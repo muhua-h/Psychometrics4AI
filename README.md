@@ -1,5 +1,8 @@
 # Designing LLM-Agents with Personalities: A Psychometric Approach
 
+## Citation 
+Huang, M., Zhang, X., Soto, C., & Evans, J. (2024). Designing LLM-agents with personalities: A psychometric approach. arXiv. [https://arxiv.org/abs/2410.19238](https://arxiv.org/abs/2410.19238)
+
 ## Objective 
 This project aims to design LLM-Agents with Big Five personalities using psychometric tests. The study involves:
 1. Understanding 
