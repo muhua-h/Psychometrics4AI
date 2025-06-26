@@ -1,0 +1,4 @@
+analysis_type,correlation,model,interpretation
+Empirical Baseline,0.7671129107650809,Human Data,Replicates Soto & John (2017)
+Simulation Validity (Best),0.5146211381858383,deepseek_temp1.0,67.1% of empirical
+Direct Comparison (Best),0.5300417382541479,deepseek_temp0.0,Direct human-LLM agreement
