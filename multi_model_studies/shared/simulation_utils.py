@@ -8,6 +8,7 @@ using the portal.py module.
 
 import json
 import re
+import ast
 import time
 import concurrent.futures
 from typing import List, Dict, Any, Optional, Callable
@@ -36,52 +37,166 @@ class SimulationConfig:
         self.max_workers = max_workers
 
 
-def extract_json_from_response(text: str) -> List[Dict[str, Any]]:
+# def extract_json_from_response(text: str) -> List[Dict[str, Any]]:
+#     """
+#     Extract JSON objects from LLM response text.
+#
+#     Args:
+#         text (str): The response text from the LLM
+#
+#     Returns:
+#         List[Dict[str, Any]]: List of extracted JSON objects
+#     """
+#     json_pattern = r'(```json\s*)?\s*(\{[^}]+\})\s*(```)?'
+#     matches = re.finditer(json_pattern, text, re.DOTALL)
+#     extracted_jsons = []
+#
+#     for match in matches:
+#         json_str = match.group(2)
+#         try:
+#             json_obj = json.loads(json_str)
+#             extracted_jsons.append(json_obj)
+#         except json.JSONDecodeError:
+#             print(f"Warning: Could not parse JSON: {json_str}")
+#
+#     return extracted_jsons
+
+def extract_json_from_response(text: str) -> dict:
     """
-    Extract JSON objects from LLM response text.
-    
-    Args:
-        text (str): The response text from the LLM
-        
-    Returns:
-        List[Dict[str, Any]]: List of extracted JSON objects
+    Extract a JSON object from a messy LLM response.
+    Handles:
+      - Markdown fences (```json … ```)
+      - Backticks around the JSON
+      - Trailing commas before } or ]
+      - Single quotes instead of double quotes
+    Raises ValueError if no valid JSON can be parsed.
     """
-    json_pattern = r'(```json\s*)?\s*(\{[^}]+\})\s*(```)?'
-    matches = re.finditer(json_pattern, text, re.DOTALL)
-    extracted_jsons = []
-    
-    for match in matches:
-        json_str = match.group(2)
-        try:
-            json_obj = json.loads(json_str)
-            extracted_jsons.append(json_obj)
-        except json.JSONDecodeError:
-            print(f"Warning: Could not parse JSON: {json_str}")
-    
-    return extracted_jsons
+    # 1) Strip markdown fences and backticks
+    cleaned = text.strip()
+    # remove ```json or ```js or plain ```
+    cleaned = re.sub(r"```(?:json|js)?", "", cleaned,
+                     flags=re.IGNORECASE).strip()
+    # remove any leftover backticks
+    cleaned = cleaned.strip("`").strip()
+
+    # 2) Extract the first {...} or [...] block
+    match = re.search(r"(\{.*\}|$begin:math:display$.*$end:math:display$)",
+                      cleaned, flags=re.DOTALL)
+    if not match:
+        raise ValueError("No JSON object found in response.")
+    json_str = match.group(1)
+
+    # helper to remove trailing commas before } or ]
+    def _strip_trailing_commas(s: str) -> str:
+        # ,}  → }
+        s = re.sub(r",\s*}", "}", s)
+        # ,]  → ]
+        s = re.sub(r",\s*\]", "]", s)
+        return s
+
+    # 3) First attempt: clean trailing commas, load as-is
+    json_str = _strip_trailing_commas(json_str)
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError:
+        pass
+
+    # 4) Second attempt: also normalize single → double quotes
+    alt = json_str.replace("'", '"')
+    alt = _strip_trailing_commas(alt)
+    try:
+        return json.loads(alt)
+    except json.JSONDecodeError:
+        pass
+
+    # 5) Last resort: use Python literal eval (handles single quotes)
+    try:
+        return ast.literal_eval(json_str)
+    except Exception as e:
+        raise ValueError(f"Failed to parse JSON:\n{text}\nError: {e}")
+
+# @retry(stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=4, max=10))
+# def get_personality_response(prompt: str,
+#                            personality_description: str,
+#                            config: SimulationConfig) -> Dict[str, Any]:
+#     """
+#     Get a response from an LLM with personality traits using the unified portal interface.
+#
+#     Args:
+#         prompt (str): The task/questionnaire prompt
+#         personality_description (str): The personality description for the system prompt
+#         config (SimulationConfig): Configuration for the simulation
+#
+#     Returns:
+#         Dict[str, Any]: The parsed response from the LLM
+#
+#     Raises:
+#         ValueError: If no valid JSON found in response
+#         Exception: If API call fails after retries
+#     """
+#     system_prompt = f"You are a person with the given personality traits: {personality_description}"
+#
+#     try:
+#         response_text = get_model_response(
+#             model=config.model,
+#             user_prompt=prompt,
+#             system_prompt=system_prompt,
+#             temperature=config.temperature,
+#             max_tokens=config.max_tokens
+#         )
+#
+#         # Try to extract JSON from response
+#         extracted_jsons = extract_json_from_response(response_text)
+#
+#         if extracted_jsons:
+#             return extracted_jsons[0]  # Return the first extracted JSON
+#         else:
+#             # If no JSON found, return the raw response for manual processing
+#             return {"raw_response": response_text}
+#
+#     except Exception as e:
+#         print(f"Error in get_personality_response: {str(e)}")
+#         raise
+
+# Global counter to track JSON parsing errors across all calls
+_json_parsing_error_count = 0
 
 
-@retry(stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=4, max=10))
-def get_personality_response(prompt: str, 
-                           personality_description: str,
-                           config: SimulationConfig) -> Dict[str, Any]:
+def reset_json_parsing_error_count():
+    """Reset the global JSON parsing error counter."""
+    global _json_parsing_error_count
+    _json_parsing_error_count = 0
+
+
+def get_json_parsing_error_count():
+    """Get the current count of JSON parsing errors."""
+    return _json_parsing_error_count
+
+
+@retry(stop=stop_after_attempt(10),
+       wait=wait_exponential(multiplier=1, min=4, max=10))
+def get_personality_response(prompt: str,
+                             personality_description: str,
+                             config: SimulationConfig) -> Dict[str, Any]:
     """
     Get a response from an LLM with personality traits using the unified portal interface.
-    
+
     Args:
         prompt (str): The task/questionnaire prompt
         personality_description (str): The personality description for the system prompt
         config (SimulationConfig): Configuration for the simulation
-        
+
     Returns:
         Dict[str, Any]: The parsed response from the LLM
-        
+
     Raises:
-        ValueError: If no valid JSON found in response
+        ValueError: If no valid JSON found in response after all retries
         Exception: If API call fails after retries
     """
-    system_prompt = f"You are a person with the given personality traits: {personality_description}"
-    
+    global _json_parsing_error_count
+    # Use the exact system prompt from the original study
+    system_prompt = "You are an agent participating in a research study. You will be given a personality profile."
+
     try:
         response_text = get_model_response(
             model=config.model,
@@ -90,20 +205,20 @@ def get_personality_response(prompt: str,
             temperature=config.temperature,
             max_tokens=config.max_tokens
         )
-        
-        # Try to extract JSON from response
-        extracted_jsons = extract_json_from_response(response_text)
-        
-        if extracted_jsons:
-            return extracted_jsons[0]  # Return the first extracted JSON
-        else:
-            # If no JSON found, return the raw response for manual processing
-            return {"raw_response": response_text}
-            
+
+        # Try to extract JSON from response - this will raise ValueError if parsing fails
+        extracted_json = extract_json_from_response(response_text)
+        return extracted_json
+
+    except ValueError as e:
+        # JSON parsing failed - increment counter and let the retry decorator handle this
+        _json_parsing_error_count += 1
+        print(
+            f"JSON parsing failed (attempt #{_json_parsing_error_count}): {str(e)}")
+        raise
     except Exception as e:
         print(f"Error in get_personality_response: {str(e)}")
         raise
-
 
 def process_single_participant(participant_data: Dict[str, Any],
                              prompt_generator: Callable,
