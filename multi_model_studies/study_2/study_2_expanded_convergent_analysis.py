@@ -34,7 +34,7 @@ reverse_coded_traits = {
 }
 
 # --- 1. Load empirical data ---
-data_path = Path(__file__).parent / 'study_2_results_I_am' / 'study2_preprocessed_data.csv'
+data_path = Path(__file__).parent / 'study_2_expanded_results' / 'study2_preprocessed_data.csv'
 data = pd.read_csv(data_path)
 
 # Get BFI-2 and Mini-Marker columns
@@ -42,7 +42,7 @@ bfi2_cols = ['bfi2_e', 'bfi2_a', 'bfi2_c', 'bfi2_n', 'bfi2_o']
 tda_cols = ['tda_e', 'tda_a', 'tda_c', 'tda_n', 'tda_o']
 
 # --- 2. Load all simulated Mini-Marker data (JSON files) ---
-results_dir = Path(__file__).parent / 'study_2_results_I_am'
+results_dir = Path(__file__).parent / 'study_2_expanded_results'
 json_files = glob.glob(str(results_dir / 'bfi_to_minimarker_*.json'))
 
 print(f"Found {len(json_files)} model files:")
