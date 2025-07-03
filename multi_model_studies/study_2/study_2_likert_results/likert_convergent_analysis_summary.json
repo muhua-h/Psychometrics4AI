@@ -1,0 +1,28 @@
+{
+  "format": "likert",
+  "models": [
+    "openai_gpt_3.5_turbo_0125_temp1",
+    "openai_gpt_3.5_turbo_0125_temp0_0",
+    "openai_gpt_3.5_turbo_0125"
+  ],
+  "summary_stats": {
+    "openai_gpt_3.5_turbo_0125_temp1": {
+      "bfi_orig_avg": 0.8016339573311889,
+      "bfi_sim_avg": 0.7113466804511954,
+      "orig_sim_avg": 0.6327476470775711,
+      "n_participants": 436
+    },
+    "openai_gpt_3.5_turbo_0125_temp0_0": {
+      "bfi_orig_avg": 0.801933672053827,
+      "bfi_sim_avg": 0.7253044344735748,
+      "orig_sim_avg": 0.6456946417852787,
+      "n_participants": 438
+    },
+    "openai_gpt_3.5_turbo_0125": {
+      "bfi_orig_avg": 0.8015237657656673,
+      "bfi_sim_avg": 0.20535856382310644,
+      "orig_sim_avg": 0.1878408571898454,
+      "n_participants": 429
+    }
+  }
+}

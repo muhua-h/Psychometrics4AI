@@ -1,0 +1,35 @@
+{
+  "format": "likert",
+  "models": [
+    "deepseek",
+    "gpt_4",
+    "llama",
+    "gpt_4o"
+  ],
+  "summary_stats": {
+    "deepseek": {
+      "bfi_orig_avg": 0.801999656638664,
+      "bfi_sim_avg": 0.03930148896549564,
+      "orig_sim_avg": 0.04342791279997832,
+      "n_participants": 436
+    },
+    "gpt_4": {
+      "bfi_orig_avg": 0.801933672053827,
+      "bfi_sim_avg": 0.1277622602246822,
+      "orig_sim_avg": 0.14483040357945604,
+      "n_participants": 438
+    },
+    "llama": {
+      "bfi_orig_avg": 0.801933672053827,
+      "bfi_sim_avg": -0.08016847981817432,
+      "orig_sim_avg": -0.06855079058293798,
+      "n_participants": 438
+    },
+    "gpt_4o": {
+      "bfi_orig_avg": 0.8014869019509631,
+      "bfi_sim_avg": 0.06986513602769415,
+      "orig_sim_avg": 0.07946850724440171,
+      "n_participants": 437
+    }
+  }
+}

@@ -38,79 +38,39 @@ def format_tda_list(tda_list):
 def get_prompt(personality, format_type="default"):
     """
     Generate a prompt for personality assessment.
-    
+
     Args:
         personality (str): The personality description
         format_type (str): Either "likert", "expanded", or "default"
     """
-    
+
+    # Format-specific personality section
     if format_type == "likert":
-        # Use original Likert format structure exactly
-        prompt = (f"### Context ###\n"
-                  f"You are participating in a personality psychology study. You "
-                  f"have been assigned with personality traits.\n\n"
-
-                  f"### Your Assigned Personality ### \n"
-                  f"{likert_context}\n"
-                  f"{personality}\n\n"
-
-                  f"### Objective ###\n"
-                  f"Fill out a personality questionnaire. Your "
-                  f"questionnaire answers should be reflective of your "
-                  f"assigned personalities.\n\n"
-
-                  f"### Response Format ###\n"
-                  f"ONLY return your response as a JSON file where the keys are the "
-                  f"traits and the numbers indicate your endorsement to the "
-                  f"statements.\n\n"
-
-                  f"### Questionnaire Instruction ###\n"
-                  f"{instruction}\n"
-
-                  f"### Questionnaire Item ###\n"
-                  f"{format_tda_list(tda_list)}"
-                  )
+        personality_section = f"{likert_context}\n{personality}"
     elif format_type == "expanded":
-        # Keep existing expanded format structure
-        prompt = (f"### Your Assigned Personality ### \n"
-                  f"{expanded_context}"
-                  f"{personality}\n\n"
-           
-                  f"### Context and Objective ###\n"
-                  f"You are participating in a study to help us understand human personality.\n\n"
-                  "Your job is to fill out a personality questionnaire below. Your questionnaire answers "
-                  "should be reflective of your assigned personalities.\n\n"
+        personality_section = f"{expanded_context}{personality}"
+    else:  # default
+        personality_section = personality
 
-                  f"### Response Format ###\n"
-                  f"ONLY return your response as a JSON file where the keys are the "
-                  f"traits and the number that best describes you. Do not say anything else.\n\n"
-                 
-                  f"### Questionnaire Instruction ###\n"
-                  f"{instruction}\n"
-                
-                  f"### Questionnaire Item ###\n"
-                  f"{format_tda_list(tda_list)}"
-                  )
-    else:
-        # Default behavior (backward compatibility)
-        prompt = (f"### Your Assigned Personality ### \n"
-                  f"{personality}\n\n"
-           
-                  f"### Context and Objective ###\n"
-                  f"You are participating in a study to help us understand human personality.\n\n"
-                  "Your job is to fill out a personality questionnaire below. Your questionnaire answers "
-                  "should be reflective of your assigned personalities.\n\n"
+    # Build the common prompt structure
+    prompt = (f"### Your Assigned Personality ### \n"
+              f"{personality_section}\n\n"
 
-                  f"### Response Format ###\n"
-                  f"ONLY return your response as a JSON file where the keys are the "
-                  f"traits and the number that best describes you. Do not say anything else.\n\n"
-                 
-                  f"### Questionnaire Instruction ###\n"
-                  f"{instruction}\n"
-                
-                  f"### Questionnaire Item ###\n"
-                  f"{format_tda_list(tda_list)}"
-                  )
+              f"### Context and Objective ###\n"
+              f"You are participating in a study to help us understand human personality.\n\n"
+              "Your job is to fill out a personality questionnaire below. Your questionnaire answers "
+              "should be reflective of your assigned personalities.\n\n"
+
+              f"### Response Format ###\n"
+              f"ONLY return your response as a JSON file where the keys are the "
+              f"traits and the number that best describes you. Do not say anything else.\n\n"
+
+              f"### Questionnaire Instruction ###\n"
+              f"{instruction}\n"
+
+              f"### Questionnaire Item ###\n"
+              f"{format_tda_list(tda_list)}")
+
     return prompt
 
 
