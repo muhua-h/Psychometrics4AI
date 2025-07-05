@@ -1,0 +1,550 @@
+#!/usr/bin/env python3
+"""
+Unified Convergent Analysis for Study 2
+
+This script analyzes convergent validity across different formats:
+- Binary Baseline
+- Expanded Format 
+- Likert Format
+
+It compares simulated Mini-Marker results with empirical BFI-2 and TDA data,
+providing detailed domain-level and aggregate results.
+"""
+
+import pandas as pd
+import numpy as np
+import json
+import glob
+from pathlib import Path
+from scipy.stats import pearsonr
+import warnings
+
+warnings.filterwarnings('ignore')
+
+# --- Mini-Marker to Big Five domain mapping (Saucier, 1994) ---
+minimarker_domain_mapping = {
+    # Extraversion (E)
+    'Bashful': 'E', 'Bold': 'E', 'Energetic': 'E', 'Extraverted': 'E',
+    'Quiet': 'E',
+    'Shy': 'E', 'Talkative': 'E', 'Withdrawn': 'E',
+    # Agreeableness (A) 
+    'Cold': 'A', 'Cooperative': 'A', 'Envious': 'A', 'Harsh': 'A',
+    'Jealous': 'A',
+    'Kind': 'A', 'Rude': 'A', 'Sympathetic': 'A', 'Unsympathetic': 'A',
+    'Warm': 'A',
+    # Conscientiousness (C)
+    'Careless': 'C', 'Disorganized': 'C', 'Efficient': 'C', 'Inefficient': 'C',
+    'Organized': 'C', 'Practical': 'C', 'Sloppy': 'C', 'Systematic': 'C',
+    # Neuroticism (N)
+    'Fretful': 'N', 'Moody': 'N', 'Relaxed': 'N', 'Temperamental': 'N',
+    'Touchy': 'N',
+    # Openness (O)
+    'Complex': 'O', 'Creative': 'O', 'Deep': 'O', 'Imaginative': 'O',
+    'Intellectual': 'O',
+    'Philosophical': 'O', 'Uncreative': 'O', 'Unenvious': 'O',
+    'Unintellectual': 'O'
+}
+
+# Items that need reverse coding (higher scores indicate LOWER levels of the trait)
+reverse_coded_traits = {
+    'Bashful', 'Quiet', 'Shy', 'Withdrawn',  # Extraversion (reverse)
+    'Cold', 'Envious', 'Harsh', 'Jealous', 'Rude', 'Unsympathetic',
+    # Agreeableness (reverse)
+    'Careless', 'Disorganized', 'Inefficient', 'Sloppy',
+    # Conscientiousness (reverse)
+    # 'Fretful', 'Moody', 'Temperamental', 'Touchy',  # Neuroticism (reverse for emotional stability)
+    'Relaxed', 'Unenvious',
+    'Uncreative', 'Unintellectual'  # Openness (reverse)
+}
+
+
+def load_empirical_data(format_type):
+    """Load empirical data based on format type."""
+    if format_type == 'binary':
+        # For binary, use the expanded data since no specific binary preprocessed data exists
+        data_path = Path(
+            __file__).parent / 'study_2_expanded_results' / 'study2_preprocessed_data.csv'
+        if not data_path.exists():
+            raise FileNotFoundError(f"Data file not found at {data_path}")
+        return pd.read_csv(data_path)
+    elif format_type == 'expanded':
+        data_path = Path(
+            __file__).parent / 'study_2_expanded_results' / 'study2_preprocessed_data.csv'
+        if not data_path.exists():
+            raise FileNotFoundError(f"Data file not found at {data_path}")
+        return pd.read_csv(data_path)
+    elif format_type == 'likert':
+        data_path = Path(
+            __file__).parent / 'study_2_likert_results' / 'study2_likert_preprocessed_data.csv'
+        if not data_path.exists():
+            raise FileNotFoundError(f"Data file not found at {data_path}")
+        return pd.read_csv(data_path)
+    else:
+        raise ValueError(f"Unknown format type: {format_type}")
+
+
+def aggregate_minimarker(df, format_type='expanded'):
+    """Aggregate Mini-Marker trait ratings to Big Five domain scores."""
+    domain_scores = {d: [] for d in ['E', 'A', 'C', 'N', 'O']}
+
+    for idx, row in df.iterrows():
+        trait_by_domain = {d: [] for d in ['E', 'A', 'C', 'N', 'O']}
+
+        for trait, value in row.items():
+            if trait not in minimarker_domain_mapping:
+                continue
+
+            # Convert string values to integers
+            if isinstance(value, str):
+                try:
+                    value = int(value)
+                except ValueError:
+                    print(
+                        f"Warning: Non-integer value '{value}' for trait '{trait}' at index {idx}. Skipping.")
+                    continue
+
+            domain = minimarker_domain_mapping[trait]
+
+            # Apply reverse coding (assuming 1-9 scale)
+            if trait in reverse_coded_traits:
+                value = 10 - value
+
+            trait_by_domain[domain].append(value)
+
+        # Aggregate domain scores
+        for d in trait_by_domain:
+            if trait_by_domain[d]:
+                if format_type == 'likert':
+                    # Use sum for Likert format
+                    domain_scores[d].append(sum(trait_by_domain[d]))
+                else:
+                    # Use mean for binary and expanded formats
+                    domain_scores[d].append(np.mean(trait_by_domain[d]))
+            else:
+                domain_scores[d].append(np.nan)
+
+    return pd.DataFrame(domain_scores)
+
+
+def compute_correlations(arr1, arr2, traits=['E', 'A', 'C', 'N', 'O']):
+    """Compute correlations between two arrays with error handling."""
+    corrs = []
+    for i, trait in enumerate(traits):
+        try:
+            # Extract data
+            x = arr1.iloc[:, i].values
+            y = arr2.iloc[:, i].values
+
+            # Remove NaN/inf values
+            valid_idx = ~(np.isnan(x) | np.isnan(y) | np.isinf(x) | np.isinf(y))
+            if sum(valid_idx) < 3:  # Need at least 3 points for correlation
+                print(f"    Warning: {trait} has insufficient valid data")
+                corrs.append(np.nan)
+                continue
+
+            x_clean = x[valid_idx]
+            y_clean = y[valid_idx]
+
+            r, _ = pearsonr(x_clean, y_clean)
+            corrs.append(r)
+        except Exception as e:
+            print(f"    Error computing correlation for {trait}: {e}")
+            corrs.append(np.nan)
+
+    return corrs
+
+
+def analyze_format(format_config):
+    """Analyze convergent validity for a specific format."""
+    format_name = format_config['name']
+    format_type = format_config['type']
+    results_dir = Path(__file__).parent / format_config['results_dir']
+    file_pattern = format_config['file_pattern']
+
+    print(f"\n{'=' * 60}")
+    print(f"ANALYZING {format_name.upper()}")
+    print(f"{'=' * 60}")
+
+    # Load empirical data
+    try:
+        data = load_empirical_data(format_type)
+        print(f"Loaded {len(data)} participants")
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        return None
+
+    # Find simulation files
+    if not results_dir.exists():
+        print(f"Warning: Results directory not found at {results_dir}")
+        return None
+
+    json_files = glob.glob(str(results_dir / file_pattern))
+    if len(json_files) == 0:
+        print(f"Warning: No JSON files found matching pattern {file_pattern}")
+        return None
+
+    print(f"Found {len(json_files)} model files")
+
+    # Define column names
+    bfi2_cols = ['bfi2_e', 'bfi2_a', 'bfi2_c', 'bfi2_n', 'bfi2_o']
+    tda_cols = ['tda_e', 'tda_a', 'tda_c', 'tda_n', 'tda_o']
+
+    format_results = {}
+
+    # Process each model
+    for json_file in json_files:
+        model_name = Path(json_file).stem.replace('bfi_to_minimarker_',
+                                                  '').replace('_temp1_0',
+                                                              '').replace(
+            'binary_', '')
+
+        print(f"\n--- Processing {model_name} ---")
+
+        try:
+            # Load JSON data
+            with open(json_file, 'r') as f:
+                sim_json = json.load(f)
+
+            # Clean keys (remove leading whitespace and index numbers)
+            cleaned_sim_json = []
+            for item in sim_json:
+                cleaned_item = {}
+                for k, v in item.items():
+                    k_clean = k.lstrip()
+                    if '. ' in k_clean:
+                        k_clean = k_clean.split('. ', 1)[1]
+                    cleaned_item[k_clean] = v
+                cleaned_sim_json.append(cleaned_item)
+
+            # Convert to DataFrame and aggregate
+            sim_df = pd.DataFrame(cleaned_sim_json)
+            sim_domains = aggregate_minimarker(sim_df, format_type)
+
+            # Align data (truncate to shortest length)
+            n = min(len(data), len(sim_domains))
+            emp_bfi2 = data.loc[:n - 1, bfi2_cols].reset_index(drop=True)
+            emp_tda = data.loc[:n - 1, tda_cols].reset_index(drop=True)
+            sim_tda = sim_domains.loc[:n - 1,
+                      ['E', 'A', 'C', 'N', 'O']].reset_index(drop=True)
+
+            # Clean invalid data
+            valid_mask = ~(sim_tda.isna().any(axis=1) | np.isinf(
+                sim_tda.values).any(axis=1))
+            if not valid_mask.all():
+                print(f"  Removing {sum(~valid_mask)} rows with invalid data")
+                emp_bfi2 = emp_bfi2[valid_mask].reset_index(drop=True)
+                emp_tda = emp_tda[valid_mask].reset_index(drop=True)
+                sim_tda = sim_tda[valid_mask].reset_index(drop=True)
+                n = len(emp_bfi2)
+
+            # Compute correlations
+            bfi_orig_corrs = compute_correlations(emp_bfi2, emp_tda)
+            bfi_sim_corrs = compute_correlations(emp_bfi2, sim_tda)
+            orig_sim_corrs = compute_correlations(emp_tda, sim_tda)
+
+            # Store results
+            format_results[model_name] = {
+                'bfi_orig_by_domain': bfi_orig_corrs,
+                'bfi_sim_by_domain': bfi_sim_corrs,
+                'orig_sim_by_domain': orig_sim_corrs,
+                'bfi_orig_avg': np.nanmean(bfi_orig_corrs),
+                'bfi_sim_avg': np.nanmean(bfi_sim_corrs),
+                'orig_sim_avg': np.nanmean(orig_sim_corrs),
+                'n_participants': n
+            }
+
+            print(f"  Final participants: {n}")
+            print(f"  BFI-2 vs Original avg: {np.nanmean(bfi_orig_corrs):.3f}")
+            print(f"  BFI-2 vs Simulated avg: {np.nanmean(bfi_sim_corrs):.3f}")
+            print(
+                f"  Original vs Simulated avg: {np.nanmean(orig_sim_corrs):.3f}")
+
+        except Exception as e:
+            print(f"  Error processing {model_name}: {str(e)}")
+            continue
+
+    return format_results
+
+
+def print_detailed_results(format_results, format_name):
+    """Print detailed results for a format with Format → Model → Domain structure."""
+    print(f"\n{'=' * 80}")
+    print(f"DETAILED CONVERGENT VALIDITY RESULTS - {format_name.upper()}")
+    print(f"{'=' * 80}")
+
+    traits = ['E', 'A', 'C', 'N', 'O']
+    trait_names = ['Extraversion', 'Agreeableness', 'Conscientiousness',
+                   'Neuroticism', 'Openness']
+
+    for model_name, results in format_results.items():
+        print(f"\n{'-' * 80}")
+        print(f"MODEL: {model_name.upper()} (n={results['n_participants']})")
+        print(f"{'-' * 80}")
+
+        # Print domain-by-domain analysis
+        print(
+            f"\n{'Domain':<20} {'BFI-Orig':<12} {'BFI-Sim':<12} {'Orig-Sim':<12}")
+        print("-" * 60)
+
+        for i, (trait, trait_name) in enumerate(zip(traits, trait_names)):
+            bfi_orig_r = results['bfi_orig_by_domain'][i]
+            bfi_sim_r = results['bfi_sim_by_domain'][i]
+            orig_sim_r = results['orig_sim_by_domain'][i]
+
+            bfi_orig_str = f"{bfi_orig_r:.3f}" if not np.isnan(
+                bfi_orig_r) else "NaN"
+            bfi_sim_str = f"{bfi_sim_r:.3f}" if not np.isnan(
+                bfi_sim_r) else "NaN"
+            orig_sim_str = f"{orig_sim_r:.3f}" if not np.isnan(
+                orig_sim_r) else "NaN"
+
+            print(
+                f"{trait_name:<20} {bfi_orig_str:<12} {bfi_sim_str:<12} {orig_sim_str:<12}")
+
+        # Print averages
+        print("-" * 60)
+        print(
+            f"{'AVERAGE':<20} {results['bfi_orig_avg']:<12.3f} {results['bfi_sim_avg']:<12.3f} {results['orig_sim_avg']:<12.3f}")
+
+        # Print interpretation
+        print(f"\nInterpretation:")
+        print(
+            f"  • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)")
+        print(
+            f"  • BFI-Sim: Simulation validity (BFI-2 vs Simulated Mini-Marker)")
+        print(
+            f"  • Orig-Sim: Direct comparison (Original vs Simulated Mini-Marker)")
+
+        # Highlight best and worst performing domains
+        if not all(np.isnan(results['bfi_sim_by_domain'])):
+            best_domain_idx = np.nanargmax(results['bfi_sim_by_domain'])
+            worst_domain_idx = np.nanargmin(results['bfi_sim_by_domain'])
+
+            print(
+                f"\n  Best performing domain: {trait_names[best_domain_idx]} (r = {results['bfi_sim_by_domain'][best_domain_idx]:.3f})")
+            print(
+                f"  Worst performing domain: {trait_names[worst_domain_idx]} (r = {results['bfi_sim_by_domain'][worst_domain_idx]:.3f})")
+
+
+def create_summary_dataframe(all_results):
+    """Create a comprehensive summary DataFrame."""
+    summary_data = []
+
+    for format_name, format_results in all_results.items():
+        for model_name, results in format_results.items():
+            # Add row for each model
+            row = {
+                'Format': format_name,
+                'Model': model_name,
+                'N_Participants': results['n_participants'],
+                'BFI2_vs_Original_Avg': results['bfi_orig_avg'],
+                'BFI2_vs_Simulated_Avg': results['bfi_sim_avg'],
+                'Original_vs_Simulated_Avg': results['orig_sim_avg']
+            }
+
+            # Add domain-specific correlations
+            traits = ['E', 'A', 'C', 'N', 'O']
+            for i, trait in enumerate(traits):
+                row[f'BFI2_vs_Original_{trait}'] = \
+                    results['bfi_orig_by_domain'][i]
+                row[f'BFI2_vs_Simulated_{trait}'] = \
+                    results['bfi_sim_by_domain'][i]
+                row[f'Original_vs_Simulated_{trait}'] = \
+                    results['orig_sim_by_domain'][i]
+
+            summary_data.append(row)
+
+    return pd.DataFrame(summary_data)
+
+
+def main():
+    """Main analysis function."""
+    print("=== UNIFIED CONVERGENT VALIDITY ANALYSIS ===")
+
+    # Define format configurations
+    format_configs = [
+        {
+            'name': 'Binary Baseline',
+            'type': 'binary',
+            'results_dir': 'study_2_binary_results',
+            'file_pattern': 'bfi_to_minimarker_binary_*.json'
+        },
+        {
+            'name': 'Expanded Format',
+            'type': 'expanded',
+            'results_dir': 'old_result/study_2_results_I_am',
+            'file_pattern': 'bfi_to_minimarker_*.json'
+        },
+        {
+            'name': 'Likert Format',
+            'type': 'likert',
+            'results_dir': 'old_result/study_2_likert_results_separate',
+            'file_pattern': 'bfi_to_minimarker_*.json'
+        }
+    ]
+
+    # Analyze each format
+    all_results = {}
+    for config in format_configs:
+        results = analyze_format(config)
+        if results:
+            all_results[config['name']] = results
+
+    # Print detailed results for each format
+    for format_name, format_results in all_results.items():
+        print_detailed_results(format_results, format_name)
+
+    if not all_results:
+        print("No valid results found for any format.")
+        return
+
+    # Create comprehensive summary
+    summary_df = create_summary_dataframe(all_results)
+
+    # Print format comparison organized by Format → Model → Domain
+    print(f"\n{'=' * 80}")
+    print("CROSS-FORMAT COMPARISON SUMMARY")
+    print(f"{'=' * 80}")
+
+    traits = ['E', 'A', 'C', 'N', 'O']
+    trait_names = ['Extraversion', 'Agreeableness', 'Conscientiousness',
+                   'Neuroticism', 'Openness']
+
+    # Organize by format first
+    for format_name in summary_df['Format'].unique():
+        format_data = summary_df[summary_df['Format'] == format_name]
+
+        print(f"\n{'-' * 80}")
+        print(f"FORMAT: {format_name.upper()}")
+        print(f"{'-' * 80}")
+
+        # Show models within format
+        print(
+            f"\n{'Model':<25} {'BFI-Orig':<12} {'BFI-Sim':<12} {'Orig-Sim':<12}")
+        print("-" * 65)
+
+        for _, row in format_data.iterrows():
+            print(
+                f"{row['Model']:<25} {row['BFI2_vs_Original_Avg']:<12.3f} {row['BFI2_vs_Simulated_Avg']:<12.3f} {row['Original_vs_Simulated_Avg']:<12.3f}")
+
+        # Format averages
+        print("-" * 65)
+        print(
+            f"{'FORMAT AVERAGE':<25} {format_data['BFI2_vs_Original_Avg'].mean():<12.3f} {format_data['BFI2_vs_Simulated_Avg'].mean():<12.3f} {format_data['Original_vs_Simulated_Avg'].mean():<12.3f}")
+        print(
+            f"{'FORMAT STD':<25} {format_data['BFI2_vs_Original_Avg'].std():<12.3f} {format_data['BFI2_vs_Simulated_Avg'].std():<12.3f} {format_data['Original_vs_Simulated_Avg'].std():<12.3f}")
+
+        # Domain breakdown for this format
+        print(f"\nDomain-level breakdown for {format_name}:")
+        print(
+            f"{'Domain':<20} {'BFI-Orig':<12} {'BFI-Sim':<12} {'Orig-Sim':<12}")
+        print("-" * 60)
+
+        for i, (trait, trait_name) in enumerate(zip(traits, trait_names)):
+            bfi_orig_avg = format_data[f'BFI2_vs_Original_{trait}'].mean()
+            bfi_sim_avg = format_data[f'BFI2_vs_Simulated_{trait}'].mean()
+            orig_sim_avg = format_data[f'Original_vs_Simulated_{trait}'].mean()
+
+            print(
+                f"{trait_name:<20} {bfi_orig_avg:<12.3f} {bfi_sim_avg:<12.3f} {orig_sim_avg:<12.3f}")
+
+    # Overall format comparison
+    print(f"\n{'=' * 80}")
+    print("OVERALL FORMAT COMPARISON")
+    print(f"{'=' * 80}")
+
+    print(f"\n{'Format':<20} {'BFI-Orig':<12} {'BFI-Sim':<12} {'Orig-Sim':<12}")
+    print("-" * 60)
+
+    for format_name in summary_df['Format'].unique():
+        format_data = summary_df[summary_df['Format'] == format_name]
+        avg_bfi_orig = format_data['BFI2_vs_Original_Avg'].mean()
+        avg_bfi_sim = format_data['BFI2_vs_Simulated_Avg'].mean()
+        avg_orig_sim = format_data['Original_vs_Simulated_Avg'].mean()
+
+        print(
+            f"{format_name:<20} {avg_bfi_orig:<12.3f} {avg_bfi_sim:<12.3f} {avg_orig_sim:<12.3f}")
+
+    # Best performing format and models
+    print(f"\n{'=' * 60}")
+    print("PERFORMANCE HIGHLIGHTS")
+    print(f"{'=' * 60}")
+
+    best_format = summary_df.loc[summary_df['BFI2_vs_Simulated_Avg'].idxmax()]
+    worst_format = summary_df.loc[summary_df['BFI2_vs_Simulated_Avg'].idxmin()]
+
+    print(f"\nBest performing combination:")
+    print(f"  Format: {best_format['Format']}")
+    print(f"  Model: {best_format['Model']}")
+    print(f"  BFI-Sim correlation: {best_format['BFI2_vs_Simulated_Avg']:.3f}")
+
+    print(f"\nWorst performing combination:")
+    print(f"  Format: {worst_format['Format']}")
+    print(f"  Model: {worst_format['Model']}")
+    print(f"  BFI-Sim correlation: {worst_format['BFI2_vs_Simulated_Avg']:.3f}")
+
+    # Format rankings
+    format_rankings = summary_df.groupby('Format')[
+        'BFI2_vs_Simulated_Avg'].mean().sort_values(ascending=False)
+    print(f"\nFormat rankings by BFI-Sim correlation:")
+    for i, (format_name, score) in enumerate(format_rankings.items(), 1):
+        print(f"  {i}. {format_name}: {score:.3f}")
+
+    # Save results
+    output_dir = Path(__file__).parent / 'unified_analysis_results'
+    output_dir.mkdir(exist_ok=True)
+
+    # Save detailed results
+    summary_df.to_csv(output_dir / 'unified_convergent_validity_results.csv',
+                      index=False)
+
+    # Save format averages
+    format_averages = summary_df.groupby('Format').agg({
+        'BFI2_vs_Original_Avg': ['mean', 'std'],
+        'BFI2_vs_Simulated_Avg': ['mean', 'std'],
+        'Original_vs_Simulated_Avg': ['mean', 'std']
+    }).round(3)
+    format_averages.to_csv(output_dir / 'format_averages.csv')
+
+    # Save domain-level averages
+    domain_summary = []
+    for trait in traits:
+        for format_name in summary_df['Format'].unique():
+            format_data = summary_df[summary_df['Format'] == format_name]
+            domain_summary.append({
+                'Format': format_name,
+                'Domain': trait,
+                'BFI2_vs_Original_Avg': format_data[
+                    f'BFI2_vs_Original_{trait}'].mean(),
+                'BFI2_vs_Simulated_Avg': format_data[
+                    f'BFI2_vs_Simulated_{trait}'].mean(),
+                'Original_vs_Simulated_Avg': format_data[
+                    f'Original_vs_Simulated_{trait}'].mean(),
+                'BFI2_vs_Original_Std': format_data[
+                    f'BFI2_vs_Original_{trait}'].std(),
+                'BFI2_vs_Simulated_Std': format_data[
+                    f'BFI2_vs_Simulated_{trait}'].std(),
+                'Original_vs_Simulated_Std': format_data[
+                    f'Original_vs_Simulated_{trait}'].std()
+            })
+
+    domain_df = pd.DataFrame(domain_summary)
+    domain_df.to_csv(output_dir / 'domain_level_results.csv', index=False)
+
+    print(f"\n{'=' * 60}")
+    print("ANALYSIS COMPLETE")
+    print(f"{'=' * 60}")
+    print(f"Results saved to: {output_dir}")
+    print("Files created:")
+    print("  - unified_convergent_validity_results.csv (detailed results)")
+    print("  - format_averages.csv (format-level statistics)")
+    print("  - domain_level_results.csv (domain-specific analysis)")
+
+    print("\nNote: All correlations are Pearson r values")
+    print("BFI-Orig: BFI-2 vs Original Mini-Marker (Empirical Baseline)")
+    print("BFI-Sim: BFI-2 vs Simulated Mini-Marker (Simulation Validity)")
+    print("Orig-Sim: Original vs Simulated Mini-Marker (Direct Comparison)")
+
+
+if __name__ == "__main__":
+    main()
