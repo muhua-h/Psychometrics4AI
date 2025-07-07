@@ -11,13 +11,16 @@ import re
 import ast
 import time
 import concurrent.futures
-from typing import List, Dict, Any, Optional, Callable
+from typing import List, Dict, Any, Optional, Callable, Tuple
 from pathlib import Path
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent.parent))
+# Add the project root to the path to import portal
+project_root = Path(__file__).resolve().parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 from portal import get_model_response
 
 
@@ -29,37 +32,18 @@ class SimulationConfig:
                  temperature: float = 0.0,
                  max_tokens: int = 2048,
                  batch_size: int = 35,
-                 max_workers: int = 10):
+                 max_workers: int = 10,
+                 max_retries: int = 5,
+                 base_wait_time: float = 2.0,
+                 max_wait_time: float = 60.0):
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.batch_size = batch_size
         self.max_workers = max_workers
-
-
-# def extract_json_from_response(text: str) -> List[Dict[str, Any]]:
-#     """
-#     Extract JSON objects from LLM response text.
-#
-#     Args:
-#         text (str): The response text from the LLM
-#
-#     Returns:
-#         List[Dict[str, Any]]: List of extracted JSON objects
-#     """
-#     json_pattern = r'(```json\s*)?\s*(\{[^}]+\})\s*(```)?'
-#     matches = re.finditer(json_pattern, text, re.DOTALL)
-#     extracted_jsons = []
-#
-#     for match in matches:
-#         json_str = match.group(2)
-#         try:
-#             json_obj = json.loads(json_str)
-#             extracted_jsons.append(json_obj)
-#         except json.JSONDecodeError:
-#             print(f"Warning: Could not parse JSON: {json_str}")
-#
-#     return extracted_jsons
+        self.max_retries = max_retries
+        self.base_wait_time = base_wait_time
+        self.max_wait_time = max_wait_time
 
 def extract_json_from_response(text: str) -> dict:
     """
@@ -114,6 +98,117 @@ def extract_json_from_response(text: str) -> dict:
         return ast.literal_eval(json_str)
     except Exception as e:
         raise ValueError(f"Failed to parse JSON:\n{text}\nError: {e}")
+
+
+class ResponseValidator:
+    """Validates LLM responses for completeness and correctness."""
+    
+    # Expected Mini-Marker traits from the shared schema
+    EXPECTED_TRAITS = {
+        'Bashful', 'Bold', 'Careless', 'Cold', 'Complex', 'Cooperative', 
+        'Creative', 'Deep', 'Disorganized', 'Efficient', 'Energetic', 
+        'Envious', 'Extraverted', 'Fretful', 'Harsh', 'Imaginative', 
+        'Inefficient', 'Intellectual', 'Jealous', 'Kind', 'Moody', 
+        'Organized', 'Philosophical', 'Practical', 'Quiet', 'Relaxed', 
+        'Rude', 'Shy', 'Sloppy', 'Sympathetic', 'Systematic', 'Talkative', 
+        'Temperamental', 'Touchy', 'Uncreative', 'Unenvious', 
+        'Unintellectual', 'Unsympathetic', 'Warm', 'Withdrawn'
+    }
+    
+    VALID_VALUES = set(range(1, 10))  # 1-9 rating scale
+    
+    @classmethod
+    def validate_response(cls, response: Dict[str, Any]) -> Tuple[bool, List[str]]:
+        """
+        Validate a response for completeness and correctness.
+        
+        Returns:
+            Tuple[bool, List[str]]: (is_valid, list_of_errors)
+        """
+        errors = []
+        
+        # Check if response is a dict
+        if not isinstance(response, dict):
+            errors.append(f"Response is not a dictionary: {type(response)}")
+            return False, errors
+        
+        # Check for expected traits
+        found_traits = set()
+        for key in response.keys():
+            # Clean the key (remove numbers, whitespace, etc.)
+            clean_key = cls._clean_trait_name(key)
+            if clean_key in cls.EXPECTED_TRAITS:
+                found_traits.add(clean_key)
+        
+        missing_traits = cls.EXPECTED_TRAITS - found_traits
+        if missing_traits:
+            errors.append(f"Missing traits: {sorted(list(missing_traits))}")
+        
+        # Check for extra/invalid traits  
+        extra_traits = found_traits - cls.EXPECTED_TRAITS
+        if extra_traits:
+            errors.append(f"Extra/invalid traits: {sorted(list(extra_traits))}")
+        
+        # Check for unnamed/generic keys (like "Unnamed_1")
+        unnamed_keys = [k for k in response.keys() if 'unnamed' in k.lower() or re.match(r'^(key|item|trait)_?\d+$', k.lower())]
+        if unnamed_keys:
+            errors.append(f"Generic/unnamed keys detected: {unnamed_keys}")
+        
+        # Check value validity
+        invalid_values = []
+        for key, value in response.items():
+            try:
+                int_value = int(value)
+                if int_value not in cls.VALID_VALUES:
+                    invalid_values.append(f"{key}={value}")
+            except (ValueError, TypeError):
+                invalid_values.append(f"{key}={value} (not convertible to int)")
+        
+        if invalid_values:
+            errors.append(f"Invalid values (must be 1-9): {invalid_values}")
+        
+        is_valid = len(errors) == 0
+        return is_valid, errors
+    
+    @classmethod
+    def _clean_trait_name(cls, key: str) -> str:
+        """Clean trait name by removing numbers, whitespace, etc."""
+        clean_key = key.strip()
+        # Remove leading numbers and dots (e.g., "1. Bashful" -> "Bashful")
+        clean_key = re.sub(r'^\d+\.\s*', '', clean_key)
+        # Remove any trailing underscores or whitespace
+        clean_key = clean_key.strip('_ ')
+        return clean_key
+    
+    @classmethod
+    def standardize_response(cls, response: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Standardize a response by cleaning keys and ensuring proper format.
+        
+        Args:
+            response: Raw response dictionary
+            
+        Returns:
+            Standardized response dictionary
+        """
+        standardized = {}
+        
+        for key, value in response.items():
+            clean_key = cls._clean_trait_name(key)
+            
+            # Only include expected traits
+            if clean_key in cls.EXPECTED_TRAITS:
+                try:
+                    # Ensure value is an integer
+                    int_value = int(value)
+                    # Clamp to valid range
+                    clamped_value = max(1, min(9, int_value))
+                    standardized[clean_key] = clamped_value
+                except (ValueError, TypeError):
+                    # Default to neutral value for invalid responses
+                    standardized[clean_key] = 5
+        
+        return standardized
 
 # @retry(stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=4, max=10))
 # def get_personality_response(prompt: str,
@@ -220,10 +315,140 @@ def get_personality_response(prompt: str,
         print(f"Error in get_personality_response: {str(e)}")
         raise
 
+
+def get_enhanced_personality_response(prompt: str,
+                                    personality_description: str,
+                                    config: SimulationConfig,
+                                    participant_id: Optional[int] = None) -> Dict[str, Any]:
+    """
+    Get a validated response with automatic regeneration for failures.
+    
+    Args:
+        prompt: The questionnaire prompt
+        personality_description: Personality description for system prompt
+        config: Configuration for the simulation
+        participant_id: Optional participant ID for logging
+        
+    Returns:
+        Valid response dictionary or error dict
+    """
+    validator = ResponseValidator()
+    system_prompt = "You are an agent participating in a research study. You will be given a personality profile."
+    
+    for attempt in range(config.max_retries):
+        try:
+            # Get LLM response
+            response_text = get_model_response(
+                model=config.model,
+                user_prompt=prompt,
+                system_prompt=system_prompt,
+                temperature=config.temperature,
+                max_tokens=config.max_tokens
+            )
+            
+            # Extract JSON
+            extracted_json = extract_json_from_response(response_text)
+            
+            # Validate response
+            is_valid, errors = validator.validate_response(extracted_json)
+            
+            if is_valid:
+                return validator.standardize_response(extracted_json)
+            else:
+                # Log validation errors
+                participant_info = f"participant {participant_id}" if participant_id is not None else "participant"
+                print(f"Validation failed for {participant_info} (attempt {attempt + 1}): {'; '.join(errors)}")
+                
+                # For partial failures (missing few traits), try to salvage on last attempt
+                if attempt == config.max_retries - 1:
+                    return _salvage_partial_response(extracted_json, errors, participant_id, validator)
+                
+                # Progressive prompt enhancement for retries
+                if attempt > 0:
+                    prompt = _enhance_prompt_for_retry(prompt, errors, attempt)
+                
+                # Add delay between retries
+                wait_time = min(config.base_wait_time ** attempt, config.max_wait_time)
+                print(f"  Retrying in {wait_time:.1f} seconds...")
+                time.sleep(wait_time)
+                
+        except Exception as e:
+            participant_info = f"participant {participant_id}" if participant_id is not None else "participant"
+            print(f"Error for {participant_info} (attempt {attempt + 1}): {str(e)}")
+            
+            if attempt == config.max_retries - 1:
+                # Last attempt failed - return error but don't lose the participant
+                return {"error": str(e), "participant_id": participant_id, "recoverable": True}
+            
+            wait_time = min(config.base_wait_time ** attempt, config.max_wait_time)
+            print(f"  Retrying in {wait_time:.1f} seconds...")
+            time.sleep(wait_time)
+    
+    # If we get here, all retries failed
+    return {"error": "All retry attempts failed", "participant_id": participant_id, "recoverable": True}
+
+
+def _enhance_prompt_for_retry(original_prompt: str, errors: List[str], attempt: int) -> str:
+    """Enhance the prompt based on the specific errors encountered."""
+    
+    enhancements = []
+    
+    # Check for missing traits error
+    if any("Missing traits" in error for error in errors):
+        enhancements.append(
+            "IMPORTANT: Your response must include ALL 40 traits listed below. "
+            "Do not skip any traits. Each trait must have a corresponding number from 1-9."
+        )
+    
+    # Check for unnamed keys error
+    if any("Generic/unnamed keys" in error for error in errors):
+        enhancements.append(
+            "CRITICAL: Use the EXACT trait names provided in the questionnaire. "
+            "Do NOT use generic names like 'Unnamed_1' or 'Item_1'. "
+            "Use the specific trait names: Bashful, Bold, Careless, etc."
+        )
+    
+    # Check for invalid values
+    if any("Invalid values" in error for error in errors):
+        enhancements.append(
+            "VALUES: Each trait must be rated with a number from 1 to 9 only. "
+            "1=Extremely Inaccurate, 5=Neutral, 9=Extremely Accurate."
+        )
+    
+    if enhancements:
+        enhancement_text = "\n\n### RETRY INSTRUCTIONS ###\n" + "\n".join(enhancements) + "\n"
+        # Insert enhancement before the questionnaire section
+        enhanced_prompt = original_prompt.replace("### Questionnaire Item ###", 
+                                                enhancement_text + "### Questionnaire Item ###")
+        return enhanced_prompt
+    
+    return original_prompt
+
+
+def _salvage_partial_response(response: Dict[str, Any], errors: List[str], participant_id: Optional[int], validator: ResponseValidator) -> Dict[str, Any]:
+    """
+    Attempt to salvage a partial response by filling in missing values.
+    """
+    participant_info = f"participant {participant_id}" if participant_id is not None else "participant"
+    print(f"Attempting to salvage partial response for {participant_info}")
+    
+    standardized = validator.standardize_response(response)
+    
+    # Fill in missing traits with neutral values
+    for trait in validator.EXPECTED_TRAITS:
+        if trait not in standardized:
+            standardized[trait] = 5  # Neutral value
+    
+    print(f"Salvaged response for {participant_info} - filled {len(validator.EXPECTED_TRAITS) - len(response)} missing traits")
+    
+    return standardized
+
 def process_single_participant(participant_data: Dict[str, Any],
                              prompt_generator: Callable,
                              config: SimulationConfig,
-                             personality_key: str = 'combined_bfi2') -> Dict[str, Any]:
+                             personality_key: str = 'combined_bfi2',
+                             use_enhanced: bool = False,
+                             participant_id: Optional[int] = None) -> Dict[str, Any]:
     """
     Process a single participant through the personality simulation.
     
@@ -232,6 +457,8 @@ def process_single_participant(participant_data: Dict[str, Any],
         prompt_generator (Callable): Function to generate prompt from personality data
         config (SimulationConfig): Configuration for the simulation
         personality_key (str): Key in participant_data containing personality description
+        use_enhanced (bool): Whether to use enhanced response validation
+        participant_id (Optional[int]): Participant ID for logging
         
     Returns:
         Dict[str, Any]: The simulation result for this participant
@@ -240,7 +467,10 @@ def process_single_participant(participant_data: Dict[str, Any],
         personality_description = participant_data[personality_key]
         prompt = prompt_generator(personality_description)
         
-        response = get_personality_response(prompt, personality_description, config)
+        if use_enhanced:
+            response = get_enhanced_personality_response(prompt, personality_description, config, participant_id)
+        else:
+            response = get_personality_response(prompt, personality_description, config)
         return response
         
     except Exception as e:
@@ -253,7 +483,8 @@ def run_batch_simulation(participants_data: List[Dict[str, Any]],
                         config: SimulationConfig,
                         personality_key: str = 'combined_bfi2',
                         output_dir: Optional[str] = None,
-                        output_filename: Optional[str] = None) -> List[Dict[str, Any]]:
+                        output_filename: Optional[str] = None,
+                        use_enhanced: bool = False) -> List[Dict[str, Any]]:
     """
     Run personality simulation for multiple participants in parallel batches.
     
@@ -281,7 +512,7 @@ def run_batch_simulation(participants_data: List[Dict[str, Any]],
         
         def process_participant_with_index(index):
             participant = participants_data[index]
-            result = process_single_participant(participant, prompt_generator, config, personality_key)
+            result = process_single_participant(participant, prompt_generator, config, personality_key, use_enhanced, index)
             return index, result
         
         # Use ThreadPoolExecutor for concurrent processing
@@ -430,7 +661,9 @@ def serialize_openai_completion(completion) -> Dict[str, Any]:
 # Convenience functions for each study type
 def run_bfi_to_minimarker_simulation(participants_data: List[Dict[str, Any]],
                                    config: SimulationConfig,
-                                   output_dir: str = "results") -> List[Dict[str, Any]]:
+                                   output_dir: str = "results",
+                                   use_enhanced: bool = False,
+                                   prompt_generator: Optional[Callable] = None) -> List[Dict[str, Any]]:
     """
     Run BFI-2 to Mini-Marker personality simulation (Study 2).
     
@@ -438,19 +671,24 @@ def run_bfi_to_minimarker_simulation(participants_data: List[Dict[str, Any]],
         participants_data (List[Dict[str, Any]]): Participant data with 'combined_bfi2' key
         config (SimulationConfig): Simulation configuration
         output_dir (str): Directory to save results
+        use_enhanced (bool): Whether to use enhanced validation
+        prompt_generator (Optional[Callable]): Prompt generator function (if None, uses default)
         
     Returns:
         List[Dict[str, Any]]: Simulation results
     """
-    from mini_marker_prompt import get_prompt
+    if prompt_generator is None:
+        from mini_marker_prompt import get_prompt
+        prompt_generator = get_prompt
     
     return run_batch_simulation(
         participants_data=participants_data,
-        prompt_generator=get_prompt,
+        prompt_generator=prompt_generator,
         config=config,
         personality_key='combined_bfi2',
         output_dir=output_dir,
-        output_filename="bfi_to_minimarker"
+        output_filename="bfi_to_minimarker",
+        use_enhanced=use_enhanced
     )
 
 
@@ -503,4 +741,34 @@ def run_risk_simulation(participants_data: List[Dict[str, Any]],
         personality_key='bfi_combined',
         output_dir=output_dir,
         output_filename="risk_simulation"
+    )
+
+
+# Convenience wrapper function for enhanced BFI simulation
+def run_enhanced_bfi_to_minimarker_simulation(participants_data: List[Dict[str, Any]],
+                                            config: SimulationConfig,
+                                            output_dir: str = "results",
+                                            use_enhanced: bool = True,
+                                            prompt_generator: Optional[Callable] = None) -> List[Dict[str, Any]]:
+    """
+    Run enhanced BFI-2 to Mini-Marker personality simulation with validation and auto-retry.
+    
+    This is a convenience wrapper around run_bfi_to_minimarker_simulation with enhanced=True.
+    
+    Args:
+        participants_data (List[Dict[str, Any]]): Participant data with 'combined_bfi2' key
+        config (SimulationConfig): Simulation configuration
+        output_dir (str): Directory to save results
+        use_enhanced (bool): Whether to use enhanced validation (default: True)
+        prompt_generator (Optional[Callable]): Prompt generator function (if None, uses default)
+        
+    Returns:
+        List[Dict[str, Any]]: Simulation results with enhanced validation
+    """
+    return run_bfi_to_minimarker_simulation(
+        participants_data=participants_data,
+        config=config,
+        output_dir=output_dir,
+        use_enhanced=use_enhanced,
+        prompt_generator=prompt_generator
     )

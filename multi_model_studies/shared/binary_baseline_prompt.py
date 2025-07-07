@@ -94,8 +94,10 @@ def get_binary_prompt(personality_description):
                    f"9 - Extremely Accurate\n")
     
     binary_context = ("Based on your personality profile below, please rate yourself "
-                     "on the following traits. Consider how each trait applies to your "
-                     "high/low personality classification.\n")
+                     "on the following traits.\n")
+    
+    # Create example JSON to show expected format
+    example_json = '{\n    "Bashful": 7,\n    "Bold": 3,\n    "Careless": 2,\n    ...\n    "Withdrawn": 4\n}'
     
     prompt = (f"### Your Assigned Personality ### \n"
               f"{binary_context}{personality_description}\n\n"
@@ -106,8 +108,14 @@ def get_binary_prompt(personality_description):
               "should be reflective of your assigned personalities.\n\n"
               
               f"### Response Format ###\n"
-              f"ONLY return your response as a JSON file where the keys are the "
-              f"traits and the number in the questionnaire that best describes you. Do not say anything else.\n\n"
+              f"IMPORTANT: You must provide ratings for ALL 40 traits listed below.\n"
+              f"Return ONLY a JSON object where:\n"
+              f"- Keys are the exact trait names (e.g., \"Bashful\", \"Bold\", etc.)\n"
+              f"- Values are numbers from 1-9 based on the rating scale\n"
+              f"- Include ALL 40 traits - no more, no less\n"
+              f"- Do NOT include personality domains like \"Extraversion\" or \"Agreeableness\"\n"
+              f"- Do NOT add any text outside the JSON\n\n"
+              f"Example format:\n{example_json}\n\n"
               
               f"### Questionnaire Instruction ###\n"
               f"{instruction}\n"
@@ -143,6 +151,41 @@ def create_binary_participant_data(original_participants_data, threshold=2.5):
         updated_participants.append(updated_participant)
     
     return updated_participants
+
+def validate_minimarker_response(response):
+    """
+    Validate that the response contains all 40 Mini-Marker traits.
+    
+    Args:
+        response: The response to validate (should be a dict)
+        
+    Returns:
+        tuple: (is_valid, error_message)
+    """
+    expected_traits = list(schema_tda.tda_dict.values())
+    
+    if not isinstance(response, dict):
+        return False, "Response is not a dictionary"
+    
+    # Check for missing traits
+    missing_traits = [trait for trait in expected_traits if trait not in response]
+    if missing_traits:
+        return False, f"Missing traits: {missing_traits}"
+    
+    # Check for extra traits (including Big Five domains)
+    extra_traits = [key for key in response.keys() if key not in expected_traits]
+    if extra_traits:
+        return False, f"Unexpected traits found: {extra_traits}"
+    
+    # Validate that all values are integers between 1-9
+    for trait, value in response.items():
+        if not isinstance(value, (int, float)):
+            return False, f"Invalid value type for {trait}: {type(value)}"
+        if value < 1 or value > 9:
+            return False, f"Invalid value for {trait}: {value} (must be 1-9)"
+    
+    return True, "Valid response"
+
 
 # Example usage and testing
 if __name__ == "__main__":
