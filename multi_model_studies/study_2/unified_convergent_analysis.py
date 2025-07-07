@@ -18,8 +18,25 @@ import glob
 from pathlib import Path
 from scipy.stats import pearsonr
 import warnings
+import sys
+from datetime import datetime
 
 warnings.filterwarnings('ignore')
+
+# Set up logging to capture all print output
+class Logger:
+    def __init__(self, filename):
+        self.terminal = sys.stdout
+        self.log = open(filename, 'w')
+    
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+        self.log.flush()
+    
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
 
 # --- Mini-Marker to Big Five domain mapping (Saucier, 1994) ---
 minimarker_domain_mapping = {
@@ -52,8 +69,7 @@ reverse_coded_traits = {
     # Agreeableness (reverse)
     'Careless', 'Disorganized', 'Inefficient', 'Sloppy',
     # Conscientiousness (reverse)
-    # 'Fretful', 'Moody', 'Temperamental', 'Touchy',  # Neuroticism (reverse for emotional stability)
-    'Relaxed', 'Unenvious',
+    'Relaxed', 'Unenvious', # Neuroticism (reverse for emotional stability)
     'Uncreative', 'Unintellectual'  # Openness (reverse)
 }
 
@@ -326,40 +342,26 @@ def print_detailed_results(format_results, format_name):
                 f"  Worst performing domain: {trait_names[worst_domain_idx]} (r = {results['bfi_sim_by_domain'][worst_domain_idx]:.3f})")
 
 
-def create_summary_dataframe(all_results):
-    """Create a comprehensive summary DataFrame."""
-    summary_data = []
 
-    for format_name, format_results in all_results.items():
-        for model_name, results in format_results.items():
-            # Add row for each model
-            row = {
-                'Format': format_name,
-                'Model': model_name,
-                'N_Participants': results['n_participants'],
-                'BFI2_vs_Original_Avg': results['bfi_orig_avg'],
-                'BFI2_vs_Simulated_Avg': results['bfi_sim_avg'],
-                'Original_vs_Simulated_Avg': results['orig_sim_avg']
-            }
-
-            # Add domain-specific correlations
-            traits = ['E', 'A', 'C', 'N', 'O']
-            for i, trait in enumerate(traits):
-                row[f'BFI2_vs_Original_{trait}'] = \
-                    results['bfi_orig_by_domain'][i]
-                row[f'BFI2_vs_Simulated_{trait}'] = \
-                    results['bfi_sim_by_domain'][i]
-                row[f'Original_vs_Simulated_{trait}'] = \
-                    results['orig_sim_by_domain'][i]
-
-            summary_data.append(row)
-
-    return pd.DataFrame(summary_data)
 
 
 def main():
     """Main analysis function."""
+    # Set up logging to capture all output
+    output_dir = Path(__file__).parent / 'unified_analysis_results'
+    output_dir.mkdir(exist_ok=True)
+    
+    # Create timestamp for log file
+    log_filename = output_dir / f'unified_analysis_log.txt'
+    
+    # Redirect stdout to both terminal and log file
+    original_stdout = sys.stdout
+    sys.stdout = Logger(str(log_filename))
+    
     print("=== UNIFIED CONVERGENT VALIDITY ANALYSIS ===")
+    print(f"Analysis started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Log file: {log_filename}")
+    print("=" * 60)
 
     # Define format configurations
     format_configs = [
@@ -372,13 +374,13 @@ def main():
         {
             'name': 'Expanded Format',
             'type': 'expanded',
-            'results_dir': 'old_result/study_2_results_I_am',
+            'results_dir': 'study_2_expanded_results',
             'file_pattern': 'bfi_to_minimarker_*.json'
         },
         {
             'name': 'Likert Format',
             'type': 'likert',
-            'results_dir': 'old_result/study_2_likert_results_separate',
+            'results_dir': 'study_2_likert_results',
             'file_pattern': 'bfi_to_minimarker_*.json'
         }
     ]
@@ -398,10 +400,7 @@ def main():
         print("No valid results found for any format.")
         return
 
-    # Create comprehensive summary
-    summary_df = create_summary_dataframe(all_results)
-
-    # Print format comparison organized by Format → Model → Domain
+    # Print format comparison summary
     print(f"\n{'=' * 80}")
     print("CROSS-FORMAT COMPARISON SUMMARY")
     print(f"{'=' * 80}")
@@ -410,9 +409,21 @@ def main():
     trait_names = ['Extraversion', 'Agreeableness', 'Conscientiousness',
                    'Neuroticism', 'Openness']
 
+    # Collect all results for summary
+    all_summary_data = []
+    for format_name, format_results in all_results.items():
+        for model_name, results in format_results.items():
+            all_summary_data.append({
+                'Format': format_name,
+                'Model': model_name,
+                'BFI2_vs_Original_Avg': results['bfi_orig_avg'],
+                'BFI2_vs_Simulated_Avg': results['bfi_sim_avg'],
+                'Original_vs_Simulated_Avg': results['orig_sim_avg']
+            })
+
     # Organize by format first
-    for format_name in summary_df['Format'].unique():
-        format_data = summary_df[summary_df['Format'] == format_name]
+    for format_name in set(item['Format'] for item in all_summary_data):
+        format_data = [item for item in all_summary_data if item['Format'] == format_name]
 
         print(f"\n{'-' * 80}")
         print(f"FORMAT: {format_name.upper()}")
@@ -423,30 +434,24 @@ def main():
             f"\n{'Model':<25} {'BFI-Orig':<12} {'BFI-Sim':<12} {'Orig-Sim':<12}")
         print("-" * 65)
 
-        for _, row in format_data.iterrows():
+        for item in format_data:
             print(
-                f"{row['Model']:<25} {row['BFI2_vs_Original_Avg']:<12.3f} {row['BFI2_vs_Simulated_Avg']:<12.3f} {row['Original_vs_Simulated_Avg']:<12.3f}")
+                f"{item['Model']:<25} {item['BFI2_vs_Original_Avg']:<12.3f} {item['BFI2_vs_Simulated_Avg']:<12.3f} {item['Original_vs_Simulated_Avg']:<12.3f}")
 
         # Format averages
+        bfi_orig_avg = np.mean([item['BFI2_vs_Original_Avg'] for item in format_data])
+        bfi_sim_avg = np.mean([item['BFI2_vs_Simulated_Avg'] for item in format_data])
+        orig_sim_avg = np.mean([item['Original_vs_Simulated_Avg'] for item in format_data])
+        
+        bfi_orig_std = np.std([item['BFI2_vs_Original_Avg'] for item in format_data])
+        bfi_sim_std = np.std([item['BFI2_vs_Simulated_Avg'] for item in format_data])
+        orig_sim_std = np.std([item['Original_vs_Simulated_Avg'] for item in format_data])
+
         print("-" * 65)
         print(
-            f"{'FORMAT AVERAGE':<25} {format_data['BFI2_vs_Original_Avg'].mean():<12.3f} {format_data['BFI2_vs_Simulated_Avg'].mean():<12.3f} {format_data['Original_vs_Simulated_Avg'].mean():<12.3f}")
+            f"{'FORMAT AVERAGE':<25} {bfi_orig_avg:<12.3f} {bfi_sim_avg:<12.3f} {orig_sim_avg:<12.3f}")
         print(
-            f"{'FORMAT STD':<25} {format_data['BFI2_vs_Original_Avg'].std():<12.3f} {format_data['BFI2_vs_Simulated_Avg'].std():<12.3f} {format_data['Original_vs_Simulated_Avg'].std():<12.3f}")
-
-        # Domain breakdown for this format
-        print(f"\nDomain-level breakdown for {format_name}:")
-        print(
-            f"{'Domain':<20} {'BFI-Orig':<12} {'BFI-Sim':<12} {'Orig-Sim':<12}")
-        print("-" * 60)
-
-        for i, (trait, trait_name) in enumerate(zip(traits, trait_names)):
-            bfi_orig_avg = format_data[f'BFI2_vs_Original_{trait}'].mean()
-            bfi_sim_avg = format_data[f'BFI2_vs_Simulated_{trait}'].mean()
-            orig_sim_avg = format_data[f'Original_vs_Simulated_{trait}'].mean()
-
-            print(
-                f"{trait_name:<20} {bfi_orig_avg:<12.3f} {bfi_sim_avg:<12.3f} {orig_sim_avg:<12.3f}")
+            f"{'FORMAT STD':<25} {bfi_orig_std:<12.3f} {bfi_sim_std:<12.3f} {orig_sim_std:<12.3f}")
 
     # Overall format comparison
     print(f"\n{'=' * 80}")
@@ -456,11 +461,11 @@ def main():
     print(f"\n{'Format':<20} {'BFI-Orig':<12} {'BFI-Sim':<12} {'Orig-Sim':<12}")
     print("-" * 60)
 
-    for format_name in summary_df['Format'].unique():
-        format_data = summary_df[summary_df['Format'] == format_name]
-        avg_bfi_orig = format_data['BFI2_vs_Original_Avg'].mean()
-        avg_bfi_sim = format_data['BFI2_vs_Simulated_Avg'].mean()
-        avg_orig_sim = format_data['Original_vs_Simulated_Avg'].mean()
+    for format_name in set(item['Format'] for item in all_summary_data):
+        format_data = [item for item in all_summary_data if item['Format'] == format_name]
+        avg_bfi_orig = np.mean([item['BFI2_vs_Original_Avg'] for item in format_data])
+        avg_bfi_sim = np.mean([item['BFI2_vs_Simulated_Avg'] for item in format_data])
+        avg_orig_sim = np.mean([item['Original_vs_Simulated_Avg'] for item in format_data])
 
         print(
             f"{format_name:<20} {avg_bfi_orig:<12.3f} {avg_bfi_sim:<12.3f} {avg_orig_sim:<12.3f}")
@@ -470,80 +475,44 @@ def main():
     print("PERFORMANCE HIGHLIGHTS")
     print(f"{'=' * 60}")
 
-    best_format = summary_df.loc[summary_df['BFI2_vs_Simulated_Avg'].idxmax()]
-    worst_format = summary_df.loc[summary_df['BFI2_vs_Simulated_Avg'].idxmin()]
+    best_item = max(all_summary_data, key=lambda x: x['BFI2_vs_Simulated_Avg'])
+    worst_item = min(all_summary_data, key=lambda x: x['BFI2_vs_Simulated_Avg'])
 
     print(f"\nBest performing combination:")
-    print(f"  Format: {best_format['Format']}")
-    print(f"  Model: {best_format['Model']}")
-    print(f"  BFI-Sim correlation: {best_format['BFI2_vs_Simulated_Avg']:.3f}")
+    print(f"  Format: {best_item['Format']}")
+    print(f"  Model: {best_item['Model']}")
+    print(f"  BFI-Sim correlation: {best_item['BFI2_vs_Simulated_Avg']:.3f}")
 
     print(f"\nWorst performing combination:")
-    print(f"  Format: {worst_format['Format']}")
-    print(f"  Model: {worst_format['Model']}")
-    print(f"  BFI-Sim correlation: {worst_format['BFI2_vs_Simulated_Avg']:.3f}")
+    print(f"  Format: {worst_item['Format']}")
+    print(f"  Model: {worst_item['Model']}")
+    print(f"  BFI-Sim correlation: {worst_item['BFI2_vs_Simulated_Avg']:.3f}")
 
     # Format rankings
-    format_rankings = summary_df.groupby('Format')[
-        'BFI2_vs_Simulated_Avg'].mean().sort_values(ascending=False)
+    format_rankings = {}
+    for format_name in set(item['Format'] for item in all_summary_data):
+        format_data = [item for item in all_summary_data if item['Format'] == format_name]
+        avg_score = np.mean([item['BFI2_vs_Simulated_Avg'] for item in format_data])
+        format_rankings[format_name] = avg_score
+    
+    sorted_rankings = sorted(format_rankings.items(), key=lambda x: x[1], reverse=True)
     print(f"\nFormat rankings by BFI-Sim correlation:")
-    for i, (format_name, score) in enumerate(format_rankings.items(), 1):
+    for i, (format_name, score) in enumerate(sorted_rankings, 1):
         print(f"  {i}. {format_name}: {score:.3f}")
-
-    # Save results
-    output_dir = Path(__file__).parent / 'unified_analysis_results'
-    output_dir.mkdir(exist_ok=True)
-
-    # Save detailed results
-    summary_df.to_csv(output_dir / 'unified_convergent_validity_results.csv',
-                      index=False)
-
-    # Save format averages
-    format_averages = summary_df.groupby('Format').agg({
-        'BFI2_vs_Original_Avg': ['mean', 'std'],
-        'BFI2_vs_Simulated_Avg': ['mean', 'std'],
-        'Original_vs_Simulated_Avg': ['mean', 'std']
-    }).round(3)
-    format_averages.to_csv(output_dir / 'format_averages.csv')
-
-    # Save domain-level averages
-    domain_summary = []
-    for trait in traits:
-        for format_name in summary_df['Format'].unique():
-            format_data = summary_df[summary_df['Format'] == format_name]
-            domain_summary.append({
-                'Format': format_name,
-                'Domain': trait,
-                'BFI2_vs_Original_Avg': format_data[
-                    f'BFI2_vs_Original_{trait}'].mean(),
-                'BFI2_vs_Simulated_Avg': format_data[
-                    f'BFI2_vs_Simulated_{trait}'].mean(),
-                'Original_vs_Simulated_Avg': format_data[
-                    f'Original_vs_Simulated_{trait}'].mean(),
-                'BFI2_vs_Original_Std': format_data[
-                    f'BFI2_vs_Original_{trait}'].std(),
-                'BFI2_vs_Simulated_Std': format_data[
-                    f'BFI2_vs_Simulated_{trait}'].std(),
-                'Original_vs_Simulated_Std': format_data[
-                    f'Original_vs_Simulated_{trait}'].std()
-            })
-
-    domain_df = pd.DataFrame(domain_summary)
-    domain_df.to_csv(output_dir / 'domain_level_results.csv', index=False)
 
     print(f"\n{'=' * 60}")
     print("ANALYSIS COMPLETE")
     print(f"{'=' * 60}")
-    print(f"Results saved to: {output_dir}")
-    print("Files created:")
-    print("  - unified_convergent_validity_results.csv (detailed results)")
-    print("  - format_averages.csv (format-level statistics)")
-    print("  - domain_level_results.csv (domain-specific analysis)")
+    print(f"Log file: {log_filename.name}")
 
     print("\nNote: All correlations are Pearson r values")
     print("BFI-Orig: BFI-2 vs Original Mini-Marker (Empirical Baseline)")
     print("BFI-Sim: BFI-2 vs Simulated Mini-Marker (Simulation Validity)")
     print("Orig-Sim: Original vs Simulated Mini-Marker (Direct Comparison)")
+    
+    # Restore original stdout
+    sys.stdout = original_stdout
+    print(f"\nAnalysis completed! Log saved to: {log_filename}")
 
 
 if __name__ == "__main__":

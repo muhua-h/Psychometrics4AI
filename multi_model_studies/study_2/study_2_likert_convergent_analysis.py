@@ -33,9 +33,10 @@ minimarker_domain_mapping = {
 # Updated to match the original Likert format exactly
 reverse_coded_traits = {
     'Bashful', 'Quiet', 'Shy', 'Withdrawn',  # Extraversion (reverse)
-    'Cold', 'Harsh', 'Rude', 'Unsympathetic',  # Agreeableness (reverse)
+    'Cold', 'Envious', 'Harsh', 'Jealous', 'Rude', 'Unsympathetic',  # Agreeableness (reverse)
     'Careless', 'Disorganized', 'Inefficient', 'Sloppy',  # Conscientiousness (reverse)
-    'Relaxed',  # Neuroticism (reverse) - only Relaxed is reverse-coded
+    # 'Fretful', 'Moody', 'Temperamental', 'Touchy',  # Neuroticism (reverse for emotional stability)
+    'Relaxed','Unenvious',
     'Uncreative', 'Unintellectual'  # Openness (reverse)
 }
 
