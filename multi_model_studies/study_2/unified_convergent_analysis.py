@@ -79,13 +79,13 @@ def load_empirical_data(format_type):
     if format_type == 'binary':
         # For binary, use the expanded data since no specific binary preprocessed data exists
         data_path = Path(
-            __file__).parent / 'study_2_expanded_results' / 'study2_preprocessed_data.csv'
+            __file__).parent / 'study_2_binary_results' / 'study2_preprocessed_data.csv'
         if not data_path.exists():
             raise FileNotFoundError(f"Data file not found at {data_path}")
         return pd.read_csv(data_path)
     elif format_type == 'expanded':
         data_path = Path(
-            __file__).parent / 'study_2_expanded_results' / 'study2_preprocessed_data.csv'
+            __file__).parent / 'study_2_expanded_results_you_are' / 'study2_preprocessed_data.csv'
         if not data_path.exists():
             raise FileNotFoundError(f"Data file not found at {data_path}")
         return pd.read_csv(data_path)
@@ -170,7 +170,7 @@ def compute_correlations(arr1, arr2, traits=['E', 'A', 'C', 'N', 'O']):
     return corrs
 
 
-def analyze_format(format_config):
+def analyze_format(format_config, csv_results=None):
     """Analyze convergent validity for a specific format."""
     format_name = format_config['name']
     format_type = format_config['type']
@@ -268,6 +268,32 @@ def analyze_format(format_config):
                 'orig_sim_avg': np.nanmean(orig_sim_corrs),
                 'n_participants': n
             }
+
+            # Save to csv_results if provided
+            if csv_results is not None:
+                csv_results.append({
+                    'condition': format_name,
+                    'model': model_name,
+                    'bfi_orig_E': bfi_orig_corrs[0],
+                    'bfi_orig_A': bfi_orig_corrs[1],
+                    'bfi_orig_C': bfi_orig_corrs[2],
+                    'bfi_orig_N': bfi_orig_corrs[3],
+                    'bfi_orig_O': bfi_orig_corrs[4],
+                    'bfi_sim_E': bfi_sim_corrs[0],
+                    'bfi_sim_A': bfi_sim_corrs[1],
+                    'bfi_sim_C': bfi_sim_corrs[2],
+                    'bfi_sim_N': bfi_sim_corrs[3],
+                    'bfi_sim_O': bfi_sim_corrs[4],
+                    'orig_sim_E': orig_sim_corrs[0],
+                    'orig_sim_A': orig_sim_corrs[1],
+                    'orig_sim_C': orig_sim_corrs[2],
+                    'orig_sim_N': orig_sim_corrs[3],
+                    'orig_sim_O': orig_sim_corrs[4],
+                    'bfi_orig_avg': np.nanmean(bfi_orig_corrs),
+                    'bfi_sim_avg': np.nanmean(bfi_sim_corrs),
+                    'orig_sim_avg': np.nanmean(orig_sim_corrs),
+                    'n_participants': n
+                })
 
             print(f"  Final participants: {n}")
             print(f"  BFI-2 vs Original avg: {np.nanmean(bfi_orig_corrs):.3f}")
@@ -374,7 +400,7 @@ def main():
         {
             'name': 'Expanded Format',
             'type': 'expanded',
-            'results_dir': 'study_2_expanded_results',
+            'results_dir': 'study_2_expanded_results_you_are',
             'file_pattern': 'bfi_to_minimarker_*.json'
         },
         {
@@ -385,10 +411,13 @@ def main():
         }
     ]
 
+    # Prepare to collect results for CSV
+    csv_results = []
+
     # Analyze each format
     all_results = {}
     for config in format_configs:
-        results = analyze_format(config)
+        results = analyze_format(config, csv_results=csv_results)
         if results:
             all_results[config['name']] = results
 
@@ -513,6 +542,12 @@ def main():
     # Restore original stdout
     sys.stdout = original_stdout
     print(f"\nAnalysis completed! Log saved to: {log_filename}")
+
+    # Save results to CSV
+    csv_df = pd.DataFrame(csv_results)
+    csv_path = output_dir / 'unified_convergent_results.csv'
+    csv_df.to_csv(csv_path, index=False)
+    print(f"\nResults saved to CSV: {csv_path}")
 
 
 if __name__ == "__main__":
