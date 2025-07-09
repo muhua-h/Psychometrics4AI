@@ -155,9 +155,10 @@ def analyze_format_for_missing_participants(format_config: Dict[str, Any]) -> Di
     print(f"{'='*60}")
     
     # Load empirical data
-    if format_type == 'binary':
-        # For binary, use the binary results directory data
-        data_path = Path(__file__).parent / 'study_2_binary_results' / 'study2_preprocessed_data.csv'
+    if format_type == 'binary_simple':
+        data_path = Path(__file__).parent / 'study_2_simple_binary_results' / 'study2_preprocessed_data.csv'
+    elif format_type == 'binary_elaborated':
+        data_path = Path(__file__).parent / 'study_2_elaborated_binary_results' / 'study2_preprocessed_data.csv'
     elif format_type == 'expanded':
         # For expanded, use the expanded results directory data
         # Check which expanded directory we're using
@@ -267,16 +268,12 @@ def create_prompt_generator_for_format(format_type: str):
     """
     Create the appropriate prompt generator function for the given format type.
     """
-    if format_type == 'binary':
+    if format_type in ['binary', 'binary_simple', 'binary_elaborated']:
         def binary_prompt_generator(personality_description):
-            # For binary format, the personality_description is actually the participant data
-            # We need to generate the binary personality description from the participant data
             if isinstance(personality_description, dict):
-                # This is participant data, generate binary description
                 binary_desc = generate_binary_personality_description(personality_description)
                 return get_binary_prompt(binary_desc)
             else:
-                # This is already a personality description string
                 return get_binary_prompt(personality_description)
         return binary_prompt_generator
     elif format_type == 'expanded':
@@ -290,19 +287,14 @@ def prepare_participant_data_for_format(participant_data: Dict[str, Any], format
     """
     Prepare participant data for the specific format type.
     """
-    if format_type == 'binary':
-        # For binary format, we need to create a special structure
-        # The simulation framework expects a 'personality_key' field
+    if format_type in ['binary', 'binary_simple', 'binary_elaborated']:
         prepared_data = participant_data.copy()
-        # Generate binary personality description and store it
         binary_description = generate_binary_personality_description(participant_data)
         prepared_data['bfi2_binary'] = binary_description
         return prepared_data
     elif format_type == 'expanded':
-        # For expanded format, the prompt generator expects the combined_bfi2 field
         return participant_data
     elif format_type == 'likert':
-        # For likert format, the prompt generator expects the combined_bfi2 field
         return participant_data
     else:
         raise ValueError(f"Unknown format type: {format_type}")
@@ -379,7 +371,7 @@ def recover_participants_for_model(model_info: Dict[str, Any],
         )
         
         # Determine personality key based on format type
-        if format_type == 'binary':
+        if format_type in ['binary', 'binary_simple', 'binary_elaborated']:
             personality_key = 'bfi2_binary'  # This will be handled by the binary prompt generator
         else:
             personality_key = 'combined_bfi2'
@@ -429,17 +421,23 @@ def main():
     """Main recovery function."""
     parser = argparse.ArgumentParser(description="Recover missing participants from Study 2 simulation results")
     parser.add_argument("--dry-run", action="store_true", help="Analyze only, don't perform recovery")
-    parser.add_argument("--format", choices=['binary', 'expanded', 'likert', 'all'], 
+    parser.add_argument("--format", choices=['binary_simple', 'binary_elaborated', 'expanded', 'likert', 'all'], 
                        default='all', help="Format to recover (default: all)")
     
     args = parser.parse_args()
     
-    # Define format configurations (same as unified_convergent_analysis.py)
+    # Define format configurations (updated for new binary directories)
     format_configs = [
         {
-            'name': 'Binary Baseline',
-            'type': 'binary',
-            'results_dir': 'study_2_binary_results',
+            'name': 'Simple Binary',
+            'type': 'binary_simple',
+            'results_dir': 'study_2_simple_binary_results',
+            'file_pattern': 'bfi_to_minimarker_binary_*.json'
+        },
+        {
+            'name': 'Elaborated Binary',
+            'type': 'binary_elaborated',
+            'results_dir': 'study_2_elaborated_binary_results',
             'file_pattern': 'bfi_to_minimarker_binary_*.json'
         },
         {
