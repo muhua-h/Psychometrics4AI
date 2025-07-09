@@ -83,9 +83,15 @@ def load_empirical_data(format_type):
         if not data_path.exists():
             raise FileNotFoundError(f"Data file not found at {data_path}")
         return pd.read_csv(data_path)
-    elif format_type == 'expanded':
+    elif format_type == 'expanded_you_are':
         data_path = Path(
             __file__).parent / 'study_2_expanded_results_you_are' / 'study2_preprocessed_data.csv'
+        if not data_path.exists():
+            raise FileNotFoundError(f"Data file not found at {data_path}")
+        return pd.read_csv(data_path)
+    elif format_type == 'expanded_i_am':
+        data_path = Path(
+            __file__).parent / 'study_2_expanded_results_i_am' / 'study2_preprocessed_data.csv'
         if not data_path.exists():
             raise FileNotFoundError(f"Data file not found at {data_path}")
         return pd.read_csv(data_path)
@@ -398,9 +404,15 @@ def main():
             'file_pattern': 'bfi_to_minimarker_binary_*.json'
         },
         {
-            'name': 'Expanded Format',
-            'type': 'expanded',
+            'name': 'Expanded (You Are)',
+            'type': 'expanded_you_are',
             'results_dir': 'study_2_expanded_results_you_are',
+            'file_pattern': 'bfi_to_minimarker_*.json'
+        },
+        {
+            'name': 'Expanded (I Am)',
+            'type': 'expanded_i_am',
+            'results_dir': 'study_2_expanded_results_i_am',
             'file_pattern': 'bfi_to_minimarker_*.json'
         },
         {

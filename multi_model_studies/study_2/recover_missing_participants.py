@@ -23,7 +23,7 @@ from datetime import datetime
 # Add shared modules to path
 sys.path.append('../shared')
 from simulation_utils import run_batch_simulation, SimulationConfig
-from mini_marker_prompt import get_expanded_prompt, get_likert_prompt
+from mini_marker_prompt import get_expanded_prompt, get_likert_prompt, generate_binary_personality_description
 from binary_baseline_prompt import get_binary_prompt
 
 # Mini-Marker to Big Five domain mapping (same as unified_convergent_analysis.py)
@@ -156,10 +156,15 @@ def analyze_format_for_missing_participants(format_config: Dict[str, Any]) -> Di
     
     # Load empirical data
     if format_type == 'binary':
-        # For binary, use the expanded data since no specific binary preprocessed data exists
-        data_path = Path(__file__).parent / 'study_2_expanded_results' / 'study2_preprocessed_data.csv'
+        # For binary, use the binary results directory data
+        data_path = Path(__file__).parent / 'study_2_binary_results' / 'study2_preprocessed_data.csv'
     elif format_type == 'expanded':
-        data_path = Path(__file__).parent / 'study_2_expanded_results' / 'study2_preprocessed_data.csv'
+        # For expanded, use the expanded results directory data
+        # Check which expanded directory we're using
+        if 'i_am' in results_dir.name:
+            data_path = Path(__file__).parent / 'study_2_expanded_results_i_am' / 'study2_preprocessed_data.csv'
+        else:
+            data_path = Path(__file__).parent / 'study_2_expanded_results_you_are' / 'study2_preprocessed_data.csv'
     elif format_type == 'likert':
         data_path = Path(__file__).parent / 'study_2_likert_results' / 'study2_likert_preprocessed_data.csv'
     else:
@@ -258,6 +263,50 @@ def analyze_format_for_missing_participants(format_config: Dict[str, Any]) -> Di
     
     return format_analysis
 
+def create_prompt_generator_for_format(format_type: str):
+    """
+    Create the appropriate prompt generator function for the given format type.
+    """
+    if format_type == 'binary':
+        def binary_prompt_generator(personality_description):
+            # For binary format, the personality_description is actually the participant data
+            # We need to generate the binary personality description from the participant data
+            if isinstance(personality_description, dict):
+                # This is participant data, generate binary description
+                binary_desc = generate_binary_personality_description(personality_description)
+                return get_binary_prompt(binary_desc)
+            else:
+                # This is already a personality description string
+                return get_binary_prompt(personality_description)
+        return binary_prompt_generator
+    elif format_type == 'expanded':
+        return get_expanded_prompt
+    elif format_type == 'likert':
+        return get_likert_prompt
+    else:
+        raise ValueError(f"Unknown format type: {format_type}")
+
+def prepare_participant_data_for_format(participant_data: Dict[str, Any], format_type: str) -> Dict[str, Any]:
+    """
+    Prepare participant data for the specific format type.
+    """
+    if format_type == 'binary':
+        # For binary format, we need to create a special structure
+        # The simulation framework expects a 'personality_key' field
+        prepared_data = participant_data.copy()
+        # Generate binary personality description and store it
+        binary_description = generate_binary_personality_description(participant_data)
+        prepared_data['bfi2_binary'] = binary_description
+        return prepared_data
+    elif format_type == 'expanded':
+        # For expanded format, the prompt generator expects the combined_bfi2 field
+        return participant_data
+    elif format_type == 'likert':
+        # For likert format, the prompt generator expects the combined_bfi2 field
+        return participant_data
+    else:
+        raise ValueError(f"Unknown format type: {format_type}")
+
 def recover_participants_for_model(model_info: Dict[str, Any], 
                                  format_config: Dict[str, Any],
                                  dry_run: bool = False) -> Dict[str, Any]:
@@ -285,31 +334,27 @@ def recover_participants_for_model(model_info: Dict[str, Any],
     with open(info['file_path'], 'r') as f:
         original_results = json.load(f)
     
-    # Determine which prompt function to use
+    # Determine format type and create appropriate prompt generator
     format_type = format_config['type']
-    if format_type == 'binary':
-        prompt_func = get_binary_prompt
-    elif format_type == 'expanded':
-        prompt_func = get_expanded_prompt
-    elif format_type == 'likert':
-        prompt_func = get_likert_prompt
-    else:
-        raise ValueError(f"Unknown format type: {format_type}")
+    prompt_generator = create_prompt_generator_for_format(format_type)
     
     # Extract model name for API call
     api_model = model_name.replace('openai_', '').replace('_', '-')
     
     print(f"Attempting to recover {len(info['problematic_indices'])} participants")
     print(f"Using model: {api_model}")
-    print(f"Using prompt function: {prompt_func.__name__}")
+    print(f"Using format type: {format_type}")
     
     # Prepare participants data for recovery
     participants_to_recover = []
     for idx in info['problematic_indices']:
         if idx < len(data):
+            participant_data = data.iloc[idx].to_dict()
+            # Prepare data for the specific format
+            prepared_data = prepare_participant_data_for_format(participant_data, format_type)
             participants_to_recover.append({
                 'original_index': idx,
-                'participant_data': data.iloc[idx].to_dict()
+                'participant_data': prepared_data
             })
     
     if not participants_to_recover:
@@ -324,23 +369,27 @@ def recover_participants_for_model(model_info: Dict[str, Any],
     for p in participants_to_recover:
         recovery_data.append(p['participant_data'])
     
-    recovery_df = pd.DataFrame(recovery_data)
-    
     try:
         # Create simulation config
         config = SimulationConfig(
             model=api_model,
             temperature=1.0,
-            batch_size=5,
-            max_workers=3
+            batch_size=10,
+            max_workers=10
         )
+        
+        # Determine personality key based on format type
+        if format_type == 'binary':
+            personality_key = 'bfi2_binary'  # This will be handled by the binary prompt generator
+        else:
+            personality_key = 'combined_bfi2'
         
         # Run simulation using the framework
         recovery_results = run_batch_simulation(
             participants_data=recovery_data,
-            prompt_generator=prompt_func,
+            prompt_generator=prompt_generator,
             config=config,
-            personality_key='combined_bfi2' if format_type != 'binary' else 'bfi2_binary'
+            personality_key=personality_key
         )
         
         # Update original results with recovered participants
@@ -394,9 +443,15 @@ def main():
             'file_pattern': 'bfi_to_minimarker_binary_*.json'
         },
         {
-            'name': 'Expanded Format',
+            'name': 'Expanded Format (I am)',
             'type': 'expanded',
-            'results_dir': 'study_2_expanded_results',
+            'results_dir': 'study_2_expanded_results_i_am',
+            'file_pattern': 'bfi_to_minimarker_*.json'
+        },
+        {
+            'name': 'Expanded Format (You are)',
+            'type': 'expanded',
+            'results_dir': 'study_2_expanded_results_you_are',
             'file_pattern': 'bfi_to_minimarker_*.json'
         },
         {
