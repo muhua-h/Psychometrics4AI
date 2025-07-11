@@ -34,7 +34,7 @@ reverse_coded_traits = {
 }
 
 # --- 1. Load empirical data ---
-data_path = Path(__file__).parent / 'study_2_expanded_results' / 'study2_preprocessed_data.csv'
+data_path = Path(__file__).parent / 'shared_data' / 'study2_preprocessed_data.csv'
 data = pd.read_csv(data_path)
 
 # Get BFI-2 and Mini-Marker columns

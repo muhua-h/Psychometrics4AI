@@ -77,27 +77,27 @@ reverse_coded_traits = {
 def load_empirical_data(format_type):
     """Load empirical data based on format type."""
     if format_type == 'binary_simple':
-        data_path = Path(__file__).parent / 'study_2_simple_binary_results' / 'study2_preprocessed_data.csv'
+        data_path = Path(__file__).parent / 'shared_data' / 'study2_preprocessed_data.csv'
         if not data_path.exists():
             raise FileNotFoundError(f"Data file not found at {data_path}")
         return pd.read_csv(data_path)
     elif format_type == 'binary_elaborated':
-        data_path = Path(__file__).parent / 'study_2_elaborated_binary_results' / 'study2_preprocessed_data.csv'
+        data_path = Path(__file__).parent / 'shared_data' / 'study2_preprocessed_data.csv'
         if not data_path.exists():
             raise FileNotFoundError(f"Data file not found at {data_path}")
         return pd.read_csv(data_path)
     elif format_type == 'expanded_you_are':
-        data_path = Path(__file__).parent / 'study_2_expanded_results_you_are' / 'study2_preprocessed_data.csv'
+        data_path = Path(__file__).parent / 'shared_data' / 'study2_preprocessed_data.csv'
         if not data_path.exists():
             raise FileNotFoundError(f"Data file not found at {data_path}")
         return pd.read_csv(data_path)
     elif format_type == 'expanded_i_am':
-        data_path = Path(__file__).parent / 'study_2_expanded_results_i_am' / 'study2_preprocessed_data.csv'
+        data_path = Path(__file__).parent / 'shared_data' / 'study2_preprocessed_data.csv'
         if not data_path.exists():
             raise FileNotFoundError(f"Data file not found at {data_path}")
         return pd.read_csv(data_path)
     elif format_type == 'likert':
-        data_path = Path(__file__).parent / 'study_2_likert_results' / 'study2_likert_preprocessed_data.csv'
+        data_path = Path(__file__).parent / 'shared_data' / 'study2_likert_preprocessed_data.csv'
         if not data_path.exists():
             raise FileNotFoundError(f"Data file not found at {data_path}")
         return pd.read_csv(data_path)
@@ -577,7 +577,7 @@ def main():
     std_df = df.groupby('model')[num_cols].std().add_suffix('_std')
     count_df = df.groupby('model')[num_cols].count().add_suffix('_count')
     model_stats = pd.concat([mean_df, std_df, count_df], axis=1)
-    model_stats_path = output_dir.parent / 'model_wise_stats.csv'
+    model_stats_path = output_dir / 'model_wise_stats.csv'
     model_stats.to_csv(model_stats_path)
     print(f"Model-wise table saved: {model_stats_path}")
 
@@ -586,7 +586,7 @@ def main():
     std_df = df.groupby('condition')[num_cols].std().add_suffix('_std')
     count_df = df.groupby('condition')[num_cols].count().add_suffix('_count')
     condition_stats = pd.concat([mean_df, std_df, count_df], axis=1)
-    condition_stats_path = output_dir.parent / 'condition_wise_stats.csv'
+    condition_stats_path = output_dir / 'condition_wise_stats.csv'
     condition_stats.to_csv(condition_stats_path)
     print(f"Condition-wise table saved: {condition_stats_path}")
 
@@ -595,7 +595,7 @@ def main():
     std_df = df.groupby(['model', 'condition'])[num_cols].std().add_suffix('_std')
     count_df = df.groupby(['model', 'condition'])[num_cols].count().add_suffix('_count')
     model_condition_stats = pd.concat([mean_df, std_df, count_df], axis=1)
-    model_condition_stats_path = output_dir.parent / 'model_condition_stats.csv'
+    model_condition_stats_path = output_dir / 'model_condition_stats.csv'
     model_condition_stats.to_csv(model_condition_stats_path)
     print(f"Model+Condition-wise table saved: {model_condition_stats_path}")
 

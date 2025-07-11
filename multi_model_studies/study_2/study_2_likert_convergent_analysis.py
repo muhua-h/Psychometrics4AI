@@ -42,7 +42,7 @@ reverse_coded_traits = {
 
 # --- 1. Load empirical data ---
 data_path = Path(
-    __file__).parent / 'study_2_likert_results' / 'study2_likert_preprocessed_data.csv'
+    __file__).parent / 'shared_data' / 'study2_likert_preprocessed_data.csv'
 if not data_path.exists():
     print(f"Error: Preprocessed data not found at {data_path}")
     print("Please run the Likert format simulation notebook first.")

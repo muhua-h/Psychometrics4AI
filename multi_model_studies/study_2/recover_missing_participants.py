@@ -156,18 +156,18 @@ def analyze_format_for_missing_participants(format_config: Dict[str, Any]) -> Di
     
     # Load empirical data
     if format_type == 'binary_simple':
-        data_path = Path(__file__).parent / 'study_2_simple_binary_results' / 'study2_preprocessed_data.csv'
+        data_path = Path(__file__).parent / 'shared_data' / 'study2_preprocessed_data.csv'
     elif format_type == 'binary_elaborated':
-        data_path = Path(__file__).parent / 'study_2_elaborated_binary_results' / 'study2_preprocessed_data.csv'
+                  data_path = Path(__file__).parent / 'shared_data' / 'study2_preprocessed_data.csv'
     elif format_type == 'expanded':
         # For expanded, use the expanded results directory data
         # Check which expanded directory we're using
         if 'i_am' in results_dir.name:
-            data_path = Path(__file__).parent / 'study_2_expanded_results_i_am' / 'study2_preprocessed_data.csv'
+            data_path = Path(__file__).parent / 'shared_data' / 'study2_preprocessed_data.csv'
         else:
-            data_path = Path(__file__).parent / 'study_2_expanded_results_you_are' / 'study2_preprocessed_data.csv'
+                          data_path = Path(__file__).parent / 'shared_data' / 'study2_preprocessed_data.csv'
     elif format_type == 'likert':
-        data_path = Path(__file__).parent / 'study_2_likert_results' / 'study2_likert_preprocessed_data.csv'
+        data_path = Path(__file__).parent / 'shared_data' / 'study2_likert_preprocessed_data.csv'
     else:
         raise ValueError(f"Unknown format type: {format_type}")
     
