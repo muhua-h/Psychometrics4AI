@@ -1,0 +1,63 @@
+================================================================================
+STUDY 4 UNIFIED MULTI-MODEL BEHAVIORAL ANALYSIS REPORT
+================================================================================
+
+MODEL PERFORMANCE RANKING:
+----------------------------------------
+1. openai-gpt-3.5-turbo-0125
+   Overall Score: 0.321
+   Significant Associations: 1/10 (10.0%)
+   Avg R² (significant): 0.018
+   Consistency Score: 0.917
+
+2. llama
+   Overall Score: 0.292
+   Significant Associations: 0/10 (0.0%)
+   Avg R² (significant): 0.000
+   Consistency Score: 0.972
+
+3. deepseek
+   Overall Score: 0.291
+   Significant Associations: 0/10 (0.0%)
+   Avg R² (significant): 0.000
+   Consistency Score: 0.971
+
+4. gpt-4o
+   Overall Score: 0.288
+   Significant Associations: 0/10 (0.0%)
+   Avg R² (significant): 0.000
+   Consistency Score: 0.958
+
+5. gpt-4
+   Overall Score: 0.285
+   Significant Associations: 0/10 (0.0%)
+   Avg R² (significant): 0.000
+   Consistency Score: 0.950
+
+PERSONALITY TRAIT INSIGHTS:
+----------------------------------------
+Most Predictive Traits:
+  • neuroticism: 10.0% significance rate
+  • openness: 0.0% significance rate
+  • conscientiousness: 0.0% significance rate
+
+Cross-Scenario Patterns:
+  • neuroticism: Moral ← (-0.028), Risk ← (-0.011)
+  • openness: Moral → (0.008), Risk → (0.046)
+  • conscientiousness: Moral ← (-0.013), Risk → (0.009)
+  • extraversion: Moral → (0.019), Risk → (0.064)
+  • agreeableness: Moral ← (-0.032), Risk → (0.075)
+
+KEY FINDINGS:
+----------------------------------------
+• Total significant associations found: 13/300 (4.3%)
+• Best performing model: openai-gpt-3.5-turbo-0125 (overall score: 0.321)
+• Most predictive personality trait: neuroticism (10.0% significance)
+
+RECOMMENDATIONS:
+----------------------------------------
+• Use openai-gpt-3.5-turbo-0125 for future behavioral personality simulations
+• Consider prompt engineering improvements to increase behavioral validity
+• Models show similar performance - ensemble approaches may be beneficial
+
+================================================================================

@@ -1,0 +1,12 @@
+model,scenario_type,significant_count,avg_r_squared,avg_abs_coefficient
+deepseek,moral,12,0.021,0.016
+deepseek,risk,20,0.086,0.05
+gpt-4,moral,16,0.038,0.043
+gpt-4,risk,26,0.137,0.103
+gpt-4o,moral,17,0.071,0.04
+gpt-4o,risk,25,0.154,0.096
+human_baseline,baseline,18,0.025,0.104
+llama,moral,18,0.058,0.017
+llama,risk,17,0.088,0.063
+openai-gpt-3.5-turbo-0125,moral,15,0.02,0.043
+openai-gpt-3.5-turbo-0125,risk,20,0.09,0.139
