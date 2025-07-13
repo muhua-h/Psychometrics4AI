@@ -8,7 +8,7 @@
   ],
   "batch_size": 25,
   "total_participants": 200,
-  "simulation_date": "2025-07-14T01:02:04.706764",
+  "simulation_date": "2025-07-12T21:58:35.114854",
   "data_source": "statistically_simulated_bfi2",
   "format": "likert",
   "results_summary": {
