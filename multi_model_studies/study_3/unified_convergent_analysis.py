@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Unified Convergent Analysis for Study 3 - Multi-Model Simulation
+Unified Convergent Analysis for Study 3 - Multi-Model Multi-Format Simulation
 
 This script analyzes convergent validity between BFI-2 and Mini-Marker scales
-using the exact same approach as the original Study 3 to ensure proper correlations.
+across both likert and expanded formats using multiple LLM models.
 """
 
 import pandas as pd
@@ -18,16 +18,16 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 def load_original_study3_data():
-    """Load the original Study 3 data that achieved good correlations."""
-    # Use the original Study 3 data that achieved 0.679 correlation
-    data_path = Path(__file__).parent.parent.parent / 'study_3' / 'likert_format' / 'facet_lvl_simulated_data.csv'
+    """Load the original Study 3 simulated data."""
+    # Use the facet-level simulated data that's used for both formats
+    data_path = Path(__file__).parent / 'facet_lvl_simulated_data.csv'
     
     if not data_path.exists():
-        raise FileNotFoundError(f"Original Study 3 data file not found: {data_path}")
+        raise FileNotFoundError(f"Study 3 simulated data file not found: {data_path}")
     
     df = pd.read_csv(data_path)
     
-    # The original Study 3 data already has the correct domain scores (bfi_e, bfi_a, etc.)
+    # The Study 3 data already has the correct domain scores (bfi_e, bfi_a, etc.)
     # Use these directly as they already have proper reverse coding applied
     
     # Map them to the expected column names for analysis
@@ -45,11 +45,11 @@ def load_original_study3_data():
     df['tda_n'] = df['bfi_n']
     df['tda_o'] = df['bfi_o']
     
-    logger.info(f"Loaded original Study 3 data: {df.shape}")
+    logger.info(f"Loaded Study 3 simulated data: {df.shape}")
     return df
 
-def aggregate_minimarker_original_study3(df, format_type='likert'):
-    """Aggregate Mini-Marker trait ratings to Big Five domain scores using original Study 3 methodology."""
+def aggregate_minimarker_responses(df, format_type='likert'):
+    """Aggregate Mini-Marker trait ratings to Big Five domain scores."""
     # Use the exact same approach as the original Study 3
     def reverse_score(score):
         return 10 - score
@@ -85,14 +85,14 @@ def aggregate_minimarker_original_study3(df, format_type='likert'):
                         trait_scores = trait_scores.apply(reverse_score)
                     scores.append(trait_scores)
                 else:
-                    logger.warning(f"Trait '{trait}' not found in data")
+                    logger.warning(f"Trait '{trait}' not found in data for {format_type} format")
             
             if scores:
                 # Average the scores for this dimension
                 dimension_scores = pd.concat(scores, axis=1).mean(axis=1)
                 results[f'miniMarker_simulated_{dimension}'] = dimension_scores
             else:
-                logger.warning(f"No traits found for dimension {dimension}")
+                logger.warning(f"No traits found for dimension {dimension} in {format_type} format")
         
         return pd.DataFrame(results)
     
@@ -104,11 +104,11 @@ def aggregate_minimarker_original_study3(df, format_type='likert'):
     for col in big_five_df.columns:
         result_df[col] = big_five_df[col]
     
-    logger.info(f"Aggregated Mini-Marker scores: {big_five_df.shape}")
+    logger.info(f"Aggregated Mini-Marker scores for {format_type} format: {big_five_df.shape}")
     return result_df
 
-def load_simulation_results(results_dir):
-    """Load Mini-Marker simulation results."""
+def load_simulation_results(results_dir, format_type):
+    """Load Mini-Marker simulation results for a specific format."""
     results_dir = Path(results_dir)
     
     if not results_dir.exists():
@@ -147,7 +147,7 @@ def load_simulation_results(results_dir):
                 
                 if responses:
                     simulation_results[model_name] = pd.DataFrame(responses)
-                    logger.info(f"Loaded {len(responses)} responses for {model_name}")
+                    logger.info(f"Loaded {len(responses)} responses for {model_name} ({format_type} format)")
                 else:
                     logger.warning(f"No valid responses found in {json_file}")
                     
@@ -156,12 +156,12 @@ def load_simulation_results(results_dir):
     
     return simulation_results
 
-def calculate_convergent_validity(simulated_data, simulation_results):
-    """Calculate convergent validity correlations."""
+def calculate_convergent_validity(simulated_data, simulation_results, format_type):
+    """Calculate convergent validity correlations for a specific format."""
     results = []
     
     for model_name, sim_df in simulation_results.items():
-        logger.info(f"Analyzing {model_name}...")
+        logger.info(f"Analyzing {model_name} ({format_type} format)...")
         
         # Ensure we have the same number of participants
         n_participants = min(len(simulated_data), len(sim_df))
@@ -169,7 +169,7 @@ def calculate_convergent_validity(simulated_data, simulation_results):
         sim_subset = sim_df.head(n_participants).copy()
         
         # Aggregate Mini-Marker responses
-        sim_aggregated = aggregate_minimarker_original_study3(sim_subset)
+        sim_aggregated = aggregate_minimarker_responses(sim_subset, format_type)
         
         # Calculate correlations between BFI-2 and simulated Mini-Marker
         domain_correlations = {}
@@ -196,7 +196,7 @@ def calculate_convergent_validity(simulated_data, simulation_results):
         
         result = {
             'model': model_name,
-            'format': 'likert',
+            'format': format_type,
             'n_participants': n_participants,
             'avg_correlation': avg_correlation,
             **domain_correlations
@@ -207,40 +207,90 @@ def calculate_convergent_validity(simulated_data, simulation_results):
     
     return results
 
+def analyze_format_differences(results_df):
+    """Analyze differences between likert and expanded formats."""
+    format_stats = {}
+    
+    for format_type in ['likert', 'expanded']:
+        format_data = results_df[results_df['format'] == format_type]
+        if not format_data.empty:
+            format_stats[format_type] = {
+                'mean_correlation': format_data['avg_correlation'].mean(),
+                'std_correlation': format_data['avg_correlation'].std(),
+                'min_correlation': format_data['avg_correlation'].min(),
+                'max_correlation': format_data['avg_correlation'].max(),
+                'n_models': len(format_data['model'].unique())
+            }
+    
+    return format_stats
+
 def main():
     """Main analysis function."""
-    logger.info("Starting unified convergent analysis for Study 3...")
+    logger.info("Starting unified convergent analysis for Study 3 (multi-format)...")
     
-    # Load original Study 3 data
+    # Load Study 3 simulated data
     try:
         simulated_data = load_original_study3_data()
     except FileNotFoundError as e:
-        logger.error(f"Could not load original Study 3 data: {e}")
+        logger.error(f"Could not load Study 3 data: {e}")
         return
     
-    # Load simulation results
-    results_dir = Path(__file__).parent / 'study_3_likert_results'
-    simulation_results = load_simulation_results(results_dir)
+    all_results = []
     
-    if not simulation_results:
-        logger.error("No simulation results found")
+    # Define format configurations
+    format_configs = [
+        {
+            'name': 'likert',
+            'results_dir': Path(__file__).parent / 'study_3_likert_results'
+        },
+        {
+            'name': 'expanded', 
+            'results_dir': Path(__file__).parent / 'study_3_expanded_results'
+        }
+    ]
+    
+    # Analyze each format
+    for config in format_configs:
+        format_name = config['name']
+        results_dir = config['results_dir']
+        
+        logger.info(f"\n{'='*50}")
+        logger.info(f"ANALYZING {format_name.upper()} FORMAT")
+        logger.info(f"{'='*50}")
+        
+        # Load simulation results for this format
+        simulation_results = load_simulation_results(results_dir, format_name)
+        
+        if simulation_results:
+            # Calculate convergent validity
+            format_results = calculate_convergent_validity(simulated_data, simulation_results, format_name)
+            all_results.extend(format_results)
+            
+            logger.info(f"Completed analysis for {format_name} format: {len(format_results)} model results")
+        else:
+            logger.warning(f"No simulation results found for {format_name} format in {results_dir}")
+    
+    if not all_results:
+        logger.error("No results to analyze")
         return
-    
-    # Calculate convergent validity
-    convergent_results = calculate_convergent_validity(simulated_data, simulation_results)
     
     # Save results
     output_dir = Path(__file__).parent / 'unified_analysis_results'
     output_dir.mkdir(exist_ok=True)
     
     # Save detailed results
-    results_df = pd.DataFrame(convergent_results)
+    results_df = pd.DataFrame(all_results)
     results_file = output_dir / 'unified_convergent_results.csv'
     results_df.to_csv(results_file, index=False)
     
     # Generate summary statistics
     summary_stats = {
-        'model_wise_stats': results_df.groupby('model').agg({
+        'model_wise_stats': results_df.groupby(['model', 'format']).agg({
+            'avg_correlation': ['mean', 'std', 'min', 'max'],
+            'n_participants': 'first'
+        }).round(3).to_dict(),
+        
+        'format_wise_stats': results_df.groupby('format').agg({
             'avg_correlation': ['mean', 'std', 'min', 'max'],
             'n_participants': 'first'
         }).round(3).to_dict(),
@@ -250,29 +300,67 @@ def main():
             'std_correlation': results_df['avg_correlation'].std(),
             'min_correlation': results_df['avg_correlation'].min(),
             'max_correlation': results_df['avg_correlation'].max(),
-            'n_models': len(results_df['model'].unique())
+            'n_models': len(results_df['model'].unique()),
+            'n_formats': len(results_df['format'].unique())
         }
     }
     
-    # Save summary
-    summary_file = output_dir / 'model_wise_stats.csv'
-    pd.DataFrame(summary_stats['model_wise_stats']).to_csv(summary_file)
+    # Analyze format differences
+    format_comparison = analyze_format_differences(results_df)
     
-    # Log summary
-    logger.info("\n" + "="*50)
-    logger.info("CONVERGENT VALIDITY ANALYSIS SUMMARY")
-    logger.info("="*50)
+    # Save summary files
+    model_wise_file = output_dir / 'model_wise_stats.csv'
+    results_df.groupby(['model', 'format'])['avg_correlation'].agg(['mean', 'std', 'count']).to_csv(model_wise_file)
+    
+    format_wise_file = output_dir / 'format_wise_stats.csv'
+    results_df.groupby('format')['avg_correlation'].agg(['mean', 'std', 'count']).to_csv(format_wise_file)
+    
+    # Log comprehensive summary
+    logger.info("\n" + "="*70)
+    logger.info("STUDY 3 CONVERGENT VALIDITY ANALYSIS SUMMARY")
+    logger.info("="*70)
     logger.info(f"Overall mean correlation: {summary_stats['overall_stats']['mean_correlation']:.3f}")
     logger.info(f"Standard deviation: {summary_stats['overall_stats']['std_correlation']:.3f}")
     logger.info(f"Range: {summary_stats['overall_stats']['min_correlation']:.3f} - {summary_stats['overall_stats']['max_correlation']:.3f}")
     logger.info(f"Number of models: {summary_stats['overall_stats']['n_models']}")
+    logger.info(f"Number of formats: {summary_stats['overall_stats']['n_formats']}")
     
-    # Log individual model results
-    logger.info("\nIndividual Model Results:")
+    # Log format comparison
+    logger.info("\nFormat Comparison:")
+    for format_name, stats in format_comparison.items():
+        logger.info(f"  {format_name.capitalize()} format:")
+        logger.info(f"    Mean correlation: {stats['mean_correlation']:.3f}")
+        logger.info(f"    Std deviation: {stats['std_correlation']:.3f}")
+        logger.info(f"    Range: {stats['min_correlation']:.3f} - {stats['max_correlation']:.3f}")
+        logger.info(f"    Models tested: {stats['n_models']}")
+    
+    # Log individual model-format results
+    logger.info("\nDetailed Results by Model and Format:")
     for _, row in results_df.iterrows():
-        logger.info(f"  {row['model']}: {row['avg_correlation']:.3f}")
+        logger.info(f"  {row['model']} ({row['format']}): {row['avg_correlation']:.3f}")
     
-    logger.info(f"\nResults saved to: {results_file}")
+    # Find best performing combinations
+    best_overall = results_df.loc[results_df['avg_correlation'].idxmax()]
+    logger.info(f"\nBest performing combination:")
+    logger.info(f"  {best_overall['model']} ({best_overall['format']}): {best_overall['avg_correlation']:.3f}")
+    
+    # Compare formats if both are available
+    if len(format_comparison) == 2:
+        likert_mean = format_comparison.get('likert', {}).get('mean_correlation', 0)
+        expanded_mean = format_comparison.get('expanded', {}).get('mean_correlation', 0)
+        difference = expanded_mean - likert_mean
+        logger.info(f"\nFormat Comparison:")
+        logger.info(f"  Expanded format advantage: {difference:+.3f}")
+        if abs(difference) > 0.01:
+            better_format = "expanded" if difference > 0 else "likert"
+            logger.info(f"  {better_format.capitalize()} format performs better")
+        else:
+            logger.info(f"  Formats perform similarly")
+    
+    logger.info(f"\nResults saved to:")
+    logger.info(f"  Detailed results: {results_file}")
+    logger.info(f"  Model-wise stats: {model_wise_file}")
+    logger.info(f"  Format-wise stats: {format_wise_file}")
     logger.info("Analysis complete!")
 
 if __name__ == "__main__":

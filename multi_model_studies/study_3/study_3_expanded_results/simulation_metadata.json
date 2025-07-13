@@ -1,0 +1,26 @@
+{
+  "simulation_type": "study_3_expanded",
+  "models_tested": [
+    "openai-gpt-3.5-turbo-0125"
+  ],
+  "temperatures": [
+    1
+  ],
+  "batch_size": 25,
+  "total_participants": 200,
+  "simulation_date": "2025-07-13T23:06:45.909344",
+  "data_source": "statistically_simulated_bfi2",
+  "format": "expanded",
+  "key_differences_from_likert": [
+    "No reverse coding applied - data already in correct format",
+    "Uses expanded_scale mapping instead of likert_scale",
+    "Uses get_expanded_prompt instead of get_likert_prompt",
+    "Descriptions are narrative (\"You are very...\")"
+  ],
+  "results_summary": {
+    "openai-gpt-3.5-turbo-0125_temp1": {
+      "total": 200,
+      "successful": 200
+    }
+  }
+}
