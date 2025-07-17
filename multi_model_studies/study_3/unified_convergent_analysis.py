@@ -120,7 +120,7 @@ def load_simulation_results(results_dir, format_type):
     # Look for JSON files with simulation results
     for json_file in results_dir.glob("*.json"):
         if json_file.name.startswith("bfi_to_minimarker"):
-            model_name = json_file.stem.replace("bfi_to_minimarker_", "").replace("_temp1.0", "").replace("_temp1", "")
+            model_name = json_file.stem.replace("bfi_to_minimarker_", "").replace("bfi_to_minimarker_binary_", "").replace("_temp1.0", "").replace("_temp1", "")
             
             try:
                 with open(json_file, 'r') as f:
@@ -246,6 +246,10 @@ def main():
         {
             'name': 'expanded', 
             'results_dir': Path(__file__).parent / 'study_3_expanded_results'
+        },
+        {
+            'name': 'binary',
+            'results_dir': Path(__file__).parent / 'study_3_binary_results'
         }
     ]
     
