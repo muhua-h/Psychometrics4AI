@@ -248,8 +248,12 @@ def main():
             'results_dir': Path(__file__).parent / 'study_3_expanded_results'
         },
         {
-            'name': 'binary',
-            'results_dir': Path(__file__).parent / 'study_3_binary_results'
+            'name': 'binary_simple',
+            'results_dir': Path(__file__).parent / 'study_3_binary_simple_results'
+        },
+        {
+            'name': 'binary_expanded',
+            'results_dir': Path(__file__).parent / 'study_3_binary_expanded_results'
         }
     ]
     
