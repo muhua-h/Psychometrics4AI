@@ -13,7 +13,7 @@ Models to Test:
 
 Data Flow:
 1. Load York human behavioral data
-2. Extract personality descriptions (bfi_combined)
+2. Extract personality descriptions (bfi_expanded)
 3. Generate moral scenario prompts using moral_stories.py
 4. Run simulations across multiple models
 5. Save results for behavioral validation analysis
@@ -95,7 +95,7 @@ def process_participant_moral_with_retry(participant_data, model, temperature=0.
     """Process a single participant with enhanced retry logic"""
     try:
         # Get personality description
-        personality = participant_data['bfi_combined']
+        personality = participant_data['bfi_expanded']
         
         # Generate moral scenario prompt
         prompt = get_prompt(personality)
@@ -143,17 +143,17 @@ def process_participant_moral(participant_data, model, temperature=0.0):
 
 def load_york_data():
     """Load and preprocess York behavioral data"""
-    data_path = Path('../../study_4/simulation/data_w_simulation.csv')
+    data_path = Path('../../raw_data/york_data_clean.csv')
     if not data_path.exists():
         raise FileNotFoundError(f"Data file not found: {data_path}")
 
     data = pd.read_csv(data_path)
     print(f"Loaded York data shape: {data.shape}")
 
-    # Filter for completed responses with good English comprehension
-    data = data[data['Finished'] == 1]
+    # Filter for good English comprehension (value 5 = excellent)
     data = data[data['8) English language reading/comprehension ability:'] == 5]
-    data = data.dropna(subset=[data.columns[17]])  # Remove null values in 18th column
+    # Remove rows with null values in bfi6 column (index 17)
+    data = data.dropna(subset=[data.columns[17]])
 
     print(f"Filtered data shape: {data.shape}")
     return data

@@ -25,16 +25,16 @@ from scipy.stats import pearsonr
 
 def load_human_data():
     """Load human personality and behavioral data"""
-    data_path = Path('../../study_4/simulation/data_w_simulation.csv')
+    data_path = Path('../../raw_data/york_data_clean.csv')
     if not data_path.exists():
         raise FileNotFoundError(f"Data file not found: {data_path}")
     
     data = pd.read_csv(data_path)
     print(f"Loaded human data shape: {data.shape}")
     
-    # Apply same filtering as simulation
-    data = data[data['Finished'] == 1]
+    # Filter for good English comprehension (value 5 = excellent)
     data = data[data['8) English language reading/comprehension ability:'] == 5]
+    # Remove rows with null values in bfi6 column (index 17)
     data = data.dropna(subset=[data.columns[17]])
     
     print(f"Filtered human data shape: {data.shape}")
