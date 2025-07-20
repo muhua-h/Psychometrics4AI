@@ -55,20 +55,25 @@ multi_model_studies/
 
 ## Studies Description
 
-### Study 2: Personality Assignment Validation
+### Study 2: ✅ **COMPLETED** - Personality Assignment Validation
 - **Purpose**: Validate BFI-2 to Mini-Marker personality assignment
-- **Models**: Tests both expanded format and Likert-style descriptions
+- **Models**: Tests binary, expanded, and likert formats across 5 models
 - **Output**: Mini-Marker trait ratings from personality descriptions
+- **Status**: Full implementation with unified analysis framework
+- **Pending**: Factor analysis implementation (R script adaptation needed)
 
-### Study 3: Facet-Level Parameter Extraction
+### Study 3: ✅ **COMPLETED** - Facet-Level Parameter Extraction
 - **Purpose**: Extract and validate personality at the facet level (12 facets vs 5 domains)
 - **Features**: Advanced psychometric analysis with facet-level correlations
-- **Comparison**: Expanded format vs. Likert format effectiveness
+- **Comparison**: Binary, expanded, and likert format effectiveness across 5 models
+- **Status**: Full implementation with statistical data generation and multi-format analysis
+- **Pending**: Factor analysis implementation (R script adaptation needed)
 
-### Study 4: Behavioral Validation
+### Study 4: ✅ **COMPLETED** - Behavioral Validation
 - **Purpose**: Test personality effects on moral reasoning and risk-taking behavior
-- **Scenarios**: 5 moral dilemmas + risk assessment tasks
+- **Scenarios**: 5 moral dilemmas + risk assessment tasks across multiple formats
 - **Validation**: Compare LLM responses to empirical human behavioral data
+- **Status**: Full implementation with generalized framework and unified analysis
 
 ## Usage
 
@@ -101,49 +106,62 @@ Each study creates organized output directories:
 
 ### Study 2 Results
 ```
-study_2_results/
-├── bfi_to_minimarker_gpt_4_temp0_0.json
+study_2_*_results/
+├── bfi_to_minimarker_gpt_4_temp1_0.json
 ├── bfi_to_minimarker_gpt_4o_temp1_0.json
-├── bfi_to_minimarker_llama_temp0_0.json
+├── bfi_to_minimarker_llama_temp1_0.json
 ├── bfi_to_minimarker_deepseek_temp1_0.json
-└── study2_preprocessed_data.csv
+└── bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1_0.json
+
+unified_analysis_results/
+├── condition_wise_stats.csv
+├── model_condition_stats.csv
+├── model_wise_stats.csv
+└── unified_convergent_results.csv
 ```
 
 ### Study 3 Results
 ```
-study_3_results/
-├── expanded_format/
-│   ├── bfi_to_minimarker_gpt_4_temp0_0.json
-│   └── ...
-├── likert_format/
-│   ├── bfi_to_minimarker_likert_gpt_4_temp0_0.json
-│   └── ...
-├── study3_data_with_facets.csv
-├── facet_scores.csv
-├── domain_scores.csv
-└── study3_experiment_summary.json
+study_3_*_results/
+├── bfi_to_minimarker_gpt_4_temp1_0.json
+├── bfi_to_minimarker_gpt_4o_temp1_0.json
+├── bfi_to_minimarker_llama_temp1_0.json
+├── bfi_to_minimarker_deepseek_temp1_0.json
+└── bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1_0.json
+
+unified_analysis_results/
+├── format_wise_stats.csv
+├── model_wise_stats.csv
+└── unified_convergent_results.csv
 ```
 
 ### Study 4 Results
 ```
-study_4_results/
-├── moral/
-│   ├── moral_simulation_gpt_4_temp0_0.json
-│   └── ...
-├── risk/
-│   ├── risk_simulation_gpt_4_temp0_0.json
-│   └── ...
-└── experiment_summary.json
+study_4_*_results/
+├── moral_{model}_temp0_0.json
+├── risk_{model}_temp0_0.json
+└── *_retried.json
+
+study_4_generalized_results/
+├── bfi_binary_elaborated_format/
+├── bfi_binary_simple_format/
+├── bfi_expanded_format/
+└── bfi_likert_format/
+
+unified_behavioral_analysis_results/
+├── model_performance_rankings.csv
+├── personality_trait_patterns.csv
+└── coefficient_heatmap_unified.png
 ```
 
 ## Analysis Workflow
 
 After running simulations:
 
-1. **Data Processing**: Use the original `process_json_*.ipynb` notebooks to process JSON results
-2. **Statistical Analysis**: Run the original `analysis.ipynb` notebooks for statistical comparisons
-3. **Factor Analysis**: Use the existing R scripts (`factor_analysis.R`) for psychometric validation
-4. **Cross-Model Comparison**: Compare results across models to assess consistency
+1. **Data Processing**: Use the unified analysis scripts to process JSON results
+2. **Statistical Analysis**: Run the unified analysis scripts for comprehensive statistical comparisons
+3. **Cross-Model Comparison**: Compare results across models to assess consistency
+4. **Factor Analysis**: 🔄 Pending - adapt original R scripts (`factor_analysis.R`) for multi-model results
 
 ## Error Handling
 
@@ -166,6 +184,16 @@ The refactored code includes robust error handling:
 - **JSON Format**: Maintains the same JSON structure as original studies
 - **Data Schema**: Preserves all original data fields and formats
 
+## Current Status
+
+### Completed Studies
+- **Study 2**: ✅ Full multi-model personality assignment validation
+- **Study 3**: ✅ Full multi-model facet-level parameter extraction
+- **Study 4**: ✅ Full multi-model behavioral validation
+
+### Pending Implementation
+- **Factor Analysis**: 🔄 R script adaptation for Studies 2 and 3 multi-model results
+
 ## Future Extensions
 
 The modular design makes it easy to:
@@ -173,6 +201,7 @@ The modular design makes it easy to:
 - Implement new personality scales by adding schema files
 - Create new study types using the shared utilities
 - Extend to other psychometric constructs
+- Complete factor analysis implementation for comprehensive validation
 
 ## Troubleshooting
 

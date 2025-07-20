@@ -1,12 +1,16 @@
 # Study 4 Multi-Model Behavioral Validation
 
-This directory contains the multi-model replication of the original Study 4, which validates personality-driven behavioral responses in moral reasoning and risk-taking scenarios across multiple LLM models.
+This directory contains the **COMPLETED** multi-model replication of the original Study 4, which validates personality-driven behavioral responses in moral reasoning and risk-taking scenarios across multiple LLM models.
 
 ## Overview
 
-Study 4 extends the original single-model behavioral validation to compare how different LLMs simulate human personality-driven decision-making in:
+Study 4 has been fully implemented and extends the original single-model behavioral validation to compare how different LLMs simulate human personality-driven decision-making in:
 - **Moral reasoning scenarios**: Ethical dilemmas testing empathy vs. rule-following
 - **Risk-taking scenarios**: Decision situations testing risk aversion vs. opportunity-seeking
+
+## Implementation Status
+
+✅ **COMPLETED**: Full multi-model behavioral validation framework
 
 ## Directory Structure
 
@@ -18,8 +22,11 @@ study_4/
 ├── study_4_moral_behavioral_analysis.py        # Moral validation analysis
 ├── study_4_risk_behavioral_analysis.py         # Risk validation analysis
 ├── unified_behavioral_analysis.py              # Cross-scenario unified analysis
+├── study_4_generalized_combined_simulation.py  # Generalized simulation framework
+├── study_4_generalized_behavioral_analysis.py  # Generalized analysis framework
 ├── study_4_moral_results/                      # Moral simulation outputs
 ├── study_4_risk_results/                       # Risk simulation outputs
+├── study_4_generalized_results/                # Generalized simulation outputs
 └── unified_behavioral_analysis_results/        # Combined analysis outputs
 ```
 
@@ -59,6 +66,15 @@ python study_4_risk_multi_model_simulation.py
 - Parallel processing with retry logic
 - Saves results to `study_4_risk_results/`
 
+**Generalized Framework** (`study_4_generalized_combined_simulation.py`):
+```bash
+python study_4_generalized_combined_simulation.py
+```
+- Unified framework for both moral and risk scenarios
+- Supports multiple personality formats (binary, expanded, likert)
+- Comprehensive multi-model testing across all formats
+- Saves results to `study_4_generalized_results/`
+
 ### 2. Validation Analysis
 
 **Moral Analysis** (`study_4_moral_behavioral_analysis.py`):
@@ -78,6 +94,15 @@ python study_4_risk_behavioral_analysis.py
 - Validates personality → risk behavior relationships
 - Cross-model comparison of behavioral patterns
 
+**Generalized Analysis** (`study_4_generalized_behavioral_analysis.py`):
+```bash
+python study_4_generalized_behavioral_analysis.py
+```
+- Unified analysis framework for both scenarios
+- Cross-format comparison of behavioral patterns
+- Comprehensive model performance evaluation
+- Advanced statistical modeling and visualization
+
 ### 3. Unified Analysis
 
 **Combined Analysis** (`unified_behavioral_analysis.py`):
@@ -89,6 +114,15 @@ python unified_behavioral_analysis.py
 - Cross-scenario personality pattern analysis
 - Comprehensive visualization dashboard
 - Summary report with recommendations
+
+**Generalized Analysis** (`study_4_generalized_behavioral_analysis.py`):
+```bash
+python study_4_generalized_behavioral_analysis.py
+```
+- Advanced unified analysis across all formats and scenarios
+- Cross-format behavioral pattern comparison
+- Comprehensive model performance evaluation
+- Advanced statistical modeling and visualization
 
 ## Key Analysis Metrics
 
@@ -143,6 +177,10 @@ python study_4_risk_multi_model_simulation.py
 python study_4_moral_behavioral_analysis.py  
 python study_4_risk_behavioral_analysis.py
 python unified_behavioral_analysis.py
+
+# Or use generalized framework
+python study_4_generalized_combined_simulation.py
+python study_4_generalized_behavioral_analysis.py
 ```
 
 ### Individual Model Testing
@@ -162,11 +200,24 @@ results = run_moral_simulation(participants, 'gpt-4', 0.0, 'test_output/')
 - `risk_{model}_temp0.0.json`: Raw risk scenario responses
 - `*_retried.json`: Results after failed participant retry
 
+### Generalized Results
+- `study_4_generalized_results/`: Comprehensive results across all formats and scenarios
+  - `bfi_binary_elaborated_format/`: Binary elaborated format results
+  - `bfi_binary_simple_format/`: Binary simple format results
+  - `bfi_expanded_format/`: Expanded format results
+  - `bfi_likert_format/`: Likert format results
+
 ### Analysis Results  
 - `moral_regression_results.csv`: Personality→moral regression coefficients
 - `risk_regression_results.csv`: Personality→risk regression coefficients
 - `*_coefficients_heatmap.png`: Visualization of trait effects
 - `*_significance_counts.png`: Model comparison charts
+
+### Generalized Analysis Results
+- `study_4_generalized_analysis_results/`: Comprehensive analysis results
+  - `aggregated_measures_coefficients.png`: Cross-format coefficient visualization
+  - `aggregated_measures_regression_results.csv`: Unified regression results
+  - `complete_regression_results.csv`: Complete statistical analysis
 
 ### Unified Analysis
 - `unified_analysis_report.txt`: Comprehensive findings summary
@@ -228,3 +279,11 @@ When using this implementation, please cite both the original Study 4 methodolog
 
 **Status**: ✅ **FULLY IMPLEMENTED** - Ready for execution and analysis
 **Next Steps**: Run simulation pipeline and analyze cross-model behavioral validation results
+
+## Key Enhancements
+
+### Generalized Framework
+- **Multi-Format Support**: Binary (simple/elaborated), expanded, and likert formats
+- **Unified Analysis**: Comprehensive cross-format behavioral pattern analysis
+- **Advanced Statistics**: Enhanced regression modeling and visualization
+- **Scalable Architecture**: Easy extension to additional scenarios and formats

@@ -10,7 +10,31 @@ This serves as a baseline comparison to the more complex expanded and likert for
 
 import schema_tda
 
-# Domain names and their corresponding binary descriptions
+# # Baseline Simple: Domain descriptions for binary personality traits
+# DOMAIN_DESCRIPTIONS = {
+#     'bfi2_e': {
+#         'high': "You are high in Extraversion.",
+#         'low': "You are low in Extraversion."
+#     },
+#     'bfi2_a': {
+#         'high': "You are high in Agreeableness.",
+#         'low': "You are low in Agreeableness."
+#     },
+#     'bfi2_c': {
+#         'high': "You are high in Conscientiousness.",
+#         'low': "You are low in Conscientiousness."
+#     },
+#     'bfi2_n': {
+#         'high': "You are high in Neuroticism.",
+#         'low': "You are low in Neuroticism."
+#     },
+#     'bfi2_o': {
+#         'high': "You are high in Openness.",
+#         'low': "You are low in Openness."
+#     }
+# }
+## Note: uncomment the following lines to use the elaborated descriptions instead of the simple ones
+# Baseline Elaborated: Domain names and their corresponding binary descriptions
 DOMAIN_DESCRIPTIONS = {
     'bfi2_e': {
         'high': "You are high in Extraversion. You are outgoing, sociable, assertive, and energetic.",
