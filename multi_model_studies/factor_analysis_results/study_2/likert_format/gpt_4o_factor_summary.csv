@@ -1,0 +1,6 @@
+Study,Format,Model,Structure_Type,Factor_Domain,N_Items,N_Participants,Alpha,Omega,Eigenvalue,Variance_Explained,Mean_Loading_Abs,Max_Loading_Abs,Min_Loading_Abs,RMSEA,CFI,TLI,SRMR,Total_Variance_Explained,N_Factors_Total,File_Source
+STUDY_2,likert,gpt_4o,Original,Extraversion,8,438,0.9560340340435293,0,5.823667621256375,0.7279584526570468,0.844363224414034,0.9638785957637239,0.6470838713241284,0,0,0,0,0,5,study_2_likert_results_bfi_to_minimarker_gpt_4o
+STUDY_2,likert,gpt_4o,Original,Agreeableness,8,438,0.93987540252841,0,5.469229886137518,0.6836537357671898,0.8217669781682508,0.9269952612181196,0.6336934458152846,0,0,0,0,0,5,study_2_likert_results_bfi_to_minimarker_gpt_4o
+STUDY_2,likert,gpt_4o,Original,Conscientiousness,8,438,0.9210279357104847,0,4.779212290958407,0.5974015363698009,0.761954213216951,0.9419997242509435,0.5470161674465887,0,0,0,0,0,5,study_2_likert_results_bfi_to_minimarker_gpt_4o
+STUDY_2,likert,gpt_4o,Original,Neuroticism,7,438,0.9069904704749793,0,4.148853510703588,0.5926933586719411,0.756708435159417,0.9696874795665302,0.5935802668651383,0,0,0,0,0,5,study_2_likert_results_bfi_to_minimarker_gpt_4o
+STUDY_2,likert,gpt_4o,Original,Openness,8,438,0.9184175293372674,0,4.623460031630712,0.577932503953839,0.7471927338167853,0.9545734695322982,0.5631371139919715,0,0,0,0,0,5,study_2_likert_results_bfi_to_minimarker_gpt_4o
