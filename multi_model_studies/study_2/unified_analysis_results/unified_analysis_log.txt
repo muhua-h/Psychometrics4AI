@@ -1,5 +1,5 @@
 === UNIFIED CONVERGENT VALIDITY ANALYSIS ===
-Analysis started at: 2025-07-13 22:54:44
+Analysis started at: 2025-08-07 22:18:45
 Log file: /Users/mhhuang/Psychometrics4AI_revision/multi_model_studies/study_2/unified_analysis_results/unified_analysis_log.txt
 ============================================================
 
@@ -78,7 +78,7 @@ Found 5 model files
   Original vs Simulated avg: 0.406
 
 ============================================================
-ANALYZING EXPANDED (YOU ARE)
+ANALYZING EXPANDED FORMAT
 ============================================================
 Loaded 438 participants
 Found 5 model files
@@ -112,42 +112,6 @@ Found 5 model files
   BFI-2 vs Original avg: 0.802
   BFI-2 vs Simulated avg: 0.773
   Original vs Simulated avg: 0.682
-
-============================================================
-ANALYZING EXPANDED (I AM)
-============================================================
-Loaded 438 participants
-Found 5 model files
-
---- Processing deepseek ---
-  Final participants: 438
-  BFI-2 vs Original avg: 0.802
-  BFI-2 vs Simulated avg: 0.889
-  Original vs Simulated avg: 0.787
-
---- Processing gpt_4 ---
-  Final participants: 438
-  BFI-2 vs Original avg: 0.802
-  BFI-2 vs Simulated avg: 0.847
-  Original vs Simulated avg: 0.763
-
---- Processing llama ---
-  Final participants: 438
-  BFI-2 vs Original avg: 0.802
-  BFI-2 vs Simulated avg: 0.901
-  Original vs Simulated avg: 0.792
-
---- Processing gpt_4o ---
-  Final participants: 438
-  BFI-2 vs Original avg: 0.802
-  BFI-2 vs Simulated avg: 0.899
-  Original vs Simulated avg: 0.796
-
---- Processing openai_gpt_3.5_turbo_0125 ---
-  Final participants: 438
-  BFI-2 vs Original avg: 0.802
-  BFI-2 vs Simulated avg: 0.781
-  Original vs Simulated avg: 0.688
 
 ============================================================
 ANALYZING LIKERT FORMAT
@@ -414,7 +378,7 @@ Interpretation:
   Worst performing domain: Agreeableness (r = 0.281)
 
 ================================================================================
-DETAILED CONVERGENT VALIDITY RESULTS - EXPANDED (YOU ARE)
+DETAILED CONVERGENT VALIDITY RESULTS - EXPANDED FORMAT
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -526,120 +490,6 @@ Interpretation:
 
   Best performing domain: Extraversion (r = 0.861)
   Worst performing domain: Agreeableness (r = 0.605)
-
-================================================================================
-DETAILED CONVERGENT VALIDITY RESULTS - EXPANDED (I AM)
-================================================================================
-
---------------------------------------------------------------------------------
-MODEL: DEEPSEEK (n=438)
---------------------------------------------------------------------------------
-
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.906        0.859       
-Agreeableness        0.796        0.882        0.772       
-Conscientiousness    0.840        0.920        0.835       
-Neuroticism          0.738        0.931        0.742       
-Openness             0.750        0.805        0.725       
-------------------------------------------------------------
-AVERAGE              0.802        0.889        0.787       
-
-Interpretation:
-  • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
-  • BFI-Sim: Simulation validity (BFI-2 vs Simulated Mini-Marker)
-  • Orig-Sim: Direct comparison (Original vs Simulated Mini-Marker)
-
-  Best performing domain: Neuroticism (r = 0.931)
-  Worst performing domain: Openness (r = 0.805)
-
---------------------------------------------------------------------------------
-MODEL: GPT_4 (n=438)
---------------------------------------------------------------------------------
-
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.912        0.862       
-Agreeableness        0.796        0.788        0.708       
-Conscientiousness    0.840        0.852        0.796       
-Neuroticism          0.738        0.901        0.733       
-Openness             0.750        0.784        0.717       
-------------------------------------------------------------
-AVERAGE              0.802        0.847        0.763       
-
-Interpretation:
-  • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
-  • BFI-Sim: Simulation validity (BFI-2 vs Simulated Mini-Marker)
-  • Orig-Sim: Direct comparison (Original vs Simulated Mini-Marker)
-
-  Best performing domain: Extraversion (r = 0.912)
-  Worst performing domain: Openness (r = 0.784)
-
---------------------------------------------------------------------------------
-MODEL: LLAMA (n=438)
---------------------------------------------------------------------------------
-
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.922        0.870       
-Agreeableness        0.796        0.897        0.750       
-Conscientiousness    0.840        0.916        0.829       
-Neuroticism          0.738        0.921        0.762       
-Openness             0.750        0.849        0.751       
-------------------------------------------------------------
-AVERAGE              0.802        0.901        0.792       
-
-Interpretation:
-  • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
-  • BFI-Sim: Simulation validity (BFI-2 vs Simulated Mini-Marker)
-  • Orig-Sim: Direct comparison (Original vs Simulated Mini-Marker)
-
-  Best performing domain: Extraversion (r = 0.922)
-  Worst performing domain: Openness (r = 0.849)
-
---------------------------------------------------------------------------------
-MODEL: GPT_4O (n=438)
---------------------------------------------------------------------------------
-
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.919        0.879       
-Agreeableness        0.796        0.899        0.785       
-Conscientiousness    0.840        0.923        0.828       
-Neuroticism          0.738        0.932        0.761       
-Openness             0.750        0.823        0.729       
-------------------------------------------------------------
-AVERAGE              0.802        0.899        0.796       
-
-Interpretation:
-  • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
-  • BFI-Sim: Simulation validity (BFI-2 vs Simulated Mini-Marker)
-  • Orig-Sim: Direct comparison (Original vs Simulated Mini-Marker)
-
-  Best performing domain: Neuroticism (r = 0.932)
-  Worst performing domain: Openness (r = 0.823)
-
---------------------------------------------------------------------------------
-MODEL: OPENAI_GPT_3.5_TURBO_0125 (n=438)
---------------------------------------------------------------------------------
-
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.863        0.816       
-Agreeableness        0.796        0.608        0.582       
-Conscientiousness    0.840        0.835        0.764       
-Neuroticism          0.738        0.814        0.655       
-Openness             0.750        0.786        0.624       
-------------------------------------------------------------
-AVERAGE              0.802        0.781        0.688       
-
-Interpretation:
-  • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
-  • BFI-Sim: Simulation validity (BFI-2 vs Simulated Mini-Marker)
-  • Orig-Sim: Direct comparison (Original vs Simulated Mini-Marker)
-
-  Best performing domain: Extraversion (r = 0.863)
-  Worst performing domain: Agreeableness (r = 0.608)
 
 ================================================================================
 DETAILED CONVERGENT VALIDITY RESULTS - LIKERT FORMAT
@@ -790,22 +640,7 @@ FORMAT AVERAGE            0.802        0.869        0.769
 FORMAT STD                0.000        0.055        0.043       
 
 --------------------------------------------------------------------------------
-FORMAT: ELABORATED BINARY
---------------------------------------------------------------------------------
-
-Model                     BFI-Orig     BFI-Sim      Orig-Sim    
------------------------------------------------------------------
-llama                     0.802        0.561        0.469       
-gpt_4o                    0.802        0.580        0.485       
-deepseek                  0.802        0.557        0.462       
-gpt_4                     0.802        0.572        0.472       
-openai_gpt_3.5_turbo_0125 0.803        0.492        0.406       
------------------------------------------------------------------
-FORMAT AVERAGE            0.802        0.552        0.459       
-FORMAT STD                0.000        0.031        0.028       
-
---------------------------------------------------------------------------------
-FORMAT: EXPANDED (YOU ARE)
+FORMAT: EXPANDED FORMAT
 --------------------------------------------------------------------------------
 
 Model                     BFI-Orig     BFI-Sim      Orig-Sim    
@@ -820,19 +655,19 @@ FORMAT AVERAGE            0.802        0.865        0.764
 FORMAT STD                0.000        0.048        0.042       
 
 --------------------------------------------------------------------------------
-FORMAT: EXPANDED (I AM)
+FORMAT: ELABORATED BINARY
 --------------------------------------------------------------------------------
 
 Model                     BFI-Orig     BFI-Sim      Orig-Sim    
 -----------------------------------------------------------------
-deepseek                  0.802        0.889        0.787       
-gpt_4                     0.802        0.847        0.763       
-llama                     0.802        0.901        0.792       
-gpt_4o                    0.802        0.899        0.796       
-openai_gpt_3.5_turbo_0125 0.802        0.781        0.688       
+llama                     0.802        0.561        0.469       
+gpt_4o                    0.802        0.580        0.485       
+deepseek                  0.802        0.557        0.462       
+gpt_4                     0.802        0.572        0.472       
+openai_gpt_3.5_turbo_0125 0.803        0.492        0.406       
 -----------------------------------------------------------------
-FORMAT AVERAGE            0.802        0.863        0.765       
-FORMAT STD                0.000        0.046        0.040       
+FORMAT AVERAGE            0.802        0.552        0.459       
+FORMAT STD                0.000        0.031        0.028       
 
 ================================================================================
 OVERALL FORMAT COMPARISON
@@ -842,9 +677,8 @@ Format               BFI-Orig     BFI-Sim      Orig-Sim
 ------------------------------------------------------------
 Simple Binary        0.802        0.551        0.461       
 Likert Format        0.802        0.869        0.769       
+Expanded Format      0.802        0.865        0.764       
 Elaborated Binary    0.802        0.552        0.459       
-Expanded (You Are)   0.802        0.865        0.764       
-Expanded (I Am)      0.802        0.863        0.765       
 
 ============================================================
 PERFORMANCE HIGHLIGHTS
@@ -862,10 +696,9 @@ Worst performing combination:
 
 Format rankings by BFI-Sim correlation:
   1. Likert Format: 0.869
-  2. Expanded (You Are): 0.865
-  3. Expanded (I Am): 0.863
-  4. Elaborated Binary: 0.552
-  5. Simple Binary: 0.551
+  2. Expanded Format: 0.865
+  3. Elaborated Binary: 0.552
+  4. Simple Binary: 0.551
 
 ============================================================
 ANALYSIS COMPLETE

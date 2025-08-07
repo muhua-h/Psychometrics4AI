@@ -441,15 +441,9 @@ def main():
             'file_pattern': 'bfi_to_minimarker_binary_*.json'
         },
         {
-            'name': 'Expanded Format (I am)',
+            'name': 'Expanded Format',
             'type': 'expanded',
-            'results_dir': 'study_2_expanded_results_i_am',
-            'file_pattern': 'bfi_to_minimarker_*.json'
-        },
-        {
-            'name': 'Expanded Format (You are)',
-            'type': 'expanded',
-            'results_dir': 'study_2_expanded_results_you_are',
+            'results_dir': 'study_2_expanded_results',
             'file_pattern': 'bfi_to_minimarker_*.json'
         },
         {
