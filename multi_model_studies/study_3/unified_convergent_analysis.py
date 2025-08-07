@@ -208,10 +208,10 @@ def calculate_convergent_validity(simulated_data, simulation_results, format_typ
     return results
 
 def analyze_format_differences(results_df):
-    """Analyze differences between likert and expanded formats."""
+    """Analyze differences between all formats."""
     format_stats = {}
     
-    for format_type in ['likert', 'expanded']:
+    for format_type in results_df['format'].unique():
         format_data = results_df[results_df['format'] == format_type]
         if not format_data.empty:
             format_stats[format_type] = {
@@ -252,8 +252,8 @@ def main():
             'results_dir': Path(__file__).parent / 'study_3_binary_simple_results'
         },
         {
-            'name': 'binary_expanded',
-            'results_dir': Path(__file__).parent / 'study_3_binary_expanded_results'
+            'name': 'binary_elaborated',
+            'results_dir': Path(__file__).parent / 'study_3_binary_elaborated_results'
         }
     ]
     

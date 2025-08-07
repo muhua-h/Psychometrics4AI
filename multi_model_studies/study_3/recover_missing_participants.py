@@ -616,10 +616,16 @@ def main():
     # Define format configurations for Study 3
     format_configs = [
         {
-            'name': 'Binary Format',
+            'name': 'Binary Simple Format',
             'type': 'binary',
-            'results_dir': 'study_3_binary_results',
-            'file_pattern': 'bfi_to_minimarker_binary_*.json'
+            'results_dir': 'study_3_binary_simple_results',
+            'file_pattern': 'bfi_to_minimarker_*.json'
+        },
+        {
+            'name': 'Binary Elaborated Format',
+            'type': 'binary',
+            'results_dir': 'study_3_binary_elaborated_results',
+            'file_pattern': 'bfi_to_minimarker_*.json'
         },
         {
             'name': 'Expanded Format',
