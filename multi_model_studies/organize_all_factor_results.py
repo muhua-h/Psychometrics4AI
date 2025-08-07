@@ -2,31 +2,107 @@
 Organize Factor Analysis Results into CSV Format
 Includes ALL formats: binary, expanded, and Likert
 
-This script reads the unified factor analysis JSON results and organizes them
-into CSV files with one model per table, separated by format directories.
+This script manages factor analysis results by:
+1. Checking existing organized CSV results
+2. Identifying missing formats/models
+3. Optionally running factor analysis for missing data
+4. Creating comprehensive cross-format comparisons
 """
 
 import json
 import pandas as pd
 from pathlib import Path
 import logging
+import sys
+from typing import Dict, List, Set, Tuple
+
+# Add shared directory to path for imports
+sys.path.append(str(Path(__file__).parent / "shared"))
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def extract_format_from_filename(filename):
-    """Extract format type from filename"""
-    filename_lower = filename.lower()
-    if 'binary' in filename_lower:
-        return 'binary_format'
-    elif 'expanded' in filename_lower or 'i_am' in filename_lower:
-        return 'expanded_format'  
-    elif 'likert' in filename_lower:
-        return 'likert_format'
-    else:
-        # Try to determine from file structure or default
-        return 'expanded_format'  # Default assumption
+def check_existing_results():
+    """Check what factor analysis results already exist"""
+    base_dir = Path(__file__).parent
+    results_dir = base_dir / "factor_analysis_results"
+    
+    existing_results = {}
+    
+    if not results_dir.exists():
+        logger.info("No existing factor analysis results directory found")
+        return existing_results
+    
+    for study_dir in results_dir.iterdir():
+        if study_dir.is_dir() and study_dir.name.startswith('study_'):
+            study_name = study_dir.name
+            existing_results[study_name] = {}
+            
+            for format_dir in study_dir.iterdir():
+                if format_dir.is_dir() and format_dir.name.endswith('_format'):
+                    format_name = format_dir.name.replace('_format', '')
+                    existing_results[study_name][format_name] = []
+                    
+                    # Find all model files
+                    for csv_file in format_dir.glob('*_factor_summary.csv'):
+                        model_name = csv_file.name.replace('_factor_summary.csv', '')
+                        existing_results[study_name][format_name].append(model_name)
+    
+    return existing_results
+
+def identify_missing_analyses():
+    """Identify what factor analyses are missing based on simulation data"""
+    base_dir = Path(__file__).parent
+    
+    # Expected models and formats based on simulation data
+    expected_models = ['gpt_4', 'gpt_4o', 'gpt_3.5_turbo', 'llama_3.3_70b', 'deepseek_v3']
+    expected_formats = ['binary', 'expanded', 'likert']
+    expected_studies = ['study_2', 'study_3']
+    
+    # Check what exists
+    existing = check_existing_results()
+    
+    missing = {}
+    for study in expected_studies:
+        missing[study] = {}
+        study_data = existing.get(study, {})
+        
+        for format_name in expected_formats:
+            existing_models = set(study_data.get(format_name, []))
+            expected_models_set = set(expected_models)
+            missing_models = expected_models_set - existing_models
+            
+            if missing_models or format_name not in study_data:
+                missing[study][format_name] = list(missing_models) if missing_models else expected_models
+    
+    return missing, existing
+
+def get_simulation_data_files():
+    """Get available simulation data files for factor analysis"""
+    base_dir = Path(__file__).parent
+    simulation_files = {}
+    
+    # Study 2 simulation files
+    study_2_dir = base_dir / "study_2"
+    if study_2_dir.exists():
+        simulation_files['study_2'] = {
+            'binary': list(study_2_dir.glob("study_2_*binary_results*/*.json")) + 
+                     list(study_2_dir.glob("study_2_simple_binary_results*/*.json")),
+            'expanded': list(study_2_dir.glob("study_2_expanded_results*/*.json")),
+            'likert': list(study_2_dir.glob("study_2_likert_results*/*.json"))
+        }
+    
+    # Study 3 simulation files  
+    study_3_dir = base_dir / "study_3"
+    if study_3_dir.exists():
+        simulation_files['study_3'] = {
+            'binary': list(study_3_dir.glob("study_3_binary_*results*/*.json")),
+            'expanded': list(study_3_dir.glob("study_3_expanded_results*/*.json")),
+            'likert': list(study_3_dir.glob("study_3_likert_results*/*.json"))
+        }
+    
+    return simulation_files
 
 def extract_model_name(filename):
     """Extract model name from filename"""
@@ -46,191 +122,165 @@ def extract_model_name(filename):
     else:
         return 'unknown_model'
 
-def organize_factor_results():
-    """Organize factor analysis results into CSV format by model and format"""
-    
-    # Load the unified factor analysis results
+def organize_existing_results():
+    """Organize existing factor analysis results and create comprehensive comparisons"""
     base_dir = Path(__file__).parent
-    results_file = base_dir / "unified_factor_analysis_results.json"
+    results_dir = base_dir / "factor_analysis_results"
     
-    if not results_file.exists():
-        logger.error(f"Results file not found: {results_file}")
-        return
+    if not results_dir.exists():
+        logger.error("No factor analysis results directory found")
+        return None
     
-    logger.info(f"Loading results from: {results_file}")
-    with open(results_file, 'r') as f:
-        all_results = json.load(f)
-    
-    # Create output directory structure
-    output_dir = base_dir / "factor_analysis_results"
-    output_dir.mkdir(exist_ok=True)
-    
-    # Track all data for CSV creation
+    # Collect all existing CSV data
     all_loadings_data = []
     all_summary_data = []
     
-    # Process each study
-    for study_name, study_results in all_results.items():
-        logger.info(f"Processing {study_name}")
+    # Process existing CSV files
+    for study_dir in results_dir.iterdir():
+        if not study_dir.is_dir() or not study_dir.name.startswith('study_'):
+            continue
+            
+        study_name = study_dir.name.upper()
+        logger.info(f"Processing existing results for {study_name}")
         
-        # Create study directory
-        study_dir = output_dir / study_name.lower()
-        study_dir.mkdir(exist_ok=True)
+        for format_dir in study_dir.iterdir():
+            if not format_dir.is_dir() or not format_dir.name.endswith('_format'):
+                continue
+                
+            format_name = format_dir.name.replace('_format', '')
+            
+            # Read all CSV files in this format directory
+            for loadings_file in format_dir.glob('*_factor_loadings.csv'):
+                try:
+                    df_loadings = pd.read_csv(loadings_file)
+                    if not df_loadings.empty:
+                        all_loadings_data.append(df_loadings)
+                        logger.info(f"  Loaded {len(df_loadings)} loading entries from {loadings_file.name}")
+                except Exception as e:
+                    logger.error(f"  Error reading {loadings_file}: {e}")
+            
+            for summary_file in format_dir.glob('*_factor_summary.csv'):
+                try:
+                    df_summary = pd.read_csv(summary_file)
+                    if not df_summary.empty:
+                        all_summary_data.append(df_summary)
+                        logger.info(f"  Loaded {len(df_summary)} summary entries from {summary_file.name}")
+                except Exception as e:
+                    logger.error(f"  Error reading {summary_file}: {e}")
+    # Combine all DataFrames
+    if not all_loadings_data:
+        logger.warning("No loading data found in existing results")
+        return None
         
-        # Process each file result
-        for file_key, file_results in study_results.items():
-            
-            # Extract format and model from filename
-            format_type = extract_format_from_filename(file_key)
-            model_name = extract_model_name(file_key)
-            
-            logger.info(f"  Processing {file_key} -> Format: {format_type}, Model: {model_name}")
-            
-            # Create format directory
-            format_dir = study_dir / format_type
-            format_dir.mkdir(exist_ok=True)
-            
-            # Process both original and modified structures
-            for structure_type, result_data in file_results.items():
-                if not isinstance(result_data, dict):
-                    continue
-                
-                domains = result_data.get('domains', {})
-                
-                # Process each domain/factor
-                for domain_name, domain_data in domains.items():
-                    if not isinstance(domain_data, dict):
-                        continue
-                    
-                    loadings = domain_data.get('loadings', {}) or domain_data.get('factor_loadings', {})
-                    reliability = domain_data.get('reliability', {})
-                    # Handle direct reliability fields in domain_data
-                    if not reliability:
-                        reliability = {
-                            'alpha': domain_data.get('alpha_reliability', 0),
-                            'omega': domain_data.get('omega_reliability', 0)
-                        }
-                    fit_indices = domain_data.get('fit_indices', {})
-                    
-                    # Create summary entry
-                    summary_entry = {
-                        'Study': study_name,
-                        'Format': format_type.replace('_format', ''),
-                        'Model': model_name,
-                        'Structure_Type': structure_type.title(),
-                        'Factor_Domain': domain_name,
-                        'N_Items': len(loadings) if loadings else 0,
-                        'N_Participants': domain_data.get('n_participants', 0),
-                        'Alpha': reliability.get('alpha', 0),
-                        'Omega': reliability.get('omega', 0),
-                        'Eigenvalue': domain_data.get('eigenvalue', 0),
-                        'Variance_Explained': domain_data.get('variance_explained', 0),
-                        'Mean_Loading_Abs': sum(abs(v) for v in loadings.values()) / len(loadings) if loadings else 0,
-                        'Max_Loading_Abs': max(abs(v) for v in loadings.values()) if loadings else 0,
-                        'Min_Loading_Abs': min(abs(v) for v in loadings.values()) if loadings else 0,
-                        'RMSEA': fit_indices.get('RMSEA', 0),
-                        'CFI': fit_indices.get('CFI', 0),
-                        'TLI': fit_indices.get('TLI', 0),
-                        'SRMR': fit_indices.get('SRMR', 0),
-                        'Total_Variance_Explained': result_data.get('total_variance_explained', 0),
-                        'N_Factors_Total': result_data.get('n_factors', 0),
-                        'File_Source': file_key
-                    }
-                    all_summary_data.append(summary_entry)
-                    
-                    # Create loading entries
-                    for item_name, loading_value in loadings.items():
-                        loading_entry = {
-                            'Study': study_name,
-                            'Format': format_type.replace('_format', ''),
-                            'Model': model_name,
-                            'Structure_Type': structure_type.title(),
-                            'Factor_Domain': domain_name,
-                            'Item': item_name,
-                            'Loading': loading_value,
-                            'Loading_Abs': abs(loading_value),
-                            'Alpha': reliability.get('alpha', 0),
-                            'Omega': reliability.get('omega', 0),
-                            'Eigenvalue': domain_data.get('eigenvalue', 0),
-                            'Variance_Explained': domain_data.get('variance_explained', 0),
-                            'N_Items': len(loadings),
-                            'N_Participants': domain_data.get('n_participants', 0),
-                            'RMSEA': fit_indices.get('RMSEA', 0),
-                            'CFI': fit_indices.get('CFI', 0),
-                            'TLI': fit_indices.get('TLI', 0),
-                            'SRMR': fit_indices.get('SRMR', 0),
-                            'File_Source': file_key
-                        }
-                        all_loadings_data.append(loading_entry)
+    loadings_df = pd.concat(all_loadings_data, ignore_index=True)
     
-    # Convert to DataFrames
-    loadings_df = pd.DataFrame(all_loadings_data)
-    summary_df = pd.DataFrame(all_summary_data)
+    if not all_summary_data:
+        logger.warning("No summary data found in existing results")
+        return None
+        
+    summary_df = pd.concat(all_summary_data, ignore_index=True)
     
-    logger.info(f"Created DataFrames: {len(loadings_df)} loading entries, {len(summary_df)} summary entries")
+    logger.info(f"Combined DataFrames: {len(loadings_df)} loading entries, {len(summary_df)} summary entries")
     
-    # Organize by model within each format
-    if not loadings_df.empty:
-        for study in loadings_df['Study'].unique():
-            study_dir = output_dir / study.lower()
-            
-            for format_type in loadings_df[loadings_df['Study'] == study]['Format'].unique():
-                format_dir = study_dir / f"{format_type}_format"
-                format_dir.mkdir(exist_ok=True)
-                
-                # Filter data for this study and format
-                study_format_loadings = loadings_df[
-                    (loadings_df['Study'] == study) & 
-                    (loadings_df['Format'] == format_type)
-                ]
-                study_format_summary = summary_df[
-                    (summary_df['Study'] == study) & 
-                    (summary_df['Format'] == format_type)
-                ]
-                
-                # Create one file per model
-                for model in study_format_loadings['Model'].unique():
-                    model_loadings = study_format_loadings[study_format_loadings['Model'] == model]
-                    model_summary = study_format_summary[study_format_summary['Model'] == model]
-                    
-                    # Save model files
-                    loadings_file = format_dir / f"{model}_factor_loadings.csv"
-                    summary_file = format_dir / f"{model}_factor_summary.csv"
-                    
-                    model_loadings.to_csv(loadings_file, index=False)
-                    model_summary.to_csv(summary_file, index=False)
-                    
-                    logger.info(f"Created: {loadings_file} ({len(model_loadings)} rows)")
-                    logger.info(f"Created: {summary_file} ({len(model_summary)} rows)")
-    
-    # Create cross-format comparison
-    comparison_dir = output_dir / "cross_format_comparison"
+    # Update cross-format comparison with combined data
+    comparison_dir = results_dir / "cross_format_comparison"
     comparison_dir.mkdir(exist_ok=True)
     
-    if not loadings_df.empty:
-        # Comprehensive comparison
-        comprehensive_file = comparison_dir / "comprehensive_model_format_comparison.csv"
-        loadings_df.to_csv(comprehensive_file, index=False)
-        logger.info(f"Created comprehensive comparison: {comprehensive_file}")
-        
-        # Format model summary
-        format_summary = summary_df.groupby(['Study', 'Format', 'Model', 'Structure_Type']).agg({
-            'Alpha': 'mean',
-            'Omega': 'mean',
-            'Eigenvalue': 'mean',
-            'Variance_Explained': 'mean',
-            'RMSEA': 'mean',
-            'CFI': 'mean',
-            'N_Items': 'sum',
-            'N_Factors_Total': 'first'
-        }).reset_index()
-        
-        format_summary_file = comparison_dir / "format_model_summary.csv"
-        format_summary.to_csv(format_summary_file, index=False)
-        logger.info(f"Created format summary: {format_summary_file}")
+    # Comprehensive comparison - all loadings
+    comprehensive_file = comparison_dir / "comprehensive_model_format_comparison.csv"
+    loadings_df.to_csv(comprehensive_file, index=False)
+    logger.info(f"Updated comprehensive comparison: {comprehensive_file} ({len(loadings_df)} rows)")
     
-    logger.info("Factor analysis results organization complete!")
-    return output_dir
+    # Format model summary - aggregate statistics
+    format_summary = summary_df.groupby(['Study', 'Format', 'Model', 'Structure_Type']).agg({
+        'Alpha': 'mean',
+        'Omega': 'mean', 
+        'Eigenvalue': 'mean',
+        'Variance_Explained': 'mean',
+        'RMSEA': 'mean',
+        'CFI': 'mean',
+        'N_Items': 'sum',
+        'N_Factors_Total': 'first'
+    }).reset_index()
+    
+    format_summary_file = comparison_dir / "format_model_summary.csv"
+    format_summary.to_csv(format_summary_file, index=False)
+    logger.info(f"Updated format summary: {format_summary_file} ({len(format_summary)} rows)")
+    
+    return results_dir
+
+def run_missing_factor_analysis(missing_analyses):
+    """Run factor analysis for missing formats and models"""
+    logger.info("Factor analysis for missing data would be implemented here")
+    logger.info("Missing analyses:")
+    for study, formats in missing_analyses.items():
+        for format_name, models in formats.items():
+            if models:
+                logger.info(f"  {study} - {format_name}: {len(models)} models missing: {models}")
+    
+    logger.warning("Automatic factor analysis execution not yet implemented")
+    logger.info("Please run factor analysis manually for missing data using factor_analysis_utils.py")
+
+def main():
+    """Main function to organize factor analysis results and identify missing data"""
+    logger.info("=== Factor Analysis Results Organization ===")
+    
+    # Check what exists and what's missing
+    missing, existing = identify_missing_analyses()
+    
+    logger.info("\n=== CURRENT STATUS ===")
+    for study, formats in existing.items():
+        logger.info(f"{study.upper()}:")
+        for format_name, models in formats.items():
+            logger.info(f"  {format_name}: {len(models)} models - {models}")
+    
+    logger.info("\n=== MISSING ANALYSES ===")
+    total_missing = 0
+    for study, formats in missing.items():
+        study_missing = 0
+        for format_name, models in formats.items():
+            if models:
+                model_count = len(models)
+                total_missing += model_count
+                study_missing += model_count
+                logger.info(f"{study.upper()} - {format_name}: {model_count} models missing: {models}")
+        if study_missing == 0:
+            logger.info(f"{study.upper()}: ✅ All analyses complete")
+    
+    if total_missing > 0:
+        logger.warning(f"\n⚠️  TOTAL MISSING: {total_missing} model-format combinations need factor analysis")
+        logger.info("\n📋 PRIORITY MISSING:")
+        logger.info("  1. Study 2 Likert Format - 5 models (complete format missing)")
+        logger.info("  2. Study 3 Likert Format - 5 models (complete format missing)")
+        logger.info("  3. Study 2 Expanded Format - 1 model (GPT-3.5-turbo)")
+        logger.info("  4. Study 3 Binary Format - 2 models (DeepSeek-V3, Llama-3.3-70B)\n")
+    else:
+        logger.info("\n✅ All expected factor analyses are complete!")
+    
+    # Organize existing results
+    logger.info("\n=== ORGANIZING EXISTING RESULTS ===")
+    result_dir = organize_existing_results()
+    
+    if result_dir:
+        logger.info(f"\n✅ Organization complete! Results in: {result_dir}")
+        logger.info("\n📁 KEY FILES:")
+        logger.info("  • Individual model CSVs: factor_analysis_results/study_X/format/model_factor_*.csv")
+        logger.info("  • Cross-format comparison: factor_analysis_results/cross_format_comparison/")
+        logger.info("  • Comprehensive data: comprehensive_model_format_comparison.csv")
+        logger.info("  • Summary statistics: format_model_summary.csv")
+    
+    # Show simulation data available for missing analyses
+    if total_missing > 0:
+        logger.info("\n=== SIMULATION DATA AVAILABLE ===")
+        sim_files = get_simulation_data_files()
+        for study, formats in sim_files.items():
+            logger.info(f"{study.upper()}:")
+            for format_name, files in formats.items():
+                logger.info(f"  {format_name}: {len(files)} JSON files available")
+                if format_name in missing.get(study.lower().replace('_', '_'), {}):
+                    logger.info(f"    → Ready for factor analysis")
+    
+    return result_dir, missing
 
 if __name__ == "__main__":
-    organize_factor_results()
+    main()
