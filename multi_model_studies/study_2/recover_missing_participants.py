@@ -58,36 +58,33 @@ reverse_coded_traits = {
 def aggregate_minimarker_for_validation(df, format_type='expanded'):
     """
     Aggregate Mini-Marker trait ratings to Big Five domain scores.
-    Same logic as unified_convergent_analysis.py for validation.
+    EXACT COPY from unified_convergent_analysis.py to ensure identical behavior.
     """
     domain_scores = {d: [] for d in ['E', 'A', 'C', 'N', 'O']}
-    
+
     for idx, row in df.iterrows():
         trait_by_domain = {d: [] for d in ['E', 'A', 'C', 'N', 'O']}
-        
+
         for trait, value in row.items():
             if trait not in minimarker_domain_mapping:
                 continue
-                
+
             # Convert string values to integers
             if isinstance(value, str):
                 try:
                     value = int(value)
                 except ValueError:
-                    # Mark as invalid for this participant
+                    print(f"Warning: Non-integer value '{value}' for trait '{trait}' at index {idx}. Skipping.")
                     continue
-                    
-            if pd.isna(value):
-                continue
-                
+
             domain = minimarker_domain_mapping[trait]
-            
+
             # Apply reverse coding (assuming 1-9 scale)
             if trait in reverse_coded_traits:
                 value = 10 - value
-                
+
             trait_by_domain[domain].append(value)
-        
+
         # Aggregate domain scores
         for d in trait_by_domain:
             if trait_by_domain[d]:
@@ -99,7 +96,7 @@ def aggregate_minimarker_for_validation(df, format_type='expanded'):
                     domain_scores[d].append(np.mean(trait_by_domain[d]))
             else:
                 domain_scores[d].append(np.nan)
-    
+
     return pd.DataFrame(domain_scores)
 
 def validate_response(response_data: Dict[str, Any]) -> Tuple[bool, List[str]]:
@@ -123,6 +120,11 @@ def validate_response(response_data: Dict[str, Any]) -> Tuple[bool, List[str]]:
     
     if missing_traits:
         errors.append(f"Missing traits: {sorted(list(missing_traits))}")
+    
+    # Check for unexpected traits (likely typos)
+    unexpected_traits = found_traits - expected_traits
+    if unexpected_traits:
+        errors.append(f"Unexpected traits (likely typos): {sorted(list(unexpected_traits))}")
     
     # Check for invalid values
     for trait, value in cleaned_response.items():
@@ -331,7 +333,13 @@ def recover_participants_for_model(model_info: Dict[str, Any],
     prompt_generator = create_prompt_generator_for_format(format_type)
     
     # Extract model name for API call
-    api_model = model_name.replace('openai_', '').replace('_', '-')
+    # Handle different model naming conventions
+    if model_name.startswith('openai_'):
+        # For OpenAI models, use the portal format: openai-gpt-3.5-turbo-0125
+        api_model = model_name.replace('_', '-')
+    else:
+        # For other models (gpt_4, deepseek, llama), just replace underscores
+        api_model = model_name.replace('_', '-')
     
     print(f"Attempting to recover {len(info['problematic_indices'])} participants")
     print(f"Using model: {api_model}")
