@@ -144,8 +144,9 @@ def aggregate_minimarker(df, format_type='expanded'):
 
 
 def compute_correlations(arr1, arr2, traits=['E', 'A', 'C', 'N', 'O']):
-    """Compute correlations between two arrays with error handling."""
+    """Compute correlations and p-values between two arrays with error handling."""
     corrs = []
+    p_values = []
     for i, trait in enumerate(traits):
         try:
             # Extract data
@@ -157,18 +158,21 @@ def compute_correlations(arr1, arr2, traits=['E', 'A', 'C', 'N', 'O']):
             if sum(valid_idx) < 3:  # Need at least 3 points for correlation
                 print(f"    Warning: {trait} has insufficient valid data")
                 corrs.append(np.nan)
+                p_values.append(np.nan)
                 continue
 
             x_clean = x[valid_idx]
             y_clean = y[valid_idx]
 
-            r, _ = pearsonr(x_clean, y_clean)
+            r, p = pearsonr(x_clean, y_clean)
             corrs.append(r)
+            p_values.append(p)
         except Exception as e:
             print(f"    Error computing correlation for {trait}: {e}")
             corrs.append(np.nan)
+            p_values.append(np.nan)
 
-    return corrs
+    return corrs, p_values
 
 
 def analyze_format(format_config, csv_results=None):
@@ -255,15 +259,18 @@ def analyze_format(format_config, csv_results=None):
                 n = len(emp_bfi2)
 
             # Compute correlations
-            bfi_orig_corrs = compute_correlations(emp_bfi2, emp_tda)
-            bfi_sim_corrs = compute_correlations(emp_bfi2, sim_tda)
-            orig_sim_corrs = compute_correlations(emp_tda, sim_tda)
+            bfi_orig_corrs, bfi_orig_pvals = compute_correlations(emp_bfi2, emp_tda)
+            bfi_sim_corrs, bfi_sim_pvals = compute_correlations(emp_bfi2, sim_tda)
+            orig_sim_corrs, orig_sim_pvals = compute_correlations(emp_tda, sim_tda)
 
             # Store results
             format_results[model_name] = {
                 'bfi_orig_by_domain': bfi_orig_corrs,
                 'bfi_sim_by_domain': bfi_sim_corrs,
                 'orig_sim_by_domain': orig_sim_corrs,
+                'bfi_orig_pvals': bfi_orig_pvals,
+                'bfi_sim_pvals': bfi_sim_pvals,
+                'orig_sim_pvals': orig_sim_pvals,
                 'bfi_orig_avg': np.nanmean(bfi_orig_corrs),
                 'bfi_sim_avg': np.nanmean(bfi_sim_corrs),
                 'orig_sim_avg': np.nanmean(orig_sim_corrs),
@@ -280,16 +287,31 @@ def analyze_format(format_config, csv_results=None):
                     'bfi_orig_C': bfi_orig_corrs[2],
                     'bfi_orig_N': bfi_orig_corrs[3],
                     'bfi_orig_O': bfi_orig_corrs[4],
+                    'bfi_orig_E_p': bfi_orig_pvals[0],
+                    'bfi_orig_A_p': bfi_orig_pvals[1],
+                    'bfi_orig_C_p': bfi_orig_pvals[2],
+                    'bfi_orig_N_p': bfi_orig_pvals[3],
+                    'bfi_orig_O_p': bfi_orig_pvals[4],
                     'bfi_sim_E': bfi_sim_corrs[0],
                     'bfi_sim_A': bfi_sim_corrs[1],
                     'bfi_sim_C': bfi_sim_corrs[2],
                     'bfi_sim_N': bfi_sim_corrs[3],
                     'bfi_sim_O': bfi_sim_corrs[4],
+                    'bfi_sim_E_p': bfi_sim_pvals[0],
+                    'bfi_sim_A_p': bfi_sim_pvals[1],
+                    'bfi_sim_C_p': bfi_sim_pvals[2],
+                    'bfi_sim_N_p': bfi_sim_pvals[3],
+                    'bfi_sim_O_p': bfi_sim_pvals[4],
                     'orig_sim_E': orig_sim_corrs[0],
                     'orig_sim_A': orig_sim_corrs[1],
                     'orig_sim_C': orig_sim_corrs[2],
                     'orig_sim_N': orig_sim_corrs[3],
                     'orig_sim_O': orig_sim_corrs[4],
+                    'orig_sim_E_p': orig_sim_pvals[0],
+                    'orig_sim_A_p': orig_sim_pvals[1],
+                    'orig_sim_C_p': orig_sim_pvals[2],
+                    'orig_sim_N_p': orig_sim_pvals[3],
+                    'orig_sim_O_p': orig_sim_pvals[4],
                     'bfi_orig_avg': np.nanmean(bfi_orig_corrs),
                     'bfi_sim_avg': np.nanmean(bfi_sim_corrs),
                     'orig_sim_avg': np.nanmean(orig_sim_corrs),
@@ -324,30 +346,35 @@ def print_detailed_results(format_results, format_name):
         print(f"MODEL: {model_name.upper()} (n={results['n_participants']})")
         print(f"{'-' * 80}")
 
-        # Print domain-by-domain analysis
+        # Print domain-by-domain analysis with p-values
         print(
-            f"\n{'Domain':<20} {'BFI-Orig':<12} {'BFI-Sim':<12} {'Orig-Sim':<12}")
-        print("-" * 60)
+            f"\n{'Domain':<20} {'BFI-Orig':<12} {'p-val':<8} {'BFI-Sim':<12} {'p-val':<8} {'Orig-Sim':<12} {'p-val':<8}")
+        print("-" * 88)
 
         for i, (trait, trait_name) in enumerate(zip(traits, trait_names)):
             bfi_orig_r = results['bfi_orig_by_domain'][i]
             bfi_sim_r = results['bfi_sim_by_domain'][i]
             orig_sim_r = results['orig_sim_by_domain'][i]
+            
+            bfi_orig_p = results['bfi_orig_pvals'][i]
+            bfi_sim_p = results['bfi_sim_pvals'][i]
+            orig_sim_p = results['orig_sim_pvals'][i]
 
-            bfi_orig_str = f"{bfi_orig_r:.3f}" if not np.isnan(
-                bfi_orig_r) else "NaN"
-            bfi_sim_str = f"{bfi_sim_r:.3f}" if not np.isnan(
-                bfi_sim_r) else "NaN"
-            orig_sim_str = f"{orig_sim_r:.3f}" if not np.isnan(
-                orig_sim_r) else "NaN"
+            bfi_orig_str = f"{bfi_orig_r:.3f}" if not np.isnan(bfi_orig_r) else "NaN"
+            bfi_sim_str = f"{bfi_sim_r:.3f}" if not np.isnan(bfi_sim_r) else "NaN"
+            orig_sim_str = f"{orig_sim_r:.3f}" if not np.isnan(orig_sim_r) else "NaN"
+            
+            bfi_orig_p_str = f"{bfi_orig_p:.3f}" if not np.isnan(bfi_orig_p) else "NaN"
+            bfi_sim_p_str = f"{bfi_sim_p:.3f}" if not np.isnan(bfi_sim_p) else "NaN"
+            orig_sim_p_str = f"{orig_sim_p:.3f}" if not np.isnan(orig_sim_p) else "NaN"
 
             print(
-                f"{trait_name:<20} {bfi_orig_str:<12} {bfi_sim_str:<12} {orig_sim_str:<12}")
+                f"{trait_name:<20} {bfi_orig_str:<12} {bfi_orig_p_str:<8} {bfi_sim_str:<12} {bfi_sim_p_str:<8} {orig_sim_str:<12} {orig_sim_p_str:<8}")
 
         # Print averages
-        print("-" * 60)
+        print("-" * 88)
         print(
-            f"{'AVERAGE':<20} {results['bfi_orig_avg']:<12.3f} {results['bfi_sim_avg']:<12.3f} {results['orig_sim_avg']:<12.3f}")
+            f"{'AVERAGE':<20} {results['bfi_orig_avg']:<12.3f} {'N/A':<8} {results['bfi_sim_avg']:<12.3f} {'N/A':<8} {results['orig_sim_avg']:<12.3f} {'N/A':<8}")
 
         # Print interpretation
         print(f"\nInterpretation:")

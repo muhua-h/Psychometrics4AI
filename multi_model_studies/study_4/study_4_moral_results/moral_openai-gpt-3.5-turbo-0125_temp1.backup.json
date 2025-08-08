@@ -518,11 +518,11 @@
     "Workplace_Theft": 2
   },
   {
-    "Confidential_Info": 5,
-    "Underage_Drinking": 5,
-    "Exam_Cheating": 3,
-    "Honest_Feedback": 5,
-    "Workplace_Theft": 3
+    "Scenario: Confidential_Info": 5,
+    "Scenario: Underage_Drinking": 3,
+    "Scenario: Exam_Cheating": 5,
+    "Scenario: Honest_Feedback": 4,
+    "Scenario: Workplace_Theft": 3
   },
   {
     "Confidential_Info": 5,

@@ -1106,18 +1106,10 @@
     "Study_Overseas": 2
   },
   {
-    "Investment": 7,
-    "Extreme_Sports": 8,
-    "Entrepreneurial_Venture": 6,
-    "Confessing_Feelings": 5,
-    "Study_Overseas": 4
+    "error": "Connection error."
   },
   {
-    "Investment": 6,
-    "Extreme_Sports": 9,
-    "Entrepreneurial_Venture": 5,
-    "Confessing_Feelings": 4,
-    "Study_Overseas": 3
+    "error": "Connection error."
   },
   {
     "Investment": 8,

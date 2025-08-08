@@ -1,5 +1,5 @@
 === UNIFIED CONVERGENT VALIDITY ANALYSIS ===
-Analysis started at: 2025-08-08 13:49:27
+Analysis started at: 2025-08-09 01:35:09
 Log file: /Users/mhhuang/Psychometrics4AI_revision/multi_model_studies/study_2/unified_analysis_results/unified_analysis_log.txt
 ============================================================
 
@@ -43,7 +43,7 @@ Found 5 model files
 ANALYZING ELABORATED BINARY
 ============================================================
 Loaded 438 participants
-Found 8 model files
+Found 5 model files
 
 --- Processing llama ---
   Final participants: 438
@@ -51,23 +51,11 @@ Found 8 model files
   BFI-2 vs Simulated avg: 0.561
   Original vs Simulated avg: 0.469
 
---- Processing openai_gpt_3.5_turbo_0125.backup ---
-  Final participants: 438
-  BFI-2 vs Original avg: 0.802
-  BFI-2 vs Simulated avg: 0.491
-  Original vs Simulated avg: 0.403
-
 --- Processing gpt_4o ---
   Final participants: 438
   BFI-2 vs Original avg: 0.802
   BFI-2 vs Simulated avg: 0.580
   Original vs Simulated avg: 0.485
-
---- Processing deepseek.backup ---
-  Final participants: 438
-  BFI-2 vs Original avg: 0.802
-  BFI-2 vs Simulated avg: 0.556
-  Original vs Simulated avg: 0.461
 
 --- Processing deepseek ---
   Final participants: 438
@@ -86,13 +74,6 @@ Found 8 model files
   BFI-2 vs Original avg: 0.802
   BFI-2 vs Simulated avg: 0.491
   Original vs Simulated avg: 0.403
-
---- Processing openai_gpt_3.5_turbo_0125.backup.backup ---
-  Removing 5 rows with invalid data
-  Final participants: 433
-  BFI-2 vs Original avg: 0.803
-  BFI-2 vs Simulated avg: 0.492
-  Original vs Simulated avg: 0.406
 
 ============================================================
 ANALYZING EXPANDED FORMAT
@@ -174,15 +155,15 @@ DETAILED CONVERGENT VALIDITY RESULTS - SIMPLE BINARY
 MODEL: LLAMA (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.672        0.608       
-Agreeableness        0.796        0.371        0.312       
-Conscientiousness    0.840        0.579        0.546       
-Neuroticism          0.738        0.770        0.602       
-Openness             0.750        0.409        0.252       
-------------------------------------------------------------
-AVERAGE              0.802        0.560        0.464       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.672        0.000    0.608        0.000   
+Agreeableness        0.796        0.000    0.371        0.000    0.312        0.000   
+Conscientiousness    0.840        0.000    0.579        0.000    0.546        0.000   
+Neuroticism          0.738        0.000    0.770        0.000    0.602        0.000   
+Openness             0.750        0.000    0.409        0.000    0.252        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.560        N/A      0.464        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -196,15 +177,15 @@ Interpretation:
 MODEL: GPT_4O (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.694        0.628       
-Agreeableness        0.796        0.464        0.400       
-Conscientiousness    0.840        0.622        0.590       
-Neuroticism          0.738        0.772        0.595       
-Openness             0.750        0.403        0.262       
-------------------------------------------------------------
-AVERAGE              0.802        0.591        0.495       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.694        0.000    0.628        0.000   
+Agreeableness        0.796        0.000    0.464        0.000    0.400        0.000   
+Conscientiousness    0.840        0.000    0.622        0.000    0.590        0.000   
+Neuroticism          0.738        0.000    0.772        0.000    0.595        0.000   
+Openness             0.750        0.000    0.403        0.000    0.262        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.591        N/A      0.495        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -218,15 +199,15 @@ Interpretation:
 MODEL: DEEPSEEK (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.674        0.609       
-Agreeableness        0.796        0.433        0.374       
-Conscientiousness    0.840        0.576        0.565       
-Neuroticism          0.738        0.780        0.596       
-Openness             0.750        0.319        0.165       
-------------------------------------------------------------
-AVERAGE              0.802        0.556        0.462       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.674        0.000    0.609        0.000   
+Agreeableness        0.796        0.000    0.433        0.000    0.374        0.000   
+Conscientiousness    0.840        0.000    0.576        0.000    0.565        0.000   
+Neuroticism          0.738        0.000    0.780        0.000    0.596        0.000   
+Openness             0.750        0.000    0.319        0.000    0.165        0.001   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.556        N/A      0.462        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -240,15 +221,15 @@ Interpretation:
 MODEL: GPT_4 (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.674        0.609       
-Agreeableness        0.796        0.390        0.338       
-Conscientiousness    0.840        0.581        0.558       
-Neuroticism          0.738        0.774        0.601       
-Openness             0.750        0.390        0.243       
-------------------------------------------------------------
-AVERAGE              0.802        0.562        0.470       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.674        0.000    0.609        0.000   
+Agreeableness        0.796        0.000    0.390        0.000    0.338        0.000   
+Conscientiousness    0.840        0.000    0.581        0.000    0.558        0.000   
+Neuroticism          0.738        0.000    0.774        0.000    0.601        0.000   
+Openness             0.750        0.000    0.390        0.000    0.243        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.562        N/A      0.470        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -262,15 +243,15 @@ Interpretation:
 MODEL: OPENAI_GPT_3.5_TURBO_0125 (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.674        0.607       
-Agreeableness        0.796        0.265        0.232       
-Conscientiousness    0.840        0.554        0.524       
-Neuroticism          0.738        0.569        0.448       
-Openness             0.750        0.358        0.268       
-------------------------------------------------------------
-AVERAGE              0.802        0.484        0.416       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.674        0.000    0.607        0.000   
+Agreeableness        0.796        0.000    0.265        0.000    0.232        0.000   
+Conscientiousness    0.840        0.000    0.554        0.000    0.524        0.000   
+Neuroticism          0.738        0.000    0.569        0.000    0.448        0.000   
+Openness             0.750        0.000    0.358        0.000    0.268        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.484        N/A      0.416        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -288,15 +269,15 @@ DETAILED CONVERGENT VALIDITY RESULTS - ELABORATED BINARY
 MODEL: LLAMA (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.673        0.609       
-Agreeableness        0.796        0.390        0.333       
-Conscientiousness    0.840        0.574        0.543       
-Neuroticism          0.738        0.770        0.605       
-Openness             0.750        0.394        0.254       
-------------------------------------------------------------
-AVERAGE              0.802        0.561        0.469       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.673        0.000    0.609        0.000   
+Agreeableness        0.796        0.000    0.390        0.000    0.333        0.000   
+Conscientiousness    0.840        0.000    0.574        0.000    0.543        0.000   
+Neuroticism          0.738        0.000    0.770        0.000    0.605        0.000   
+Openness             0.750        0.000    0.394        0.000    0.254        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.561        N/A      0.469        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -307,40 +288,18 @@ Interpretation:
   Worst performing domain: Agreeableness (r = 0.390)
 
 --------------------------------------------------------------------------------
-MODEL: OPENAI_GPT_3.5_TURBO_0125.BACKUP (n=438)
---------------------------------------------------------------------------------
-
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.675        0.612       
-Agreeableness        0.796        0.277        0.215       
-Conscientiousness    0.840        0.576        0.508       
-Neuroticism          0.738        0.567        0.444       
-Openness             0.750        0.361        0.237       
-------------------------------------------------------------
-AVERAGE              0.802        0.491        0.403       
-
-Interpretation:
-  • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
-  • BFI-Sim: Simulation validity (BFI-2 vs Simulated Mini-Marker)
-  • Orig-Sim: Direct comparison (Original vs Simulated Mini-Marker)
-
-  Best performing domain: Extraversion (r = 0.675)
-  Worst performing domain: Agreeableness (r = 0.277)
-
---------------------------------------------------------------------------------
 MODEL: GPT_4O (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.685        0.619       
-Agreeableness        0.796        0.436        0.387       
-Conscientiousness    0.840        0.610        0.581       
-Neuroticism          0.738        0.770        0.589       
-Openness             0.750        0.399        0.251       
-------------------------------------------------------------
-AVERAGE              0.802        0.580        0.485       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.685        0.000    0.619        0.000   
+Agreeableness        0.796        0.000    0.436        0.000    0.387        0.000   
+Conscientiousness    0.840        0.000    0.610        0.000    0.581        0.000   
+Neuroticism          0.738        0.000    0.770        0.000    0.589        0.000   
+Openness             0.750        0.000    0.399        0.000    0.251        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.580        N/A      0.485        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -351,40 +310,18 @@ Interpretation:
   Worst performing domain: Openness (r = 0.399)
 
 --------------------------------------------------------------------------------
-MODEL: DEEPSEEK.BACKUP (n=438)
---------------------------------------------------------------------------------
-
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.679        0.617       
-Agreeableness        0.796        0.425        0.370       
-Conscientiousness    0.840        0.565        0.554       
-Neuroticism          0.738        0.780        0.587       
-Openness             0.750        0.331        0.179       
-------------------------------------------------------------
-AVERAGE              0.802        0.556        0.461       
-
-Interpretation:
-  • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
-  • BFI-Sim: Simulation validity (BFI-2 vs Simulated Mini-Marker)
-  • Orig-Sim: Direct comparison (Original vs Simulated Mini-Marker)
-
-  Best performing domain: Neuroticism (r = 0.780)
-  Worst performing domain: Openness (r = 0.331)
-
---------------------------------------------------------------------------------
 MODEL: DEEPSEEK (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.679        0.617       
-Agreeableness        0.796        0.425        0.370       
-Conscientiousness    0.840        0.565        0.554       
-Neuroticism          0.738        0.780        0.587       
-Openness             0.750        0.331        0.179       
-------------------------------------------------------------
-AVERAGE              0.802        0.556        0.461       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.679        0.000    0.617        0.000   
+Agreeableness        0.796        0.000    0.425        0.000    0.370        0.000   
+Conscientiousness    0.840        0.000    0.565        0.000    0.554        0.000   
+Neuroticism          0.738        0.000    0.780        0.000    0.587        0.000   
+Openness             0.750        0.000    0.331        0.000    0.179        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.556        N/A      0.461        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -398,15 +335,15 @@ Interpretation:
 MODEL: GPT_4 (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.680        0.614       
-Agreeableness        0.796        0.428        0.369       
-Conscientiousness    0.840        0.585        0.554       
-Neuroticism          0.738        0.775        0.595       
-Openness             0.750        0.390        0.231       
-------------------------------------------------------------
-AVERAGE              0.802        0.572        0.472       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.680        0.000    0.614        0.000   
+Agreeableness        0.796        0.000    0.428        0.000    0.369        0.000   
+Conscientiousness    0.840        0.000    0.585        0.000    0.554        0.000   
+Neuroticism          0.738        0.000    0.775        0.000    0.595        0.000   
+Openness             0.750        0.000    0.390        0.000    0.231        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.572        N/A      0.472        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -420,15 +357,15 @@ Interpretation:
 MODEL: OPENAI_GPT_3.5_TURBO_0125 (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.675        0.612       
-Agreeableness        0.796        0.277        0.215       
-Conscientiousness    0.840        0.576        0.508       
-Neuroticism          0.738        0.567        0.444       
-Openness             0.750        0.361        0.237       
-------------------------------------------------------------
-AVERAGE              0.802        0.491        0.403       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.675        0.000    0.612        0.000   
+Agreeableness        0.796        0.000    0.277        0.000    0.215        0.000   
+Conscientiousness    0.840        0.000    0.576        0.000    0.508        0.000   
+Neuroticism          0.738        0.000    0.567        0.000    0.444        0.000   
+Openness             0.750        0.000    0.361        0.000    0.237        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.491        N/A      0.403        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -438,28 +375,6 @@ Interpretation:
   Best performing domain: Extraversion (r = 0.675)
   Worst performing domain: Agreeableness (r = 0.277)
 
---------------------------------------------------------------------------------
-MODEL: OPENAI_GPT_3.5_TURBO_0125.BACKUP.BACKUP (n=433)
---------------------------------------------------------------------------------
-
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.883        0.669        0.605       
-Agreeableness        0.797        0.281        0.215       
-Conscientiousness    0.840        0.582        0.516       
-Neuroticism          0.743        0.565        0.458       
-Openness             0.751        0.362        0.237       
-------------------------------------------------------------
-AVERAGE              0.803        0.492        0.406       
-
-Interpretation:
-  • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
-  • BFI-Sim: Simulation validity (BFI-2 vs Simulated Mini-Marker)
-  • Orig-Sim: Direct comparison (Original vs Simulated Mini-Marker)
-
-  Best performing domain: Extraversion (r = 0.669)
-  Worst performing domain: Agreeableness (r = 0.281)
-
 ================================================================================
 DETAILED CONVERGENT VALIDITY RESULTS - EXPANDED FORMAT
 ================================================================================
@@ -468,15 +383,15 @@ DETAILED CONVERGENT VALIDITY RESULTS - EXPANDED FORMAT
 MODEL: DEEPSEEK (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.907        0.858       
-Agreeableness        0.796        0.888        0.768       
-Conscientiousness    0.840        0.921        0.840       
-Neuroticism          0.738        0.932        0.755       
-Openness             0.750        0.809        0.715       
-------------------------------------------------------------
-AVERAGE              0.802        0.891        0.787       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.907        0.000    0.858        0.000   
+Agreeableness        0.796        0.000    0.888        0.000    0.768        0.000   
+Conscientiousness    0.840        0.000    0.921        0.000    0.840        0.000   
+Neuroticism          0.738        0.000    0.932        0.000    0.755        0.000   
+Openness             0.750        0.000    0.809        0.000    0.715        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.891        N/A      0.787        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -490,15 +405,15 @@ Interpretation:
 MODEL: GPT_4 (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.905        0.857       
-Agreeableness        0.796        0.831        0.736       
-Conscientiousness    0.840        0.874        0.805       
-Neuroticism          0.738        0.907        0.731       
-Openness             0.750        0.794        0.706       
-------------------------------------------------------------
-AVERAGE              0.802        0.862        0.767       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.905        0.000    0.857        0.000   
+Agreeableness        0.796        0.000    0.831        0.000    0.736        0.000   
+Conscientiousness    0.840        0.000    0.874        0.000    0.805        0.000   
+Neuroticism          0.738        0.000    0.907        0.000    0.731        0.000   
+Openness             0.750        0.000    0.794        0.000    0.706        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.862        N/A      0.767        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -512,15 +427,15 @@ Interpretation:
 MODEL: LLAMA (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.921        0.870       
-Agreeableness        0.796        0.895        0.753       
-Conscientiousness    0.840        0.915        0.830       
-Neuroticism          0.738        0.919        0.749       
-Openness             0.750        0.849        0.753       
-------------------------------------------------------------
-AVERAGE              0.802        0.900        0.791       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.921        0.000    0.870        0.000   
+Agreeableness        0.796        0.000    0.895        0.000    0.753        0.000   
+Conscientiousness    0.840        0.000    0.915        0.000    0.830        0.000   
+Neuroticism          0.738        0.000    0.919        0.000    0.749        0.000   
+Openness             0.750        0.000    0.849        0.000    0.753        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.900        N/A      0.791        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -534,15 +449,15 @@ Interpretation:
 MODEL: GPT_4O (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.917        0.879       
-Agreeableness        0.796        0.911        0.775       
-Conscientiousness    0.840        0.931        0.829       
-Neuroticism          0.738        0.925        0.757       
-Openness             0.750        0.820        0.733       
-------------------------------------------------------------
-AVERAGE              0.802        0.901        0.794       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.917        0.000    0.879        0.000   
+Agreeableness        0.796        0.000    0.911        0.000    0.775        0.000   
+Conscientiousness    0.840        0.000    0.931        0.000    0.829        0.000   
+Neuroticism          0.738        0.000    0.925        0.000    0.757        0.000   
+Openness             0.750        0.000    0.820        0.000    0.733        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.901        N/A      0.794        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -556,15 +471,15 @@ Interpretation:
 MODEL: OPENAI_GPT_3.5_TURBO_0125 (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.861        0.808       
-Agreeableness        0.796        0.605        0.612       
-Conscientiousness    0.840        0.794        0.719       
-Neuroticism          0.738        0.821        0.651       
-Openness             0.750        0.784        0.623       
-------------------------------------------------------------
-AVERAGE              0.802        0.773        0.682       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.861        0.000    0.808        0.000   
+Agreeableness        0.796        0.000    0.605        0.000    0.612        0.000   
+Conscientiousness    0.840        0.000    0.794        0.000    0.719        0.000   
+Neuroticism          0.738        0.000    0.821        0.000    0.651        0.000   
+Openness             0.750        0.000    0.784        0.000    0.623        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.773        N/A      0.682        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -582,15 +497,15 @@ DETAILED CONVERGENT VALIDITY RESULTS - LIKERT FORMAT
 MODEL: GPT_4 (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.925        0.883       
-Agreeableness        0.796        0.907        0.795       
-Conscientiousness    0.840        0.910        0.838       
-Neuroticism          0.738        0.909        0.747       
-Openness             0.750        0.677        0.550       
-------------------------------------------------------------
-AVERAGE              0.802        0.865        0.763       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.925        0.000    0.883        0.000   
+Agreeableness        0.796        0.000    0.907        0.000    0.795        0.000   
+Conscientiousness    0.840        0.000    0.910        0.000    0.838        0.000   
+Neuroticism          0.738        0.000    0.909        0.000    0.747        0.000   
+Openness             0.750        0.000    0.677        0.000    0.550        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.865        N/A      0.763        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -604,15 +519,15 @@ Interpretation:
 MODEL: GPT_4O (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.922        0.878       
-Agreeableness        0.796        0.912        0.785       
-Conscientiousness    0.840        0.926        0.836       
-Neuroticism          0.738        0.926        0.752       
-Openness             0.750        0.858        0.762       
-------------------------------------------------------------
-AVERAGE              0.802        0.909        0.803       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.922        0.000    0.878        0.000   
+Agreeableness        0.796        0.000    0.912        0.000    0.785        0.000   
+Conscientiousness    0.840        0.000    0.926        0.000    0.836        0.000   
+Neuroticism          0.738        0.000    0.926        0.000    0.752        0.000   
+Openness             0.750        0.000    0.858        0.000    0.762        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.909        N/A      0.803        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -626,15 +541,15 @@ Interpretation:
 MODEL: OPENAI_GPT_3.5_TURBO_0125 (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.861        0.831       
-Agreeableness        0.796        0.716        0.668       
-Conscientiousness    0.840        0.848        0.770       
-Neuroticism          0.738        0.828        0.678       
-Openness             0.750        0.567        0.495       
-------------------------------------------------------------
-AVERAGE              0.802        0.764        0.689       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.861        0.000    0.831        0.000   
+Agreeableness        0.796        0.000    0.716        0.000    0.668        0.000   
+Conscientiousness    0.840        0.000    0.848        0.000    0.770        0.000   
+Neuroticism          0.738        0.000    0.828        0.000    0.678        0.000   
+Openness             0.750        0.000    0.567        0.000    0.495        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.764        N/A      0.689        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -648,15 +563,15 @@ Interpretation:
 MODEL: DEEPSEEK (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.932        0.886       
-Agreeableness        0.796        0.907        0.778       
-Conscientiousness    0.840        0.920        0.830       
-Neuroticism          0.738        0.923        0.736       
-Openness             0.750        0.816        0.725       
-------------------------------------------------------------
-AVERAGE              0.802        0.900        0.791       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.932        0.000    0.886        0.000   
+Agreeableness        0.796        0.000    0.907        0.000    0.778        0.000   
+Conscientiousness    0.840        0.000    0.920        0.000    0.830        0.000   
+Neuroticism          0.738        0.000    0.923        0.000    0.736        0.000   
+Openness             0.750        0.000    0.816        0.000    0.725        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.900        N/A      0.791        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -670,15 +585,15 @@ Interpretation:
 MODEL: LLAMA (n=438)
 --------------------------------------------------------------------------------
 
-Domain               BFI-Orig     BFI-Sim      Orig-Sim    
-------------------------------------------------------------
-Extraversion         0.885        0.938        0.890       
-Agreeableness        0.796        0.878        0.771       
-Conscientiousness    0.840        0.915        0.822       
-Neuroticism          0.738        0.916        0.754       
-Openness             0.750        0.887        0.765       
-------------------------------------------------------------
-AVERAGE              0.802        0.907        0.801       
+Domain               BFI-Orig     p-val    BFI-Sim      p-val    Orig-Sim     p-val   
+----------------------------------------------------------------------------------------
+Extraversion         0.885        0.000    0.938        0.000    0.890        0.000   
+Agreeableness        0.796        0.000    0.878        0.000    0.771        0.000   
+Conscientiousness    0.840        0.000    0.915        0.000    0.822        0.000   
+Neuroticism          0.738        0.000    0.916        0.000    0.754        0.000   
+Openness             0.750        0.000    0.887        0.000    0.765        0.000   
+----------------------------------------------------------------------------------------
+AVERAGE              0.802        N/A      0.907        N/A      0.801        N/A     
 
 Interpretation:
   • BFI-Orig: Empirical baseline correlation (BFI-2 vs Original Mini-Marker)
@@ -691,21 +606,6 @@ Interpretation:
 ================================================================================
 CROSS-FORMAT COMPARISON SUMMARY
 ================================================================================
-
---------------------------------------------------------------------------------
-FORMAT: EXPANDED FORMAT
---------------------------------------------------------------------------------
-
-Model                     BFI-Orig     BFI-Sim      Orig-Sim    
------------------------------------------------------------------
-deepseek                  0.802        0.891        0.787       
-gpt_4                     0.802        0.862        0.767       
-llama                     0.802        0.900        0.791       
-gpt_4o                    0.802        0.901        0.794       
-openai_gpt_3.5_turbo_0125 0.802        0.773        0.682       
------------------------------------------------------------------
-FORMAT AVERAGE            0.802        0.865        0.764       
-FORMAT STD                0.000        0.048        0.042       
 
 --------------------------------------------------------------------------------
 FORMAT: SIMPLE BINARY
@@ -729,16 +629,28 @@ FORMAT: ELABORATED BINARY
 Model                     BFI-Orig     BFI-Sim      Orig-Sim    
 -----------------------------------------------------------------
 llama                     0.802        0.561        0.469       
-openai_gpt_3.5_turbo_0125.backup 0.802        0.491        0.403       
 gpt_4o                    0.802        0.580        0.485       
-deepseek.backup           0.802        0.556        0.461       
 deepseek                  0.802        0.556        0.461       
 gpt_4                     0.802        0.572        0.472       
 openai_gpt_3.5_turbo_0125 0.802        0.491        0.403       
-openai_gpt_3.5_turbo_0125.backup.backup 0.803        0.492        0.406       
 -----------------------------------------------------------------
-FORMAT AVERAGE            0.802        0.537        0.445       
-FORMAT STD                0.000        0.036        0.033       
+FORMAT AVERAGE            0.802        0.552        0.458       
+FORMAT STD                0.000        0.031        0.029       
+
+--------------------------------------------------------------------------------
+FORMAT: EXPANDED FORMAT
+--------------------------------------------------------------------------------
+
+Model                     BFI-Orig     BFI-Sim      Orig-Sim    
+-----------------------------------------------------------------
+deepseek                  0.802        0.891        0.787       
+gpt_4                     0.802        0.862        0.767       
+llama                     0.802        0.900        0.791       
+gpt_4o                    0.802        0.901        0.794       
+openai_gpt_3.5_turbo_0125 0.802        0.773        0.682       
+-----------------------------------------------------------------
+FORMAT AVERAGE            0.802        0.865        0.764       
+FORMAT STD                0.000        0.048        0.042       
 
 --------------------------------------------------------------------------------
 FORMAT: LIKERT FORMAT
@@ -761,9 +673,9 @@ OVERALL FORMAT COMPARISON
 
 Format               BFI-Orig     BFI-Sim      Orig-Sim    
 ------------------------------------------------------------
-Expanded Format      0.802        0.865        0.764       
 Simple Binary        0.802        0.551        0.461       
-Elaborated Binary    0.802        0.537        0.445       
+Elaborated Binary    0.802        0.552        0.458       
+Expanded Format      0.802        0.865        0.764       
 Likert Format        0.802        0.869        0.769       
 
 ============================================================
@@ -783,8 +695,8 @@ Worst performing combination:
 Format rankings by BFI-Sim correlation:
   1. Likert Format: 0.869
   2. Expanded Format: 0.865
-  3. Simple Binary: 0.551
-  4. Elaborated Binary: 0.537
+  3. Elaborated Binary: 0.552
+  4. Simple Binary: 0.551
 
 ============================================================
 ANALYSIS COMPLETE

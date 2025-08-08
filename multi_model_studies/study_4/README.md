@@ -39,8 +39,9 @@ study_4/
 
 ## Data Source
 
-- **Human Data**: `../../study_4/data/york_data_clean.csv`
-  - 276 participants (after quality filtering)
+- **Human Data**: `../../raw_data/york_data_clean.csv`
+  - **276 participants** (English comprehension ≥ 4, matched to valid AI responses)  
+  - **267 valid AI responses** per model (after simulation filtering for both scenarios)
   - BFI-2 personality profiles + behavioral responses
   - Moral and risk scenario ratings (1-10 scale)
 
@@ -133,8 +134,8 @@ python study_4_generalized_behavioral_analysis.py
 - **Overall Score**: Weighted combination of above metrics
 
 ### Behavioral Validation
-- **Human-Simulation Correlations**: Direct comparison of human vs. LLM responses
-- **Personality Regression**: Big Five traits predicting behavioral choices
+- **Matched Participant Analysis**: Human baseline uses same 276 participants as AI simulations
+- **Personality Regression**: Big Five traits predicting behavioral choices (n=267 AI, n=276 human)
 - **Cross-Scenario Consistency**: Trait effects across moral vs. risk domains
 
 ## Scenario Details

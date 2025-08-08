@@ -32,8 +32,8 @@ def load_human_data():
     data = pd.read_csv(data_path)
     print(f"Loaded human data shape: {data.shape}")
     
-    # Filter for good English comprehension (value 5 = excellent)
-    data = data[data['8) English language reading/comprehension ability:'] == 5]
+    # Filter for good English comprehension (value >= 4, matching original simulation criteria)
+    data = data[data['8) English language reading/comprehension ability:'] >= 4]
     # Remove rows with null values in bfi6 column (index 17)
     data = data.dropna(subset=[data.columns[17]])
     
@@ -161,6 +161,21 @@ def compare_with_human_baseline(human_data):
     """Run regression analysis on human risk data for comparison"""
     print("\nHuman Baseline Analysis:")
     print("=" * 60)
+    
+    # Load valid participant indices to match AI analysis
+    import json
+    from pathlib import Path
+    
+    valid_indices_path = Path('valid_participant_indices.json')
+    if valid_indices_path.exists():
+        with open(valid_indices_path, 'r') as f:
+            valid_data = json.load(f)
+        valid_indices = valid_data['valid_indices']
+        
+        # Filter human data to match AI participants
+        human_data_matched = human_data.iloc[valid_indices].copy()
+        print(f"Human data filtered to match AI participants: {len(human_data_matched)} (was {len(human_data)})")
+        human_data = human_data_matched
     
     predictors = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism']
     targets = ['risk_sum']  # Focus on aggregate measure

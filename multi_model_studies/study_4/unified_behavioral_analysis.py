@@ -25,27 +25,64 @@ import warnings
 warnings.filterwarnings('ignore')
 
 def load_regression_results():
-    """Load regression results from both moral and risk analyses"""
-    moral_path = Path("study_4_moral_results/moral_regression_results.csv")
-    risk_path = Path("study_4_risk_results/risk_regression_results.csv")
+    """Load complete regression results from generalized analysis"""
+    complete_path = Path("study_4_generalized_analysis_results/complete_regression_results.csv")
     
     results = {}
     
-    if moral_path.exists():
-        moral_results = pd.read_csv(moral_path)
-        moral_results['scenario_type'] = 'moral'
-        results['moral'] = moral_results
-        print(f"Loaded moral regression results: {len(moral_results)} entries")
-    else:
-        print("Warning: Moral regression results not found")
+    if complete_path.exists():
+        # Load complete regression results
+        complete_results = pd.read_csv(complete_path)
         
-    if risk_path.exists():
-        risk_results = pd.read_csv(risk_path)
-        risk_results['scenario_type'] = 'risk'
+        # Filter out human baseline data for model comparison
+        ai_results = complete_results[complete_results['model'] != 'human'].copy()
+        
+        # Rename columns to match expected format
+        ai_results = ai_results.rename(columns={
+            'standardized_coefficient': 'coefficient',
+            'n_valid': 'n_observations'
+        })
+        
+        # Add required columns that might be missing
+        if 'adj_r_squared' not in ai_results.columns:
+            ai_results['adj_r_squared'] = ai_results.get('adj_r_squared', 0)
+        
+        # Separate moral and risk results
+        moral_results = ai_results[ai_results['scenario_type'] == 'moral'].copy()
+        risk_results = ai_results[ai_results['scenario_type'] == 'risk'].copy()
+        
+        # For sum measures, update target names to match expected format
+        moral_results.loc[:, 'target'] = moral_results['target_measure'].str.replace('ethic_sum', 'moral_sum')
+        risk_results.loc[:, 'target'] = risk_results['target_measure'].str.replace('risk_sum', 'risk_sum')
+        
+        results['moral'] = moral_results
         results['risk'] = risk_results
-        print(f"Loaded risk regression results: {len(risk_results)} entries")
+        
+        print(f"Loaded complete regression results:")
+        print(f"  Moral: {len(moral_results)} entries ({moral_results['n_observations'].iloc[0] if len(moral_results) > 0 else 0} observations)")
+        print(f"  Risk: {len(risk_results)} entries ({risk_results['n_observations'].iloc[0] if len(risk_results) > 0 else 0} observations)")
     else:
-        print("Warning: Risk regression results not found")
+        print("Warning: Complete regression results not found, trying individual files...")
+        
+        # Fallback to individual files
+        moral_path = Path("study_4_moral_results/moral_regression_results.csv")
+        risk_path = Path("study_4_risk_results/risk_regression_results.csv")
+        
+        if moral_path.exists():
+            moral_results = pd.read_csv(moral_path)
+            moral_results['scenario_type'] = 'moral'
+            results['moral'] = moral_results
+            print(f"  Loaded moral regression results: {len(moral_results)} entries")
+        else:
+            print("  Warning: Moral regression results not found")
+            
+        if risk_path.exists():
+            risk_results = pd.read_csv(risk_path)
+            risk_results['scenario_type'] = 'risk'
+            results['risk'] = risk_results
+            print(f"  Loaded risk regression results: {len(risk_results)} entries")
+        else:
+            print("  Warning: Risk regression results not found")
     
     return results
 
