@@ -4,60 +4,53 @@ STUDY 4 UNIFIED MULTI-MODEL BEHAVIORAL ANALYSIS REPORT
 
 MODEL PERFORMANCE RANKING:
 ----------------------------------------
-1. openai-gpt-3.5-turbo-0125
-   Overall Score: 0.360
-   Significant Associations: 2/10 (20.0%)
-   Avg R² (significant): 0.018
-   Consistency Score: 0.914
+1. gpt-4o
+   Overall Score: 0.540
+   Significant Associations: 27/40 (67.5%)
+   Avg R² (significant): 0.114
+   Consistency Score: 0.786
 
-2. llama
-   Overall Score: 0.335
-   Significant Associations: 1/10 (10.0%)
-   Avg R² (significant): 0.018
-   Consistency Score: 0.967
+2. gpt-4
+   Overall Score: 0.510
+   Significant Associations: 24/40 (60.0%)
+   Avg R² (significant): 0.093
+   Consistency Score: 0.807
 
-3. deepseek
-   Overall Score: 0.335
-   Significant Associations: 1/10 (10.0%)
-   Avg R² (significant): 0.016
-   Consistency Score: 0.968
+3. llama
+   Overall Score: 0.493
+   Significant Associations: 22/40 (55.0%)
+   Avg R² (significant): 0.103
+   Consistency Score: 0.808
 
-4. gpt-4
-   Overall Score: 0.328
-   Significant Associations: 1/10 (10.0%)
-   Avg R² (significant): 0.018
-   Consistency Score: 0.942
-
-5. gpt-4o
-   Overall Score: 0.283
-   Significant Associations: 0/10 (0.0%)
-   Avg R² (significant): 0.000
-   Consistency Score: 0.944
+4. deepseek
+   Overall Score: 0.474
+   Significant Associations: 20/40 (50.0%)
+   Avg R² (significant): 0.098
+   Consistency Score: 0.816
 
 PERSONALITY TRAIT INSIGHTS:
 ----------------------------------------
 Most Predictive Traits:
-  • agreeableness: 30.0% significance rate
-  • extraversion: 10.0% significance rate
-  • neuroticism: 10.0% significance rate
+  • neuroticism: 78.1% significance rate
+  • conscientiousness: 59.4% significance rate
+  • agreeableness: 53.1% significance rate
 
 Cross-Scenario Patterns:
-  • agreeableness: Moral ← (-0.028), Risk → (0.108)
-  • extraversion: Moral → (0.013), Risk → (0.081)
-  • neuroticism: Moral ← (-0.020), Risk ← (-0.028)
-  • openness: Moral → (0.004), Risk → (0.058)
-  • conscientiousness: Moral ← (-0.015), Risk → (0.029)
+  • neuroticism: Moral ← (-0.157), Risk → (0.257)
+  • conscientiousness: Moral → (0.228), Risk ← (-0.075)
+  • agreeableness: Moral → (0.032), Risk ← (-0.071)
+  • openness: Moral ← (-0.051), Risk ← (-0.234)
+  • extraversion: Moral ← (-0.010), Risk ← (-0.461)
 
 KEY FINDINGS:
 ----------------------------------------
-• Total significant associations found: 30/300 (10.0%)
-• Best performing model: openai-gpt-3.5-turbo-0125 (overall score: 0.360)
-• Most predictive personality trait: agreeableness (30.0% significance)
+• Total significant associations found: 496/960 (51.7%)
+• Best performing model: gpt-4o (overall score: 0.540)
+• Most predictive personality trait: neuroticism (78.1% significance)
 
 RECOMMENDATIONS:
 ----------------------------------------
-• Use openai-gpt-3.5-turbo-0125 for future behavioral personality simulations
-• Consider prompt engineering improvements to increase behavioral validity
+• Use gpt-4o for future behavioral personality simulations
 • Models show similar performance - ensemble approaches may be beneficial
 
 ================================================================================
