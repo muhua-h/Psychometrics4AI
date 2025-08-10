@@ -250,7 +250,7 @@ def main():
     print("=== Study 4 Generalized Moral Simulation (Parallelized) ===")
     
     # Configuration
-    models = ['gpt-4', 'gpt-4o', 'llama', 'deepseek']
+    models = ['gpt-4', 'gpt-4o', 'llama', 'deepseek', 'openai-gpt-3.5-turbo-0125']
     personality_formats = ['bfi_expanded', 'bfi_likert', 'bfi_binary_elaborated', 'bfi_binary_simple']
     temperature = 1.0
     max_workers = 4  # Number of parallel workers (one per model)

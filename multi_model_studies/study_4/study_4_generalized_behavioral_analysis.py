@@ -56,7 +56,7 @@ def load_simulation_results(base_dir):
     all_results = {}
     personality_formats = ['bfi_expanded', 'bfi_likert', 'bfi_binary_elaborated', 'bfi_binary_simple']
     scenario_types = ['moral', 'risk']
-    models = ['gpt-4', 'gpt-4o', 'llama', 'deepseek']
+    models = ['gpt-4', 'gpt-4o', 'llama', 'deepseek', 'openai-gpt-3.5-turbo-0125']
     
     for format_name in personality_formats:
         format_dir = base_path / f"{format_name}_format"
@@ -267,7 +267,7 @@ def analyze_behavioral_regressions(human_data, simulation_results):
         for scenario_type in ['moral', 'risk']:
             scenarios = moral_scenarios if scenario_type == 'moral' else risk_scenarios
             
-            for model in ['gpt-4', 'gpt-4o', 'llama', 'deepseek']:
+            for model in ['gpt-4', 'gpt-4o', 'llama', 'deepseek', 'openai-gpt-3.5-turbo-0125']:
                 # Extract behavioral responses
                 responses = extract_behavioral_responses(simulation_results, scenario_type, model, format_name)
                 if not responses:

@@ -91,7 +91,7 @@ def load_simulation_data():
     moral_dir = Path("study_4_moral_results")
     risk_dir = Path("study_4_risk_results")
     
-    models = ['gpt-4', 'gpt-4o', 'llama', 'deepseek']
+    models = ['gpt-4', 'gpt-4o', 'llama', 'deepseek', 'openai-gpt-3.5-turbo-0125']
     simulation_data = {}
     
     for model in models:
