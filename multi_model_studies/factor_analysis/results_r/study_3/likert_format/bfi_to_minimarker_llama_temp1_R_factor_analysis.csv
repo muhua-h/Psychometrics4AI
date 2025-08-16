@@ -1,6 +1,6 @@
-"Study","Format","Model","Factor_Domain","N_Items","N_Participants","Alpha","CFI","TLI","RMSEA","SRMR","Chi_Square","DF","P_Value"
-"STUDY_3","likert","bfi_to_minimarker_llama_temp1","Extraversion",8,200,0.946,0.929,0.901,0.182,0.061,153.014,20,0
-"STUDY_3","likert","bfi_to_minimarker_llama_temp1","Agreeableness",8,200,0.959,0.755,0.657,0.372,0.092,572.219,20,0
-"STUDY_3","likert","bfi_to_minimarker_llama_temp1","Conscientiousness",8,200,0.938,0.816,0.742,0.276,0.072,323.618,20,0
-"STUDY_3","likert","bfi_to_minimarker_llama_temp1","Neuroticism",8,200,0.885,0.583,0.417,0.418,0.24,718.925,20,0
-"STUDY_3","likert","bfi_to_minimarker_llama_temp1","Openness",8,200,0.94,0.655,0.517,0.447,0.153,818.116,20,0
+"Study","Format","Model","Factor_Domain","N_Items","N_Participants","Alpha","Omega","CFI","TLI","RMSEA","SRMR","Chi_Square","DF","P_Value"
+"STUDY_3","likert","bfi_to_minimarker_llama_temp1","Extraversion",8,200,0.946,0.918,0.929,0.901,0.182,0.061,153.014,20,0
+"STUDY_3","likert","bfi_to_minimarker_llama_temp1","Agreeableness",8,200,0.959,0.94,0.755,0.657,0.372,0.092,572.219,20,0
+"STUDY_3","likert","bfi_to_minimarker_llama_temp1","Conscientiousness",8,200,0.938,0.95,0.816,0.742,0.276,0.072,323.618,20,0
+"STUDY_3","likert","bfi_to_minimarker_llama_temp1","Neuroticism",8,200,0.885,0.53,0.583,0.417,0.418,0.24,718.925,20,0
+"STUDY_3","likert","bfi_to_minimarker_llama_temp1","Openness",8,200,0.94,0.862,0.655,0.517,0.447,0.153,818.116,20,0

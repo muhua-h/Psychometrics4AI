@@ -8,6 +8,7 @@ suppressPackageStartupMessages({
   library(psych)
   library(jsonlite)
   library(dplyr)
+  library(semTools)
 })
 
 # Big Five domains
@@ -42,7 +43,21 @@ reverse_items <- function(data) {
   
   to_reverse <- negative[negative %in% names(data)]
   if (length(to_reverse) > 0) {
-    data[to_reverse] <- 10 - data[to_reverse]  # Assuming 1-9 scale
+    # Detect actual scale range
+    max_val <- max(data[to_reverse], na.rm = TRUE)
+    min_val <- min(data[to_reverse], na.rm = TRUE)
+    
+    # Reverse code based on detected scale
+    if (max_val <= 5) {  # 1-5 scale
+      data[to_reverse] <- 6 - data[to_reverse]
+    } else if (max_val <= 7) {  # 1-7 scale
+      data[to_reverse] <- 8 - data[to_reverse]
+    } else if (max_val <= 9) {  # 1-9 scale
+      data[to_reverse] <- 10 - data[to_reverse]
+    } else {
+      cat("Warning: Unknown scale range, using 1-9 reverse coding\n")
+      data[to_reverse] <- 10 - data[to_reverse]
+    }
   }
   data
 }
@@ -112,6 +127,22 @@ analyze_file <- function(json_path, output_dir) {
         # Reliability
         alpha <- psych::alpha(domain_data, check.keys = TRUE)$total$raw_alpha
         
+        # McDonald's Omega using multiple methods
+        omega <- tryCatch({
+          # Primary method: compRelSEM
+          compRelSEM(fit, return.total = TRUE)
+        }, error = function(e1) {
+          tryCatch({
+            # Fallback method: psych::omega
+            omega_res <- psych::omega(domain_data)
+            omega_res$omega.tot[1]
+          }, error = function(e2) {
+            # Final fallback: Cronbach's alpha approximation
+            cat("Warning: Both compRelSEM and psych::omega failed, using NA\n")
+            NA
+          })
+        })
+        
         # Summary
         results[[domain]] <- data.frame(
           Study = study,
@@ -121,6 +152,7 @@ analyze_file <- function(json_path, output_dir) {
           N_Items = length(available),
           N_Participants = nrow(domain_data),
           Alpha = round(alpha, 3),
+          Omega = round(omega, 3),
           CFI = round(fit_stats["cfi"], 3),
           TLI = round(fit_stats["tli"], 3),
           RMSEA = round(fit_stats["rmsea"], 3),
@@ -130,7 +162,7 @@ analyze_file <- function(json_path, output_dir) {
           P_Value = round(fit_stats["pvalue"], 3)
         )
         
-        cat("✅ Alpha:", round(alpha, 3), "CFI:", round(fit_stats["cfi"], 3), "\n")
+        cat("✅ Alpha:", round(alpha, 3), "Omega:", round(omega, 3), "CFI:", round(fit_stats["cfi"], 3), "\n")
         
       }, error = function(e) {
         cat("❌ CFA failed:", substr(as.character(e), 1, 50), "...\n")

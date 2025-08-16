@@ -113,8 +113,8 @@ def analyze_scenario_for_missing_participants(scenario_config: Dict[str, Any]) -
     # Load and filter data to match simulation criteria
     data = pd.read_csv(data_path)
     
-    # Apply same filtering as in simulation scripts (English >= 4, no null in bfi6)
-    data = data[data['8) English language reading/comprehension ability:'] >= 4]
+    # Apply same filtering as in simulation scripts (English == 5, no null in bfi6)
+    data = data[data['8) English language reading/comprehension ability:'] == 5]
     data = data.dropna(subset=[data.columns[17]])  # bfi6 column
     
     expected_participants = len(data)

@@ -258,7 +258,7 @@ def main():
     
     # Configuration
     models = ['openai-gpt-3.5-turbo-0125', 'gpt-4', 'gpt-4o', 'llama', 'deepseek']
-    personality_formats = ['bfi_expanded',  'bfi_binary_elaborated', 'bfi_binary_simple']
+    personality_formats = ['bfi_expanded',  'bfi_binary_elaborated', 'bfi_binary_simple', 'bfi_likert']
     scenario_types = ['moral', 'risk']
     temperature = 1.0
     max_workers = 10  # Number of parallel workers (one per model)
