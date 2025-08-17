@@ -55,31 +55,28 @@ def load_study3_data():
     logger.info(f"Loaded Study 3 simulated data: {df.shape}")
     return df
 
-def dichotomize_scores(df, cutoff_type='median'):
-    """Dichotomize continuous BFI-2 scores using specified cutoff."""
+
+def dichotomize_scores(df, cutoff_value=2.5):
+    """Dichotomize continuous BFI-2 scores using a fixed cutoff (default=2.5)."""
     df_dichotomized = df.copy()
-    
+
     # Define BFI-2 domains
     bfi_domains = ['e', 'a', 'c', 'n', 'o']
-    
+
     for domain in bfi_domains:
         bfi_col = f'bfi2_{domain}'
-        
-        if cutoff_type == 'median':
-            cutoff = df[bfi_col].median()
-        elif cutoff_type == 'mean':
-            cutoff = df[bfi_col].mean()
-        else:
-            # Use numeric cutoff
-            cutoff = float(cutoff_type)
-        
+
+        # Always use the fixed cutoff
+        cutoff = cutoff_value
+
         # Create dichotomized version (0 = low, 1 = high)
-        df_dichotomized[f'bfi2_{domain}_dichotomized'] = (df[bfi_col] >= cutoff).astype(int)
-        
+        df_dichotomized[f'{bfi_col}_dichotomized'] = (
+                    df[bfi_col] >= cutoff).astype(int)
+
         logger.info(f"Dichotomized {domain}: cutoff={cutoff:.3f}, "
-                   f"low={sum(df_dichotomized[f'bfi2_{domain}_dichotomized']==0)}, "
-                   f"high={sum(df_dichotomized[f'bfi2_{domain}_dichotomized']==1)}")
-    
+                    f"low={sum(df_dichotomized[f'{bfi_col}_dichotomized'] == 0)}, "
+                    f"high={sum(df_dichotomized[f'{bfi_col}_dichotomized'] == 1)}")
+
     return df_dichotomized
 
 def aggregate_minimarker_responses(df, format_type='binary'):
@@ -283,7 +280,7 @@ def main():
     logger.info("Starting unified binary dichotomized analysis for Study 2 and Study 3...")
     
     all_results = []
-    cutoff_type = 'median'
+    cutoff_type = 2.5
     
     # Define study configurations
     study_configs = [
