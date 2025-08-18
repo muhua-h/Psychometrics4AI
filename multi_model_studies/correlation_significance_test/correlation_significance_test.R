@@ -123,8 +123,10 @@ results_df <- do.call(rbind, lapply(results_list, function(x) {
     Test_Statistic = ifelse(is.null(x$statistic) || is.na(x$statistic), NA, round(x$statistic, 4)),
     P_Value = ifelse(is.null(x$p_value) || is.na(x$p_value), NA, round(x$p_value, 6)),
     Significant = ifelse(is.null(x$significant) || is.na(x$significant), FALSE, x$significant),
-    Bonferroni_P = NA,  # Will be filled in next step
-    Bonferroni_Significant = FALSE,  # Will be filled in next step
+    Bonferroni_P_Global = NA,  # Global correction (all 120 tests)
+    Bonferroni_Significant_Global = FALSE,
+    Bonferroni_P_Domain = NA,  # Domain-wise correction (20 tests per domain)
+    Bonferroni_Significant_Domain = FALSE,
     stringsAsFactors = FALSE
   )
 }))
@@ -132,88 +134,109 @@ results_df <- do.call(rbind, lapply(results_list, function(x) {
 # Add row names to avoid the missing row names error
 rownames(results_df) <- 1:nrow(results_df)
 
-# Apply Bonferroni correction (only to valid p-values)
+# Apply Global Bonferroni correction (all tests together)
 valid_p_indices <- !is.na(results_df$P_Value)
 valid_p_values <- results_df$P_Value[valid_p_indices]
 
 if(length(valid_p_values) > 0) {
-  n_tests <- length(valid_p_values)
-  bonferroni_alpha <- 0.05 / n_tests
-  bonferroni_p_values <- p.adjust(valid_p_values, method = "bonferroni")
+  n_tests_global <- length(valid_p_values)
+  bonferroni_alpha_global <- 0.05 / n_tests_global
+  bonferroni_p_values_global <- p.adjust(valid_p_values, method = "bonferroni")
   
-  # Fill in Bonferroni results for valid tests
-  results_df$Bonferroni_P[valid_p_indices] <- round(bonferroni_p_values, 6)
-  results_df$Bonferroni_Significant[valid_p_indices] <- bonferroni_p_values < 0.05
+  # Fill in Global Bonferroni results for valid tests
+  results_df$Bonferroni_P_Global[valid_p_indices] <- round(bonferroni_p_values_global, 6)
+  results_df$Bonferroni_Significant_Global[valid_p_indices] <- bonferroni_p_values_global < 0.05
 } else {
-  n_tests <- 0
-  bonferroni_alpha <- NA
+  n_tests_global <- 0
+  bonferroni_alpha_global <- NA
+}
+
+# Apply Domain-wise Bonferroni correction (20 tests per domain)
+for(domain in domains) {
+  domain_indices <- results_df$Domain == domain & !is.na(results_df$P_Value)
+  domain_p_values <- results_df$P_Value[domain_indices]
+  
+  if(length(domain_p_values) > 0) {
+    n_tests_domain <- length(domain_p_values)
+    bonferroni_alpha_domain <- 0.05 / n_tests_domain
+    bonferroni_p_values_domain <- p.adjust(domain_p_values, method = "bonferroni")
+    
+    # Fill in Domain-wise Bonferroni results
+    results_df$Bonferroni_P_Domain[domain_indices] <- round(bonferroni_p_values_domain, 6)
+    results_df$Bonferroni_Significant_Domain[domain_indices] <- bonferroni_p_values_domain < 0.05
+    
+    cat(sprintf("Domain %s: %d tests, corrected alpha = %.6f\n", 
+                domain, n_tests_domain, bonferroni_alpha_domain))
+  }
 }
 
 # Print summary statistics
-cat("=== CORRELATION SIGNIFICANCE TEST RESULTS (INCLUDING AVERAGE) ===\n")
+cat("\n=== CORRELATION SIGNIFICANCE TEST RESULTS (WITH TWO CORRECTION METHODS) ===\n")
 cat("Total number of tests:", nrow(results_df), "\n")
 cat("Valid tests (non-NA p-values):", sum(!is.na(results_df$P_Value)), "\n")
-if(!is.na(bonferroni_alpha)) {
-  cat("Bonferroni-corrected alpha level:", round(bonferroni_alpha, 6), "\n")
+if(!is.na(bonferroni_alpha_global)) {
+  cat("Global Bonferroni-corrected alpha level:", round(bonferroni_alpha_global, 6), "\n")
 }
+cat("Domain-wise Bonferroni-corrected alpha level (per domain):", 0.05/20, "\n")
 cat("Number of significant tests (uncorrected):", sum(results_df$Significant, na.rm = TRUE), "\n")
-cat("Number of significant tests (Bonferroni-corrected):", sum(results_df$Bonferroni_Significant, na.rm = TRUE), "\n")
+cat("Number of significant tests (Global Bonferroni):", sum(results_df$Bonferroni_Significant_Global, na.rm = TRUE), "\n")
+cat("Number of significant tests (Domain-wise Bonferroni):", sum(results_df$Bonferroni_Significant_Domain, na.rm = TRUE), "\n")
 cat("Human average correlation:", round(human_avg, 4), "\n\n")
 
 # Display results
 print(results_df)
 
-# Create summary by condition and domain
-cat("\n=== SUMMARY BY CONDITION AND DOMAIN ===\n")
-summary_stats <- aggregate(cbind(Bonferroni_Significant, P_Value) ~ Condition + Domain, 
-                           data = results_df, 
-                           FUN = function(x) c(mean = mean(x), sum_sig = sum(x == TRUE, na.rm = TRUE)))
+# Compare the two correction methods
+cat("\n=== COMPARISON OF CORRECTION METHODS ===\n")
+comparison <- data.frame(
+  Domain = results_df$Domain,
+  Condition = results_df$Condition,
+  Model = results_df$Model,
+  P_Value = results_df$P_Value,
+  Global_Corrected = results_df$Bonferroni_Significant_Global,
+  Domain_Corrected = results_df$Bonferroni_Significant_Domain,
+  Difference = results_df$Bonferroni_Significant_Domain != results_df$Bonferroni_Significant_Global
+)
 
-# Count significant results by condition
-sig_by_condition <- aggregate(Bonferroni_Significant ~ Condition, 
-                              data = results_df, 
-                              FUN = function(x) c(total_tests = length(x), significant = sum(x)))
-
-cat("\nSignificant results by condition (after Bonferroni correction):\n")
-print(sig_by_condition)
-
-# Count significant results by domain
-sig_by_domain <- aggregate(Bonferroni_Significant ~ Domain, 
-                           data = results_df, 
-                           FUN = function(x) c(total_tests = length(x), significant = sum(x)))
-
-cat("\nSignificant results by domain (after Bonferroni correction):\n")
-print(sig_by_domain)
-
-# Show only significant results after Bonferroni correction
-significant_results <- results_df[results_df$Bonferroni_Significant, ]
-if(nrow(significant_results) > 0) {
-  cat("\n=== SIGNIFICANT RESULTS (BONFERRONI-CORRECTED) ===\n")
-  print(significant_results)
+# Show cases where the two methods differ
+different_results <- comparison[comparison$Difference & !is.na(comparison$P_Value), ]
+if(nrow(different_results) > 0) {
+  cat("Cases where Global and Domain-wise corrections differ:\n")
+  print(different_results)
 } else {
-  cat("\n=== NO SIGNIFICANT RESULTS AFTER BONFERRONI CORRECTION ===\n")
+  cat("Global and Domain-wise corrections produce identical results.\n")
 }
 
-# Create a separate analysis focused on average scores
-cat("\n=== AVERAGE SCORE ANALYSIS ===\n")
-avg_results <- results_df[results_df$Domain == "Avg", ]
-cat("Average correlation results:\n")
-print(avg_results[, c("Condition", "Model", "AI_Correlation", "Human_Correlation", 
-                      "Difference", "P_Value", "Bonferroni_P", "Bonferroni_Significant")])
+# Summary by domain for both correction methods
+cat("\n=== SIGNIFICANT RESULTS BY DOMAIN (BOTH METHODS) ===\n")
+for(domain in domains) {
+  domain_data <- results_df[results_df$Domain == domain, ]
+  global_sig <- sum(domain_data$Bonferroni_Significant_Global, na.rm = TRUE)
+  domain_sig <- sum(domain_data$Bonferroni_Significant_Domain, na.rm = TRUE)
+  total_tests <- sum(!is.na(domain_data$P_Value))
+  
+  cat(sprintf("Domain %s: %d/%d significant (Global), %d/%d significant (Domain-wise)\n", 
+              domain, global_sig, total_tests, domain_sig, total_tests))
+}
 
-# Summary statistics for average scores by condition
-avg_by_condition <- aggregate(AI_Correlation ~ Condition, data = avg_results, 
-                              FUN = function(x) c(mean = mean(x), sd = sd(x), min = min(x), max = max(x)))
-cat("\nAverage correlation statistics by condition:\n")
-print(avg_by_condition)
+# Show significant results for both methods
+cat("\n=== SIGNIFICANT RESULTS (GLOBAL BONFERRONI CORRECTION) ===\n")
+global_significant <- results_df[results_df$Bonferroni_Significant_Global & !is.na(results_df$Bonferroni_Significant_Global), ]
+if(nrow(global_significant) > 0) {
+  print(global_significant[, c("Condition", "Model", "Domain", "AI_Correlation", "Human_Correlation", 
+                               "Difference", "P_Value", "Bonferroni_P_Global")])
+} else {
+  cat("No significant results with global Bonferroni correction.\n")
+}
 
-# Identify best performing models for average scores
-cat("\nBest performing models by condition (average correlation):\n")
-for(condition in unique(avg_results$Condition)) {
-  condition_data <- avg_results[avg_results$Condition == condition, ]
-  best_model <- condition_data[which.max(condition_data$AI_Correlation), ]
-  cat(sprintf("%s: %s (r = %.4f)\n", condition, best_model$Model, best_model$AI_Correlation))
+cat("\n=== SIGNIFICANT RESULTS (DOMAIN-WISE BONFERRONI CORRECTION) ===\n")
+domain_significant <- results_df[results_df$Bonferroni_Significant_Domain & !is.na(results_df$Bonferroni_Significant_Domain), ]
+if(nrow(domain_significant) > 0) {
+  print(domain_significant[, c("Condition", "Model", "Domain", "AI_Correlation", "Human_Correlation", 
+                               "Difference", "P_Value", "Bonferroni_P_Domain")])
+} else {
+  cat("No significant results with domain-wise Bonferroni correction.\n")
 }
 
 # Export results to CSV (optional)
-write.csv(results_df, "multi_model_studies/correlation_significance_test/correlation_significance_results.csv", row.names = FALSE)
+write.csv(results_df, "multi_model_studies/correlation_significance_test/correlation_significance_results_updated.csv", row.names = FALSE)
