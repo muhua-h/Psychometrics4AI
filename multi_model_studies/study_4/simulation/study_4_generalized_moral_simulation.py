@@ -145,7 +145,7 @@ def process_participant_moral(participant_data, model, personality_format, tempe
 
 def load_york_data():
     """Load and preprocess York behavioral data"""
-    data_path = Path('../../raw_data/york_data_clean.csv')
+    data_path = Path('../../../raw_data/york_data_clean.csv')
     if not data_path.exists():
         raise FileNotFoundError(f"Data file not found: {data_path}")
 
@@ -264,7 +264,7 @@ def main():
     print(f"Processing {len(participants_data)} participants")
     
     # Create output directory structure
-    base_output_dir = Path('study_4_generalized_results')
+    base_output_dir = Path('../study_4_generalized_results')
     base_output_dir.mkdir(exist_ok=True)
     
     # Create format directories

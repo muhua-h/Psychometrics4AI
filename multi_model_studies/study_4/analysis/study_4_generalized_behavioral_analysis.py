@@ -32,7 +32,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 def load_york_data():
     """Load and preprocess York behavioral data"""
-    data_path = Path('../../raw_data/york_data_clean.csv')
+    data_path = Path('../../../raw_data/york_data_clean.csv')
     if not data_path.exists():
         raise FileNotFoundError(f"Data file not found: {data_path}")
 
@@ -501,7 +501,7 @@ def main():
     regression_results = analyze_behavioral_regressions(human_data, simulation_results)
     
     # Create output directory
-    output_dir = 'study_4_generalized_analysis_results'
+    output_dir = '../study_4_generalized_analysis_results'
     output_path = Path(output_dir)
     output_path.mkdir(exist_ok=True)
     

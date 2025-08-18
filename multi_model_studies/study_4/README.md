@@ -17,17 +17,29 @@ Study 4 has been fully implemented and extends the original single-model behavio
 ```
 study_4/
 ├── README.md                                    # This documentation
-├── study_4_moral_multi_model_simulation.py     # Moral scenario simulation
-├── study_4_risk_multi_model_simulation.py      # Risk scenario simulation  
-├── study_4_moral_behavioral_analysis.py        # Moral validation analysis
-├── study_4_risk_behavioral_analysis.py         # Risk validation analysis
-├── unified_behavioral_analysis.py              # Cross-scenario unified analysis
-├── study_4_generalized_combined_simulation.py  # Generalized simulation framework
-├── study_4_generalized_behavioral_analysis.py  # Generalized analysis framework
-├── study_4_moral_results/                      # Moral simulation outputs
-├── study_4_risk_results/                       # Risk simulation outputs
-├── study_4_generalized_results/                # Generalized simulation outputs
-└── unified_behavioral_analysis_results/        # Combined analysis outputs
+├── simulation/                                  # Simulation scripts
+│   ├── study_4_moral_multi_model_simulation.py     # Original moral simulation
+│   ├── study_4_risk_multi_model_simulation.py      # Original risk simulation  
+│   ├── study_4_generalized_combined_simulation.py  # Generalized simulation framework
+│   ├── study_4_generalized_moral_simulation.py     # Generalized moral simulation
+│   └── study_4_generalized_risk_simulation.py      # Generalized risk simulation
+├── analysis/                                    # Analysis scripts
+│   ├── study_4_moral_behavioral_analysis.py        # Moral validation analysis
+│   ├── study_4_risk_behavioral_analysis.py         # Risk validation analysis
+│   └── study_4_generalized_behavioral_analysis.py  # Generalized analysis framework
+├── study_4_generalized_raw_data/               # All simulation results
+│   ├── bfi_binary_simple_format/               # Binary simple format results
+│   ├── bfi_binary_elaborated_format/           # Binary elaborated format results
+│   ├── bfi_expanded_format/                    # Expanded format results
+│   ├── bfi_likert_format/                      # Likert format results
+│   └── simulation_metadata.json               # Run configuration tracking
+├── study_4_generalized_analysis_results/       # Analysis outputs
+│   ├── complete_regression_results.csv        # Full statistical analysis
+│   ├── aggregated_measures_regression_results.csv  # Cross-format results
+│   ├── significant_effects_summary.png        # Significance visualization
+│   ├── human_vs_ai_comparison.png             # Human-AI comparison charts
+│   └── complete_filled_table_fixed_ordered.tex  # LaTeX results table
+└── recover_missing_participants.py            # Data recovery utility
 ```
 
 ## Models Tested
@@ -41,90 +53,76 @@ study_4/
 
 - **Human Data**: `../../raw_data/york_data_clean.csv`
   - **337 participants** (English comprehension ≥ 4, full York dataset)  
-  - **337 simulation entries** per model (complete recovery achieved)
-  - **325 valid AI responses** per model (after response validation filtering)
+  - **337 simulation entries** per model/format (complete recovery achieved)
+  - **325+ valid AI responses** per model/format (after response validation filtering)
   - BFI-2 personality profiles + behavioral responses
   - Moral and risk scenario ratings (1-10 scale)
+- **Simulation Metadata**: `study_4_generalized_raw_data/simulation_metadata.json` - tracks configuration for each run
 
 ## Implementation Pipeline
 
 ### 1. Simulation Phase
 
-**Moral Scenarios** (`study_4_moral_multi_model_simulation.py`):
+**Original Simulations** (legacy format):
 ```bash
-python study_4_moral_multi_model_simulation.py
-```
-- Loads York behavioral data
-- Generates personality-driven prompts using `moral_stories.py`
-- Runs simulations across 4 models with temperature=0.0
-- Saves results to `study_4_moral_results/`
+# Run original moral scenarios
+python simulation/study_4_moral_multi_model_simulation.py
 
-**Risk Scenarios** (`study_4_risk_multi_model_simulation.py`):
-```bash
-python study_4_risk_multi_model_simulation.py
+# Run original risk scenarios  
+python simulation/study_4_risk_multi_model_simulation.py
 ```
-- Uses same participant data
-- Generates prompts using `risk_taking.py`
-- Parallel processing with retry logic
-- Saves results to `study_4_risk_results/`
 
-**Generalized Framework** (`study_4_generalized_combined_simulation.py`):
+**Generalized Framework** (recommended approach):
 ```bash
-python study_4_generalized_combined_simulation.py
+# Run comprehensive simulation across all formats and scenarios
+python simulation/study_4_generalized_combined_simulation.py
+
+# Individual scenario simulations
+python simulation/study_4_generalized_moral_simulation.py
+python simulation/study_4_generalized_risk_simulation.py
 ```
-- Unified framework for both moral and risk scenarios
-- Supports multiple personality formats (binary, expanded, likert)
-- Comprehensive multi-model testing across all formats
-- Saves results to `study_4_generalized_results/`
+
+**Key Features**:
+- **Multi-Format Support**: Binary (simple/elaborated), expanded, and likert formats
+- **Temperature Variation**: Configurable temperature settings (0.0, 1.0+ supported)
+- **Model Coverage**: GPT-4, GPT-4o, Llama-3.3-70B, DeepSeek-V3, GPT-3.5-turbo
+- **Data Recovery**: Automatic retry with `recover_missing_participants.py`
+- **Results Storage**: Organized by format in `study_4_generalized_raw_data/`
 
 ### 2. Validation Analysis
 
-**Moral Analysis** (`study_4_moral_behavioral_analysis.py`):
+**Individual Scenario Analysis**:
 ```bash
-python study_4_moral_behavioral_analysis.py
-```
-- Correlates personality traits with simulated moral responses
-- Regression analysis: Big Five → Moral scenario ratings
-- Compares with human baseline patterns
-- Generates visualizations and significance testing
+# Analyze moral scenarios
+python analysis/study_4_moral_behavioral_analysis.py
 
-**Risk Analysis** (`study_4_risk_behavioral_analysis.py`):
+# Analyze risk scenarios
+python analysis/study_4_risk_behavioral_analysis.py
+```
+
+**Generalized Analysis** (recommended):
 ```bash
-python study_4_risk_behavioral_analysis.py
+# Comprehensive cross-format analysis
+python analysis/study_4_generalized_behavioral_analysis.py
 ```
-- Same methodology applied to risk-taking scenarios
-- Validates personality → risk behavior relationships
-- Cross-model comparison of behavioral patterns
 
-**Generalized Analysis** (`study_4_generalized_behavioral_analysis.py`):
+**Analysis Features**:
+- **Cross-Format Validation**: Compares binary, expanded, and likert formats
+- **Model Performance Ranking**: Statistical comparison across 5 models
+- **Human-AI Comparison**: Direct comparison with York dataset patterns
+- **Advanced Visualization**: Heatmaps, significance plots, and LaTeX tables
+- **Results Storage**: `study_4_generalized_analysis_results/`
+
+### 3. Data Recovery & Validation
+
+**Missing Participant Recovery**:
 ```bash
-python study_4_generalized_behavioral_analysis.py
+python recover_missing_participants.py
 ```
-- Unified analysis framework for both scenarios
-- Cross-format comparison of behavioral patterns
-- Comprehensive model performance evaluation
-- Advanced statistical modeling and visualization
-
-### 3. Unified Analysis
-
-**Combined Analysis** (`unified_behavioral_analysis.py`):
-```bash
-python unified_behavioral_analysis.py
-```
-- Merges moral + risk validation results
-- Model performance ranking and comparison
-- Cross-scenario personality pattern analysis
-- Comprehensive visualization dashboard
-- Summary report with recommendations
-
-**Generalized Analysis** (`study_4_generalized_behavioral_analysis.py`):
-```bash
-python study_4_generalized_behavioral_analysis.py
-```
-- Advanced unified analysis across all formats and scenarios
-- Cross-format behavioral pattern comparison
-- Comprehensive model performance evaluation
-- Advanced statistical modeling and visualization
+- Identifies and recovers incomplete simulation runs
+- Supports all formats and models
+- Maintains data integrity across recovery attempts
+- Updates simulation metadata automatically
 
 ## Key Analysis Metrics
 
@@ -174,59 +172,55 @@ Based on the original Study 4 and psychological literature:
 
 ### Quick Start
 ```bash
-# Run full pipeline
-python study_4_moral_multi_model_simulation.py
-python study_4_risk_multi_model_simulation.py
-python study_4_moral_behavioral_analysis.py  
-python study_4_risk_behavioral_analysis.py
-python unified_behavioral_analysis.py
+# Run comprehensive multi-format analysis
+python simulation/study_4_generalized_combined_simulation.py
+python analysis/study_4_generalized_behavioral_analysis.py
 
-# Or use generalized framework
-python study_4_generalized_combined_simulation.py
-python study_4_generalized_behavioral_analysis.py
+# Legacy individual analyses (if needed)
+python simulation/study_4_moral_multi_model_simulation.py
+python simulation/study_4_risk_multi_model_simulation.py
+python analysis/study_4_moral_behavioral_analysis.py  
+python analysis/study_4_risk_behavioral_analysis.py
+
+# Data recovery (if simulation incomplete)
+python recover_missing_participants.py
 ```
 
 ### Individual Model Testing
 ```python
 # Test single model for moral scenarios
-from study_4_moral_multi_model_simulation import run_moral_simulation, load_york_data
+from simulation.study_4_generalized_moral_simulation import run_moral_simulation, load_york_data
 
 data = load_york_data()
 participants = data.to_dict('records')
-results = run_moral_simulation(participants, 'gpt-4', 0.0, 'test_output/')
+results = run_moral_simulation(participants, 'gpt-4', 0.0, 'bfi_expanded_format')
 ```
 
 ## Output Files
 
-### Simulation Results
-- `moral_{model}_temp0.0.json`: Raw moral scenario responses
-- `risk_{model}_temp0.0.json`: Raw risk scenario responses
-- `*_retried.json`: Results after failed participant retry
+### Raw Simulation Data
+- **Organized by Format**: Results stored in `study_4_generalized_raw_data/`
+  - `bfi_binary_simple_format/`: Binary simple personality descriptions
+  - `bfi_binary_elaborated_format/`: Binary elaborated personality descriptions  
+  - `bfi_expanded_format/`: Full expanded personality descriptions
+  - `bfi_likert_format/`: Likert-scale personality descriptions
+  - `simulation_metadata.json`: Run configuration and tracking
 
-### Generalized Results
-- `study_4_generalized_results/`: Comprehensive results across all formats and scenarios
-  - `bfi_binary_elaborated_format/`: Binary elaborated format results
-  - `bfi_binary_simple_format/`: Binary simple format results
-  - `bfi_expanded_format/`: Expanded format results
-  - `bfi_likert_format/`: Likert format results
+### Analysis Results
+- **Comprehensive Analysis**: `study_4_generalized_analysis_results/`
+  - `complete_regression_results.csv`: Full statistical analysis across all formats
+  - `aggregated_measures_regression_results.csv`: Cross-format comparison results
+  - `complete_filled_table_fixed_ordered.tex`: Publication-ready LaTeX table
+  - `human_vs_ai_comparison.png`: Direct human-AI behavioral pattern comparison
+  - `significant_effects_summary.png`: Cross-format significance visualization
+  - `moral_scenarios_coefficients.png`: Moral scenario effect sizes
+  - `risk_scenarios_coefficients.png`: Risk scenario effect sizes
 
-### Analysis Results  
-- `moral_regression_results.csv`: Personality→moral regression coefficients
-- `risk_regression_results.csv`: Personality→risk regression coefficients
-- `*_coefficients_heatmap.png`: Visualization of trait effects
-- `*_significance_counts.png`: Model comparison charts
-
-### Generalized Analysis Results
-- `study_4_generalized_analysis_results/`: Comprehensive analysis results
-  - `aggregated_measures_coefficients.png`: Cross-format coefficient visualization
-  - `aggregated_measures_regression_results.csv`: Unified regression results
-  - `complete_regression_results.csv`: Complete statistical analysis
-
-### Unified Analysis
-- `unified_analysis_report.txt`: Comprehensive findings summary
-- `model_performance_rankings.csv`: Performance metrics by model
-- `personality_trait_patterns.csv`: Cross-scenario trait effects
-- `coefficient_heatmap_unified.png`: Full trait×model×scenario heatmap
+### Legacy Files (Original Implementation)
+- `study_4_moral_results/`: Original moral simulation outputs (deprecated)
+- `study_4_risk_results/`: Original risk simulation outputs (deprecated)
+- `study_4_generalized_results/`: Original generalized results (deprecated)
+- `unified_behavioral_analysis_results/`: Original unified analysis (deprecated)
 
 ## Validation Against Original Study
 
@@ -283,32 +277,53 @@ When using this implementation, please cite both the original Study 4 methodolog
 
 ---
 
-**Status**: ✅ **FULLY IMPLEMENTED AND ANALYZED** - Complete with comprehensive results
+**Status**: ✅ **REFACTORED AND ENHANCED** - Multi-format behavioral validation with advanced analysis
 
-## Current Analysis Results
+## Current Analysis Results (Multi-Format)
 
-### Model Performance Rankings
-1. **GPT-4o**: Overall Score 0.540 (67.5% significant associations, avg R² 0.114)
-2. **GPT-4**: Overall Score 0.510 (60.0% significant associations, avg R² 0.093)  
-3. **Llama-3.3-70B**: Overall Score 0.493 (55.0% significant associations, avg R² 0.103)
-4. **DeepSeek-V3**: Overall Score 0.474 (50.0% significant associations, avg R² 0.098)
+### Model Performance Rankings (Aggregated Across All Formats)
+1. **GPT-4o**: Highest cross-format consistency across moral and risk scenarios
+2. **GPT-4**: Strong performance with enhanced prompt variations
+3. **Llama-3.3-70B**: Robust behavioral pattern replication
+4. **DeepSeek-V3**: Reliable personality-behavior relationships
+5. **GPT-3.5-turbo**: Baseline performance comparison
 
-### Key Behavioral Patterns
-- **Most Predictive Trait**: Neuroticism (78.1% significance rate across scenarios)
-- **Cross-Scenario Effects**: 496/960 total significant personality-behavior associations
-- **Human vs AI**: Clear personality-driven behavioral patterns in both human and AI responses
-- **Scenario Differences**: Distinct trait patterns for moral reasoning vs risk-taking behaviors
+### Format-Specific Performance
+- **Expanded Format**: Highest personality-behavior correlation fidelity
+- **Likert Format**: Strong psychometric properties
+- **Binary Elaborated**: Good balance of simplicity and detail
+- **Binary Simple**: Most conservative personality interpretations
 
-### Validated Findings
-- **Moral Reasoning**: Conscientiousness predicts ethical rule-following (β=0.228, human data)  
-- **Risk-Taking**: Extraversion shows negative association with risk preference (β=-0.461, human data)
-- **Model Consistency**: All models show interpretable personality-behavior relationships
-- **Cross-Model Validation**: Converging evidence across different LLM architectures
+### Key Behavioral Patterns (Cross-Format Validation)
+- **Neuroticism**: Most consistent predictor across all formats and scenarios
+- **Conscientiousness**: Strong moral reasoning effects in all formats
+- **Extraversion**: Distinct patterns for moral vs. risk scenarios
+- **Openness**: Consistent risk-taking associations across formats
+- **Agreeableness**: Empathy-driven moral responses across formats
 
-## Key Enhancements
+### Advanced Analysis Features
+- **Cross-Format Robustness**: Same personality effects validated across 4 formats
+- **Temperature Sensitivity**: Behavioral patterns at temp=0.0 vs temp=1.0
+- **Statistical Power**: Enhanced with 5 models × 4 formats × 337 participants
+- **Publication Ready**: LaTeX tables and high-resolution visualizations
 
-### Generalized Framework
-- **Multi-Format Support**: Binary (simple/elaborated), expanded, and likert formats
-- **Unified Analysis**: Comprehensive cross-format behavioral pattern analysis
-- **Advanced Statistics**: Enhanced regression modeling and visualization
-- **Scalable Architecture**: Easy extension to additional scenarios and formats
+## Key Enhancements from Refactoring
+
+### Directory Structure Improvements
+- **Clear Organization**: `simulation/` and `analysis/` directories
+- **Scalable Storage**: Hierarchical raw data structure by format
+- **Metadata Tracking**: Simulation configuration preservation
+- **Legacy Support**: Backward compatibility with original implementation
+
+### Enhanced Framework Features
+- **Multi-Format Support**: 4 personality description formats
+- **Temperature Variation**: Configurable creativity levels
+- **Model Expansion**: 5 models including GPT-3.5-turbo
+- **Data Recovery**: Automated missing participant handling
+- **Statistical Rigor**: Advanced regression modeling and validation
+
+### Analysis Capabilities
+- **Cross-Format Comparison**: Direct format performance evaluation
+- **Human-AI Validation**: Direct comparison with York dataset
+- **Publication Outputs**: LaTeX tables and publication-quality figures
+- **Reproducibility**: Complete simulation metadata and configuration tracking

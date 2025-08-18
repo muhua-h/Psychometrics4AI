@@ -25,7 +25,7 @@ from scipy.stats import pearsonr
 
 def load_human_data():
     """Load human personality and behavioral data"""
-    data_path = Path('../../raw_data/york_data_clean.csv')
+    data_path = Path('../../../raw_data/york_data_clean.csv')
     if not data_path.exists():
         raise FileNotFoundError(f"Data file not found: {data_path}")
     

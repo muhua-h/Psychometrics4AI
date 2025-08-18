@@ -143,7 +143,7 @@ def process_participant_moral(participant_data, model, temperature=0.0):
 
 def load_york_data():
     """Load and preprocess York behavioral data"""
-    data_path = Path('../../raw_data/york_data_clean.csv')
+    data_path = Path('../../../raw_data/york_data_clean.csv')
     if not data_path.exists():
         raise FileNotFoundError(f"Data file not found: {data_path}")
 
