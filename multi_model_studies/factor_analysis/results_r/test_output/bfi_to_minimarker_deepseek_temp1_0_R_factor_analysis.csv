@@ -1,0 +1,6 @@
+"Study","Format","Model","Factor_Domain","N_Items","N_Participants","Alpha","Omega","CFI","TLI","RMSEA","SRMR","Chi_Square","DF","P_Value","Console_Output"
+"STUDY_2","expanded","bfi_to_minimarker_deepseek_temp1_0","Extraversion",8,438,0.959,0.962,0.903,0.864,0.22,0.035,444.58,20,0,"No warnings or messages"
+"STUDY_2","expanded","bfi_to_minimarker_deepseek_temp1_0","Agreeableness",8,438,0.921,0.915,0.685,0.559,0.369,0.094,1211.473,20,0,"No warnings or messages"
+"STUDY_2","expanded","bfi_to_minimarker_deepseek_temp1_0","Conscientiousness",8,438,0.911,0.89,0.745,0.642,0.317,0.108,901.914,20,0,"No warnings or messages"
+"STUDY_2","expanded","bfi_to_minimarker_deepseek_temp1_0","Neuroticism",8,438,0.896,0.596,0.674,0.543,0.386,0.206,1327.828,20,0,"No warnings or messages"
+"STUDY_2","expanded","bfi_to_minimarker_deepseek_temp1_0","Openness",8,438,0.887,0.67,0.54,0.356,0.567,0.255,2841.068,20,0,"No warnings or messages"

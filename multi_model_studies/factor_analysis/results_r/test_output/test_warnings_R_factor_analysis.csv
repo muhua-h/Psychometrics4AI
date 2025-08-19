@@ -1,0 +1,3 @@
+"Study","Format","Model","Factor_Domain","N_Items","N_Participants","Alpha","Omega","CFI","TLI","RMSEA","SRMR","Chi_Square","DF","P_Value","Console_Output"
+"STUDY_4","unknown","test_warnings","Extraversion",8,10,NA,NA,NA,NA,NA,NA,NA,NA,NA,"ERROR: lavaan->lav_samplestats_icov():  
+   sample covariance matrix is not positive-definite"

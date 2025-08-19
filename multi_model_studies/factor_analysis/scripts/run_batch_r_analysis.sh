@@ -57,9 +57,6 @@ analyze_study "$BASE_DIR/study_2" "study_2"
 # Study 3  
 analyze_study "$BASE_DIR/study_3" "study_3"
 
-# Study 4
-analyze_study "$BASE_DIR/study_4" "study_4"
-
 echo "=== Analysis Complete ==="
 echo "Results saved to: $RESULTS_DIR"
 

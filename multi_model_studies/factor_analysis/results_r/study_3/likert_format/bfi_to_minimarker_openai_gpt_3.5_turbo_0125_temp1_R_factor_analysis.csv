@@ -1,6 +1,7 @@
-"Study","Format","Model","Factor_Domain","N_Items","N_Participants","Alpha","Omega","CFI","TLI","RMSEA","SRMR","Chi_Square","DF","P_Value"
-"STUDY_3","likert","bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1","Extraversion",8,200,0.82,0.599,0.773,0.682,0.244,0.183,258.573,20,0
-"STUDY_3","likert","bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1","Agreeableness",8,200,0.82,0.78,0.743,0.64,0.3,0.24,380.825,20,0
-"STUDY_3","likert","bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1","Conscientiousness",8,200,0.838,0.657,0.563,0.388,0.335,0.234,467.709,20,0
-"STUDY_3","likert","bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1","Neuroticism",8,200,0.639,0.315,0.596,0.435,0.321,0.233,432.858,20,0
-"STUDY_3","likert","bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1","Openness",8,200,0.87,0.856,0.729,0.62,0.298,0.132,375.132,20,0
+"Study","Format","Model","Factor_Domain","N_Items","N_Participants","Alpha","Omega","CFI","TLI","RMSEA","SRMR","Chi_Square","DF","P_Value","Has_Warning","Warnings"
+"STUDY_3","likert","bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1","Extraversion",8,200,0.82,0.599,0.773,0.682,0.244,0.183,258.573,20,0,FALSE,NA
+"STUDY_3","likert","bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1","Agreeableness",8,200,0.82,0.78,0.743,0.64,0.3,0.24,380.825,20,0,FALSE,NA
+"STUDY_3","likert","bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1","Conscientiousness",8,200,0.838,0.657,0.563,0.388,0.335,0.234,467.709,20,0,FALSE,NA
+"STUDY_3","likert","bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1","Neuroticism",8,200,0.639,0.315,0.596,0.435,0.321,0.233,432.858,20,0,TRUE,"Some items were negatively correlated with the first principal component and were automatically reversed.
+ This is indicated by a negative sign for the variable name."
+"STUDY_3","likert","bfi_to_minimarker_openai_gpt_3.5_turbo_0125_temp1","Openness",8,200,0.87,0.856,0.729,0.62,0.298,0.132,375.132,20,0,FALSE,NA

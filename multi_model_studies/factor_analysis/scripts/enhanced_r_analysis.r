@@ -1,5 +1,5 @@
 # Explicit CFA Analysis for ALL Model × Domain × Format Combinations
-# No loops - every combination written out explicitly
+# Enhanced version with warning message capture
 # Usage: Run line by line in R console
 
 suppressPackageStartupMessages({
@@ -37,6 +37,26 @@ REVERSE_ITEMS <- c(
   "Relaxed", "Unenvious", "Uncreative", "Unintellectual"
 )
 
+# Function to capture warnings and convert to string
+capture_warnings <- function(expr) {
+  warnings_list <- list()
+  result <- withCallingHandlers(
+    expr,
+    warning = function(w) {
+      warnings_list <<- c(warnings_list, conditionMessage(w))
+      invokeRestart("muffleWarning")
+    }
+  )
+  
+  warnings_text <- if (length(warnings_list) > 0) {
+    paste(warnings_list, collapse = " | ")
+  } else {
+    ""
+  }
+  
+  list(result = result, warnings = warnings_text)
+}
+
 # Function to detect scale range
 get_scale_range <- function(data) {
   max_val <- max(data, na.rm = TRUE)
@@ -59,12 +79,13 @@ load_and_prepare_data <- function(json_path, model_name, format_type, study_name
 
   if (!file.exists(json_path)) {
     cat("❌ File not found:", json_path, "\n")
-    return(NULL)
+    return(list(data = NULL, warnings = "File not found"))
   }
 
   cat("📊 Loading:", basename(json_path), "\n")
 
-  tryCatch({
+  # Capture warnings during data loading
+  load_result <- capture_warnings({
     # Load JSON
     json_data <- fromJSON(json_path)
 
@@ -82,18 +103,17 @@ load_and_prepare_data <- function(json_path, model_name, format_type, study_name
     data <- data[complete.cases(data), ]
 
     if (nrow(data) < 10) {
-      cat("❌ Insufficient data - only", nrow(data), "rows\n")
-      return(NULL)
+      stop("Insufficient data - only ", nrow(data), " rows")
     }
 
     # Detect scale range
     scale_max <- get_scale_range(data)
-    cat("📏 Detected scale range: 1-", scale_max, "\n", sep = "")
+    cat("🔍 Detected scale range: 1-", scale_max, "\n", sep = "")
 
     # Apply reverse coding
     existing_reverse <- intersect(REVERSE_ITEMS, names(data))
     if (length(existing_reverse) > 0) {
-      cat("↩️  Reverse coding", length(existing_reverse), "items:\n")
+      cat("↩️ Reverse coding", length(existing_reverse), "items:\n")
       for (item in existing_reverse) {
         original_mean <- mean(data[[item]], na.rm = TRUE)
         data[[item]] <- correct_reverse_score(data[[item]], scale_max)
@@ -106,22 +126,31 @@ load_and_prepare_data <- function(json_path, model_name, format_type, study_name
     variances <- apply(data, 2, var, na.rm = TRUE)
     near_zero <- which(variances < 0.01)
     if (length(near_zero) > 0) {
-      cat("⚠️  Removing near-zero variance items:", names(data)[near_zero], "\n")
+      cat("⚠️ Removing near-zero variance items:", names(data)[near_zero], "\n")
       data <- data[, -near_zero]
     }
 
     cat("✅ Prepared:", nrow(data), "observations,", ncol(data), "items\n")
-    return(data)
-
-  }, error = function(e) {
-    cat("❌ Error loading", basename(json_path), ":", e$message, "\n")
-    return(NULL)
+    data
   })
+  
+  if (inherits(load_result$result, "try-error") || is.null(load_result$result)) {
+    error_msg <- if (inherits(load_result$result, "try-error")) {
+      as.character(load_result$result)
+    } else {
+      "Unknown error during data loading"
+    }
+    cat("❌ Error loading", basename(json_path), ":", error_msg, "\n")
+    return(list(data = NULL, warnings = paste(load_result$warnings, error_msg, sep = " | ")))
+  }
+  
+  return(list(data = load_result$result, warnings = load_result$warnings))
 }
 
 # Function to run CFA for a single domain
 run_domain_cfa <- function(domain, items, data, model_name, format_type, study_name) {
-  tryCatch({
+  # Capture all warnings during CFA analysis
+  cfa_result <- capture_warnings({
     # Clean item names to avoid special characters issues
     clean_items <- gsub("[^a-zA-Z0-9]", "_", items)
     names(data) <- gsub("[^a-zA-Z0-9]", "_", names(data))
@@ -136,18 +165,18 @@ run_domain_cfa <- function(domain, items, data, model_name, format_type, study_n
     fit <- cfa(model_syntax, data = data, estimator = "MLR", std.lv = TRUE)
 
     if (!lavInspect(fit, "converged")) {
-      cat("❌ Model did not converge\n")
-      return(NULL)
+      stop("Model did not converge")
     }
 
     fit_measures <- fitMeasures(fit, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
 
-    alpha <- psych::alpha(data[, items])$total$raw_alpha
-    omega <- psych::omega(data[, items])$omega.tot
+    # Calculate reliability measures with warning capture
+    alpha_result <- capture_warnings(psych::alpha(data[, items])$total$raw_alpha)
+    omega_result <- capture_warnings(psych::omega(data[, items])$omega.tot)
 
     cat("✅ Results for", toupper(domain), "\n")
-    cat(sprintf("   Alpha: %.3f\n", alpha))
-    cat(sprintf("   Omega: %.3f\n", omega))
+    cat(sprintf("   Alpha: %.3f\n", alpha_result$result))
+    cat(sprintf("   Omega: %.3f\n", omega_result$result))
     cat(sprintf("   CFI:   %.3f\n", fit_measures["cfi"]))
     cat(sprintf("   TLI:   %.3f\n", fit_measures["tli"]))
     cat(sprintf("   RMSEA: %.3f\n", fit_measures["rmsea"]))
@@ -155,36 +184,107 @@ run_domain_cfa <- function(domain, items, data, model_name, format_type, study_n
     cat(sprintf("   Chi²:  %.3f (df=%d, p=%.3f)\n",
                 fit_measures["chisq"], fit_measures["df"], fit_measures["pvalue"]))
 
-    return(data.frame(
-      Study = toupper(study_name),
-      Format = format_type,
-      Model = model_name,
-      Factor_Domain = toupper(domain),
-      N_Items = length(items),
-      N_Participants = nrow(data),
-      Alpha = round(alpha, 3),
-      Omega = round(omega, 3),
-      CFI = round(fit_measures["cfi"], 3),
-      TLI = round(fit_measures["tli"], 3),
-      RMSEA = round(fit_measures["rmsea"], 3),
-      SRMR = round(fit_measures["srmr"], 3),
-      Chi_Square = round(fit_measures["chisq"], 3),
-      DF = fit_measures["df"],
-      P_Value = round(fit_measures["pvalue"], 3),
-      stringsAsFactors = FALSE
-    ))
+    # Combine all warnings
+    all_warnings <- paste(c(alpha_result$warnings, omega_result$warnings), collapse = " | ")
+    all_warnings <- if (all_warnings == " | " || all_warnings == "") "" else all_warnings
 
-  }, error = function(e) {
-    cat("❌ CFA failed for", toupper(domain), ":", e$message, "\n")
-    return(NULL)
+    list(
+      result = data.frame(
+        Study = toupper(study_name),
+        Format = format_type,
+        Model = model_name,
+        Factor_Domain = toupper(domain),
+        N_Items = length(items),
+        N_Participants = nrow(data),
+        Alpha = round(alpha_result$result, 3),
+        Omega = round(omega_result$result, 3),
+        CFI = round(fit_measures["cfi"], 3),
+        TLI = round(fit_measures["tli"], 3),
+        RMSEA = round(fit_measures["rmsea"], 3),
+        SRMR = round(fit_measures["srmr"], 3),
+        Chi_Square = round(fit_measures["chisq"], 3),
+        DF = fit_measures["df"],
+        P_Value = round(fit_measures["pvalue"], 3),
+        Warnings = all_warnings,
+        stringsAsFactors = FALSE
+      ),
+      warnings = all_warnings
+    )
   })
+  
+  if (inherits(cfa_result$result, "try-error")) {
+    error_msg <- as.character(cfa_result$result)
+    cat("❌ CFA failed for", toupper(domain), ":", error_msg, "\n")
+    return(list(
+      result = data.frame(
+        Study = toupper(study_name),
+        Format = format_type,
+        Model = model_name,
+        Factor_Domain = toupper(domain),
+        N_Items = length(items),
+        N_Participants = nrow(data),
+        Alpha = NA,
+        Omega = NA,
+        CFI = NA,
+        TLI = NA,
+        RMSEA = NA,
+        SRMR = NA,
+        Chi_Square = NA,
+        DF = NA,
+        P_Value = NA,
+        Warnings = paste(cfa_result$warnings, error_msg, sep = " | "),
+        stringsAsFactors = FALSE
+      ),
+      warnings = paste(cfa_result$warnings, error_msg, sep = " | ")
+    ))
+  }
+  
+  # Add any CFA-level warnings to the result
+  if (cfa_result$warnings != "") {
+    cfa_result$result$result$Warnings <- paste(cfa_result$result$warnings, cfa_result$warnings, sep = " | ")
+  }
+  
+  return(cfa_result$result)
 }
 
 # Function to run complete analysis for one model/format/study
 run_single_analysis <- function(json_path, model_name, format_type, study_name) {
-  data <- load_and_prepare_data(json_path, model_name, format_type, study_name)
-  if (is.null(data)) return(NULL)
+  # Load data with warning capture
+  data_result <- load_and_prepare_data(json_path, model_name, format_type, study_name)
+  if (is.null(data_result$data)) {
+    # Create a failed analysis record
+    failed_result <- data.frame(
+      Study = toupper(study_name),
+      Format = format_type,
+      Model = model_name,
+      Factor_Domain = "DATA_LOAD_FAILED",
+      N_Items = NA,
+      N_Participants = NA,
+      Alpha = NA,
+      Omega = NA,
+      CFI = NA,
+      TLI = NA,
+      RMSEA = NA,
+      SRMR = NA,
+      Chi_Square = NA,
+      DF = NA,
+      P_Value = NA,
+      Warnings = data_result$warnings,
+      stringsAsFactors = FALSE
+    )
+    
+    # Still save this failed result
+    output_dir <- file.path(RESULTS_DIR, study_name, paste0(format_type, "_format"))
+    if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+    output_file <- file.path(output_dir, paste0(model_name, "_R_factor_analysis.csv"))
+    write_csv(failed_result, output_file)
+    cat("\n💾 Failed analysis saved to:", output_file, "\n")
+    
+    return(failed_result)
+  }
 
+  data <- data_result$data
+  data_warnings <- data_result$warnings
   results <- list()
 
   # Run CFA for each domain
@@ -193,11 +293,39 @@ run_single_analysis <- function(json_path, model_name, format_type, study_name) 
 
     if (length(items) >= 3) {
       result <- run_domain_cfa(domain, items, data, model_name, format_type, study_name)
-      if (!is.null(result)) {
-        results[[length(results) + 1]] <- result
+      if (!is.null(result$result)) {
+        # Add data loading warnings to domain-specific warnings
+        if (data_warnings != "") {
+          result$result$Warnings <- paste(data_warnings, result$result$Warnings, sep = " | ")
+          result$result$Warnings <- gsub("^\\s*\\|\\s*|\\s*\\|\\s*$", "", result$result$Warnings) # Clean up separators
+        }
+        results[[length(results) + 1]] <- result$result
       }
     } else {
-      cat("⚠️  Skipping", toupper(domain), "- insufficient items (", length(items), ")\n")
+      cat("⚠️ Skipping", toupper(domain), "- insufficient items (", length(items), ")\n")
+      
+      # Record this skip as a result with warnings
+      skip_result <- data.frame(
+        Study = toupper(study_name),
+        Format = format_type,
+        Model = model_name,
+        Factor_Domain = toupper(domain),
+        N_Items = length(items),
+        N_Participants = nrow(data),
+        Alpha = NA,
+        Omega = NA,
+        CFI = NA,
+        TLI = NA,
+        RMSEA = NA,
+        SRMR = NA,
+        Chi_Square = NA,
+        DF = NA,
+        P_Value = NA,
+        Warnings = paste(data_warnings, "Insufficient items for CFA", sep = " | "),
+        stringsAsFactors = FALSE
+      )
+      skip_result$Warnings <- gsub("^\\s*\\|\\s*|\\s*\\|\\s*$", "", skip_result$Warnings)
+      results[[length(results) + 1]] <- skip_result
     }
   }
 
@@ -216,6 +344,19 @@ run_single_analysis <- function(json_path, model_name, format_type, study_name) 
   write_csv(final_results, output_file)
 
   cat("\n💾 Results saved to:", output_file, "\n")
+  
+  # Print summary of warnings
+  warnings_summary <- final_results %>%
+    filter(Warnings != "" & !is.na(Warnings)) %>%
+    select(Factor_Domain, Warnings)
+  
+  if (nrow(warnings_summary) > 0) {
+    cat("\n⚠️ WARNING SUMMARY:\n")
+    for (i in 1:nrow(warnings_summary)) {
+      cat(sprintf("   %s: %s\n", warnings_summary$Factor_Domain[i], warnings_summary$Warnings[i]))
+    }
+  }
+  
   return(final_results)
 }
 
@@ -507,109 +648,4 @@ run_study3_likert_gpt35 <- function() {
 run_study3_binary_simple_gpt4 <- function() {
   run_single_analysis(
     json_path = file.path(BASE_DIR, "study_3", "study_3_binary_simple_results", "bfi_to_minimarker_binary_gpt_4_temp1.json"),
-    model_name = "gpt_4",
-    format_type = "binary_simple",
-    study_name = "study_3"
-  )
-}
-
-run_study3_binary_simple_gpt4o <- function() {
-  run_single_analysis(
-    json_path = file.path(BASE_DIR, "study_3", "study_3_binary_simple_results", "bfi_to_minimarker_binary_gpt_4o_temp1.json"),
-    model_name = "gpt_4o",
-    format_type = "binary_simple",
-    study_name = "study_3"
-  )
-}
-
-run_study3_binary_simple_llama <- function() {
-  run_single_analysis(
-    json_path = file.path(BASE_DIR, "study_3", "study_3_binary_simple_results", "bfi_to_minimarker_binary_llama_temp1.json"),
-    model_name = "llama_3.3_70b",
-    format_type = "binary_simple",
-    study_name = "study_3"
-  )
-}
-
-run_study3_binary_simple_deepseek <- function() {
-  run_single_analysis(
-    json_path = file.path(BASE_DIR, "study_3", "study_3_binary_simple_results", "bfi_to_minimarker_binary_deepseek_temp1.json"),
-    model_name = "deepseek_v3",
-    format_type = "binary_simple",
-    study_name = "study_3"
-  )
-}
-
-run_study3_binary_simple_gpt35 <- function() {
-  run_single_analysis(
-    json_path = file.path(BASE_DIR, "study_3", "study_3_binary_simple_results", "bfi_to_minimarker_binary_openai_gpt_3.5_turbo_0125_temp1.json"),
-    model_name = "gpt_3.5_turbo",
-    format_type = "binary_simple",
-    study_name = "study_3"
-  )
-}
-
-# STUDY 3 - BINARY ELABORATED FORMAT
-run_study3_binary_elaborated_gpt4 <- function() {
-  run_single_analysis(
-    json_path = file.path(BASE_DIR, "study_3", "study_3_binary_elaborated_results", "bfi_to_minimarker_binary_gpt_4_temp1.json"),
-    model_name = "gpt_4",
-    format_type = "binary_elaborated",
-    study_name = "study_3"
-  )
-}
-
-run_study3_binary_elaborated_gpt4o <- function() {
-  run_single_analysis(
-    json_path = file.path(BASE_DIR, "study_3", "study_3_binary_elaborated_results", "bfi_to_minimarker_binary_gpt_4o_temp1.json"),
-    model_name = "gpt_4o",
-    format_type = "binary_elaborated",
-    study_name = "study_3"
-  )
-}
-
-run_study3_binary_elaborated_llama <- function() {
-  run_single_analysis(
-    json_path = file.path(BASE_DIR, "study_3", "study_3_binary_elaborated_results", "bfi_to_minimarker_binary_llama_temp1.json"),
-    model_name = "llama_3.3_70b",
-    format_type = "binary_elaborated",
-    study_name = "study_3"
-  )
-}
-
-run_study3_binary_elaborated_deepseek <- function() {
-  run_single_analysis(
-    json_path = file.path(BASE_DIR, "study_3", "study_3_binary_elaborated_results", "bfi_to_minimarker_binary_deepseek_temp1.json"),
-    model_name = "deepseek_v3",
-    format_type = "binary_elaborated",
-    study_name = "study_3"
-  )
-}
-
-run_study3_binary_elaborated_gpt35 <- function() {
-  run_single_analysis(
-    json_path = file.path(BASE_DIR, "study_3", "study_3_binary_elaborated_results", "bfi_to_minimarker_binary_openai_gpt_3.5_turbo_0125_temp1.json"),
-    model_name = "gpt_3.5_turbo",
-    format_type = "binary_elaborated",
-    study_name = "study_3"
-  )
-}
-
-# ==============================================
-# USAGE EXAMPLES - COPY/PASTE INTO R CONSOLE
-# ==============================================
-
-# Quick test examples:
-run_study2_expanded_gpt4()
-# run_study2_expanded_gpt4o()
-# run_study3_likert_deepseek()
-
-# Run all combinations for a specific study and format:
-# run_study2_expanded_gpt4()
-# run_study2_expanded_gpt4o()
-# run_study2_expanded_llama()
-# run_study2_expanded_deepseek()
-# run_study2_expanded_gpt35()
-
-# Check if files exist
-# file.exists("/Users/mhhuang/Psychometrics4AI_revision/multi_model_studies/study_2/study_2_expanded_results/bfi_to_minimarker_gpt_4_temp1_0.json")
+    model_name = "g
