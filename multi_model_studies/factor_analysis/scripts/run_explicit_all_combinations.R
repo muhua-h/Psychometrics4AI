@@ -1,6 +1,3 @@
-# Enhanced CFA Analysis with Explicit Domain-Level Warnings
-# Modifications to make warnings and messages domain-specific
-
 suppressPackageStartupMessages({
   library(dplyr)
   library(readr)
@@ -19,7 +16,6 @@ if (!dir.exists(RESULTS_DIR)) {
   dir.create(RESULTS_DIR, recursive = TRUE)
 }
 
-
 # Define Big Five domains with actual mini-marker items
 DOMAINS <- list(
   Extraversion = c("Bold", "Energetic", "Extraverted", "Talkative", "Bashful", "Quiet", "Shy", "Withdrawn"),
@@ -36,15 +32,6 @@ REVERSE_ITEMS <- c(
   "Careless", "Disorganized", "Inefficient", "Sloppy", 
   "Relaxed", "Unenvious", "Uncreative", "Unintellectual"
 )
-
-# Function to detect scale range
-get_scale_range <- function(data) {
-  max_val <- max(data, na.rm = TRUE)
-  if (max_val <= 5) return(5)
-  if (max_val <= 7) return(7)
-  if (max_val <= 9) return(9)
-  return(9)
-}
 
 # Function to reverse score items
 correct_reverse_score <- function(x, scale_max) {
@@ -87,7 +74,7 @@ load_and_prepare_data <- function(json_path, model_name, format_type, study_name
     }
     
     # Detect scale range
-    scale_max <- get_scale_range(data)
+    scale_max <- 9
     cat("🔍 Detected scale range: 1-", scale_max, "\n", sep = "")
     
     # Apply reverse coding
@@ -159,7 +146,6 @@ run_domain_cfa <- function(domain, items, data, model_name, format_type, study_n
       model_syntax <- paste(domain, "=~", paste(items, collapse = " + "))
       
       cat(domain_header, "📋 Model specification:\n")
-      # cat(domain_header, "   Items (", length(items), "):", paste(items, collapse = ", "), "\n")
       cat(domain_header, "   Syntax:", model_syntax, "\n")
       
       # Check correlations before fitting
@@ -184,7 +170,7 @@ run_domain_cfa <- function(domain, items, data, model_name, format_type, study_n
         cat(domain_header, "⚠️ Many low correlations - items may not be measuring same construct\n")
       }
       
-      cat(domain_header, "🔄 Fitting CFA model...\n")
+      cat(domain_header, "🔥 Fitting CFA model...\n")
       
       # Fit the model
       fit <- cfa(model_syntax, data = data, estimator = "MLR", std.lv = TRUE)
@@ -195,11 +181,6 @@ run_domain_cfa <- function(domain, items, data, model_name, format_type, study_n
         return(NULL)
       }
       
-      # Check for estimation problems
-      # if (lavInspect(fit, "post.check")) {
-      #   cat(domain_header, "⚠️ Post-fitting check issues detected\n")
-      # }
-      # 
       # Get fit measures
       fit_measures <- fitMeasures(fit, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
       
@@ -218,37 +199,6 @@ run_domain_cfa <- function(domain, items, data, model_name, format_type, study_n
       # McDonald's Omega
       omega_result <- psych::omega(data[, items], plot = FALSE)
       omega <- omega_result$omega.tot
-      
-      # Display detailed results
-      # cat(domain_header, "✅ CFA Results Summary:\n")
-      # cat(domain_header, sprintf("   📈 Sample Size: %d participants\n", nrow(data)))
-      # cat(domain_header, sprintf("   📊 Items Analyzed: %d\n", length(items)))
-      # cat(domain_header, sprintf("   🔸 Cronbach's Alpha: %.3f\n", alpha))
-      # cat(domain_header, sprintf("   🔸 McDonald's Omega: %.3f\n", omega))
-      # cat(domain_header, sprintf("   🔸 CFI: %.3f\n", fit_measures["cfi"]))
-      # cat(domain_header, sprintf("   🔸 TLI: %.3f\n", fit_measures["tli"]))
-      # cat(domain_header, sprintf("   🔸 RMSEA: %.3f\n", fit_measures["rmsea"]))
-      # cat(domain_header, sprintf("   🔸 SRMR: %.3f\n", fit_measures["srmr"]))
-      # cat(domain_header, sprintf("   🔸 Chi²: %.3f (df=%d, p=%.3f)\n", 
-      #                            fit_measures["chisq"], fit_measures["df"], fit_measures["pvalue"]))
-      
-      # Interpret fit indices
-      # cat(domain_header, "🔍 Fit Assessment:\n")
-      # if (fit_measures["cfi"] >= 0.95) {
-      #   cat(domain_header, "   ✅ CFI: Excellent fit (≥0.95)\n")
-      # } else if (fit_measures["cfi"] >= 0.90) {
-      #   cat(domain_header, "   ⚠️ CFI: Acceptable fit (0.90-0.94)\n")
-      # } else {
-      #   cat(domain_header, "   ❌ CFI: Poor fit (<0.90)\n")
-      # }
-      # 
-      # if (fit_measures["rmsea"] <= 0.06) {
-      #   cat(domain_header, "   ✅ RMSEA: Good fit (≤0.06)\n")
-      # } else if (fit_measures["rmsea"] <= 0.08) {
-      #   cat(domain_header, "   ⚠️ RMSEA: Acceptable fit (0.06-0.08)\n")
-      # } else {
-      #   cat(domain_header, "   ❌ RMSEA: Poor fit (>0.08)\n")
-      # }
       
       # Report any collected warnings
       if (length(domain_warnings) > 0) {
@@ -304,7 +254,7 @@ run_single_analysis <- function(json_path, model_name, format_type, study_name) 
   failed_domains <- character(0)
   
   cat("\n", paste(rep("=", 80), collapse = ""), "\n", sep = "")
-  cat("🔄 STARTING DOMAIN-BY-DOMAIN CFA ANALYSIS\n")
+  cat("🔥 STARTING DOMAIN-BY-DOMAIN CFA ANALYSIS\n")
   cat(paste(rep("=", 80), collapse = ""), "\n", sep = "")
   
   # Run CFA for each domain with detailed reporting
@@ -368,262 +318,373 @@ run_single_analysis <- function(json_path, model_name, format_type, study_name) 
   return(final_results)
 }
 
-# Keep all your existing function definitions for the specific analyses...
-# [All the run_study2_* and run_study3_* functions remain the same]
+# ==============================================
+# DYNAMIC FUNCTION GENERATION
+# ==============================================
+
+# Function to generate correct filename based on study and format
+get_filename <- function(study, format, model) {
+  # Determine the correct file prefix based on study
+  file_prefix <- if (study == "study_2") "bfi_to_minimarker" else "bfi_to_minimarker"
+  
+  # Handle special model name formatting for files
+  file_model_name <- switch(model,
+                            "openai_gpt_3.5_turbo_0125" = "openai_gpt_3.5_turbo_0125",
+                            "deepseek" = "deepseek", 
+                            "gpt_4" = "gpt_4",
+                            "gpt_4o" = "gpt_4o",
+                            "llama" = "llama",
+                            model  # fallback
+  )
+  
+  # Generate filename based on format and study
+  if (grepl("binary", format)) {
+    if (study == "study_2") {
+      # Study 2 binary formats have temp1_0 suffix
+      filename <- paste0(file_prefix, "_binary_", file_model_name, "_temp1_0.json")
+    } else {
+      # Study 3 binary formats have temp1 suffix (no _0)
+      filename <- paste0(file_prefix, "_binary_", file_model_name, "_temp1.json")
+    }
+  } else if (format == "likert_format") {
+    # Likert format has no temp suffix for both studies
+    filename <- paste0(file_prefix, "_", file_model_name, ".json")
+  } else if (format == "expanded_format") {
+    if (study == "study_2") {
+      # Study 2 expanded format has temp1_0 suffix
+      filename <- paste0(file_prefix, "_", file_model_name, "_temp1_0.json")
+    } else {
+      # Study 3 expanded format - need to check actual naming
+      # Based on the pattern, it might not have temp suffix or might be different
+      filename <- paste0(file_prefix, "_", file_model_name, ".json")  # Try without temp first
+    }
+  }
+  
+  return(filename)
+}
+
+# Function to get directory name based on study and format
+get_directory_name <- function(study, format) {
+  if (study == "study_2") {
+    dir_mapping <- list(
+      "expanded_format" = "study_2_expanded_results",
+      "likert_format" = "study_2_likert_results", 
+      "binary_simple_format" = "study_2_simple_binary_results",
+      "binary_elaborated_format" = "study_2_elaborated_binary_results"
+    )
+  } else {
+    dir_mapping <- list(
+      "expanded_format" = "study_3_expanded_results",
+      "likert_format" = "study_3_likert_results", 
+      "binary_simple_format" = "study_3_binary_simple_results",
+      "binary_elaborated_format" = "study_3_binary_elaborated_results"
+    )
+  }
+  
+  return(dir_mapping[[format]])
+}
+
+# Generate all function configurations
+function_configs <- list()
+
+# Define formats and models based on your actual file structure
+formats <- c("expanded_format", "likert_format", "binary_simple_format", "binary_elaborated_format")
+models <- c("deepseek", "gpt_4", "gpt_4o", "llama", "openai_gpt_3.5_turbo_0125")
+
+# Generate configurations for both studies
+for (study in c("study_2", "study_3")) {
+  for (format in formats) {
+    for (model in models) {
+      filename <- get_filename(study, format, model)
+      dir_name <- get_directory_name(study, format)
+      
+      # Add to configurations
+      function_configs[[length(function_configs) + 1]] <- list(
+        study = study,
+        format = format,
+        model = model,
+        file = filename,
+        directory = dir_name
+      )
+    }
+  }
+}
+
+# Generate all functions dynamically
+for (config in function_configs) {
+  # Create function name (clean up format names for function names)
+  clean_format <- gsub("_format$", "", config$format)  # Remove "_format" suffix
+  func_name <- paste0("run_", config$study, "_", clean_format, "_", config$model)
+  
+  # Create the function with dynamic path finding
+  func_body <- substitute({
+    # Find the actual JSON file location
+    json_path <- find_json_file(STUDY_NAME, FORMAT_FULL, FILENAME)
+    
+    run_single_analysis(
+      json_path = json_path,
+      model_name = MODEL_NAME,
+      format_type = FORMAT_TYPE,
+      study_name = STUDY_NAME
+    )
+  }, list(
+    STUDY_NAME = config$study,
+    FORMAT_FULL = config$format,
+    FORMAT_TYPE = clean_format,
+    FILENAME = config$file,
+    MODEL_NAME = config$model
+  ))
+  
+  # Assign the function to the global environment
+  assign(func_name, eval(substitute(function() BODY, list(BODY = func_body))), envir = .GlobalEnv)
+}
 
 # ==============================================
-# STUDY 2 - ALL MODEL × FORMAT COMBINATIONS
+# CONVENIENCE FUNCTIONS  
 # ==============================================
-# ===============================
-# STUDY 2 - EXPANDED
-# ===============================
-run_study2_expanded_gpt_3_5_turbo <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_expanded_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
-                      "gpt_3_5_turbo","expanded","study_2")
-}
-run_study2_expanded_gpt_4 <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_expanded_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
-                      "gpt_4","expanded","study_2")
-}
-run_study2_expanded_gpt_4o <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_expanded_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
-                      "gpt_4o","expanded","study_2")
-}
-run_study2_expanded_llama <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_expanded_results","bfi_to_minimarker_llama_temp1_0.json"),
-                      "llama","expanded","study_2")
-}
-run_study2_expanded_deepseek <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_expanded_results","bfi_to_minimarker_deepseek_temp1_0.json"),
-                      "deepseek","expanded","study_2")
+
+# ENHANCED Function to find JSON data files with better path detection
+find_json_file <- function(study, format, filename) {
+  # Get the correct directory name
+  dir_name <- get_directory_name(study, format)
+  
+  # Possible locations for JSON data files - now includes the correct directory structure
+  possible_dirs <- c(
+    # Direct path to the results directory
+    file.path(BASE_DIR, study, dir_name),
+    # Alternative paths
+    file.path(BASE_DIR, study, format),
+    file.path(BASE_DIR, study, "data", format),
+    file.path(BASE_DIR, study, "raw_data", format), 
+    file.path(BASE_DIR, "data", study, format),
+    file.path(BASE_DIR, study, gsub("_format$", "", format)),
+    file.path(BASE_DIR, study, paste0(gsub("_format$", "", format), "_results"))
+  )
+  
+  # Try each possible directory
+  for (dir_path in possible_dirs) {
+    full_path <- file.path(dir_path, filename)
+    if (file.exists(full_path)) {
+      cat("📁 Found file at:", full_path, "\n")
+      return(full_path)
+    }
+  }
+  
+  # If not found, try alternative filename patterns for study 3 expanded format
+  if (study == "study_3" && format == "expanded_format") {
+    # Try with temp1_0 suffix as well
+    alt_filename <- gsub("\\.json$", "_temp1_0.json", filename)
+    for (dir_path in possible_dirs) {
+      full_path <- file.path(dir_path, alt_filename)
+      if (file.exists(full_path)) {
+        cat("📁 Found alternative file at:", full_path, "\n")
+        return(full_path)
+      }
+    }
+  }
+  
+  # If still not found, return the most likely path for error reporting
+  most_likely_path <- file.path(BASE_DIR, study, dir_name, filename)
+  cat("❓ File not found. Expected location:", most_likely_path, "\n")
+  return(most_likely_path)
 }
 
-# ===============================
-# STUDY 2 - BINARY SIMPLE
-# ===============================
-run_study2_binary_simple_gpt_3_5_turbo <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_simple_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
-                      "gpt_3_5_turbo","binary_simple","study_2")
-}
-run_study2_binary_simple_gpt_4 <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_simple_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
-                      "gpt_4","binary_simple","study_2")
-}
-run_study2_binary_simple_gpt_4o <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_simple_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
-                      "gpt_4o","binary_simple","study_2")
-}
-run_study2_binary_simple_llama <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_simple_results","bfi_to_minimarker_llama_temp1_0.json"),
-                      "llama","binary_simple","study_2")
-}
-run_study2_binary_simple_deepseek <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_simple_results","bfi_to_minimarker_deepseek_temp1_0.json"),
-                      "deepseek","binary_simple","study_2")
-}
-
-# ===============================
-# STUDY 2 - BINARY ELABORATED
-# ===============================
-run_study2_binary_elaborated_gpt_3_5_turbo <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_elaborated_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
-                      "gpt_3_5_turbo","binary_elaborated","study_2")
-}
-run_study2_binary_elaborated_gpt_4 <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_elaborated_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
-                      "gpt_4","binary_elaborated","study_2")
-}
-run_study2_binary_elaborated_gpt_4o <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_elaborated_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
-                      "gpt_4o","binary_elaborated","study_2")
-}
-run_study2_binary_elaborated_llama <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_elaborated_results","bfi_to_minimarker_llama_temp1_0.json"),
-                      "llama","binary_elaborated","study_2")
-}
-run_study2_binary_elaborated_deepseek <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_elaborated_results","bfi_to_minimarker_deepseek_temp1_0.json"),
-                      "deepseek","binary_elaborated","study_2")
+# Function to list all available analysis functions
+list_analysis_functions <- function() {
+  all_funcs <- ls(envir = .GlobalEnv)
+  analysis_funcs <- all_funcs[grepl("^run_study[23]_", all_funcs)]
+  
+  cat("Available analysis functions:\n")
+  cat("=============================\n")
+  
+  # Group by study
+  study2_funcs <- analysis_funcs[grepl("^run_study_2_", analysis_funcs)]
+  study3_funcs <- analysis_funcs[grepl("^run_study_3_", analysis_funcs)]
+  
+  if (length(study2_funcs) > 0) {
+    cat("\nStudy 2 functions:\n")
+    for (func in sort(study2_funcs)) {
+      cat("  ", func, "()\n")
+    }
+  }
+  
+  if (length(study3_funcs) > 0) {
+    cat("\nStudy 3 functions:\n")
+    for (func in sort(study3_funcs)) {
+      cat("  ", func, "()\n")
+    }
+  }
+  
+  return(invisible(analysis_funcs))
 }
 
-# ===============================
-# STUDY 2 - LIKERT
-# ===============================
-run_study2_likert_gpt_3_5_turbo <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_likert_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
-                      "gpt_3_5_turbo","likert","study_2")
-}
-run_study2_likert_gpt_4 <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_likert_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
-                      "gpt_4","likert","study_2")
-}
-run_study2_likert_gpt_4o <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_likert_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
-                      "gpt_4o","likert","study_2")
-}
-run_study2_likert_llama <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_likert_results","bfi_to_minimarker_llama_temp1_0.json"),
-                      "llama","likert","study_2")
-}
-run_study2_likert_deepseek <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_likert_results","bfi_to_minimarker_deepseek_temp1_0.json"),
-                      "deepseek","likert","study_2")
-}
-
-##=====
-# ===============================
-# STUDY 3 - EXPANDED
-# ===============================
-run_study3_expanded_gpt_3_5_turbo <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_expanded_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
-                      "gpt_3_5_turbo","expanded","study_3")
-}
-run_study3_expanded_gpt_4 <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_expanded_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
-                      "gpt_4","expanded","study_3")
-}
-run_study3_expanded_gpt_4o <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_expanded_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
-                      "gpt_4o","expanded","study_3")
-}
-run_study3_expanded_llama <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_expanded_results","bfi_to_minimarker_llama_temp1_0.json"),
-                      "llama","expanded","study_3")
-}
-run_study3_expanded_deepseek <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_expanded_results","bfi_to_minimarker_deepseek_temp1_0.json"),
-                      "deepseek","expanded","study_3")
+# Function to run all analyses for a specific study
+run_all_study <- function(study_num) {
+  study_pattern <- paste0("^run_study_", study_num, "_")
+  all_funcs <- ls(envir = .GlobalEnv)
+  study_funcs <- all_funcs[grepl(study_pattern, all_funcs)]
+  
+  if (length(study_funcs) == 0) {
+    cat("No functions found for study", study_num, "\n")
+    return(NULL)
+  }
+  
+  cat("Running all analyses for Study", study_num, "...\n")
+  cat("Found", length(study_funcs), "functions to run\n\n")
+  
+  results <- list()
+  for (func_name in sort(study_funcs)) {
+    cat("Executing:", func_name, "\n")
+    tryCatch({
+      func <- get(func_name, envir = .GlobalEnv)
+      result <- func()
+      if (!is.null(result)) {
+        results[[func_name]] <- result
+      }
+    }, error = function(e) {
+      cat("Error in", func_name, ":", e$message, "\n")
+    })
+    cat("\n")
+  }
+  
+  return(results)
 }
 
-# ===============================
-# STUDY 3 - BINARY SIMPLE
-# ===============================
-run_study3_binary_simple_gpt_3_5_turbo <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_simple_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
-                      "gpt_3_5_turbo","binary_simple","study_3")
-}
-run_study3_binary_simple_gpt_4 <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_simple_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
-                      "gpt_4","binary_simple","study_3")
-}
-run_study3_binary_simple_gpt_4o <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_simple_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
-                      "gpt_4o","binary_simple","study_3")
-}
-run_study3_binary_simple_llama <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_simple_results","bfi_to_minimarker_llama_temp1_0.json"),
-                      "llama","binary_simple","study_3")
-}
-run_study3_binary_simple_deepseek <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_simple_results","bfi_to_minimarker_deepseek_temp1_0.json"),
-                      "deepseek","binary_simple","study_3")
+# Function to run all analyses for a specific format
+# Fixed Function to run all analyses for a specific format
+# CORRECTED run_all_format function
+run_all_format <- function(format_type) {
+  # Get all study functions
+  all_funcs <- ls(envir = .GlobalEnv)
+  study_funcs <- all_funcs[grepl("^run_study[23]_", all_funcs)]
+  
+  if (length(study_funcs) == 0) {
+    cat("❌ No study functions found!\n")
+    return(NULL)
+  }
+  
+  # Create the pattern - this is what was working in the debug
+  format_pattern <- paste0("_", format_type, "_")
+  
+  # Find matching functions - this should work based on debug output
+  format_funcs <- study_funcs[grepl(format_pattern, study_funcs)]
+  
+  if (length(format_funcs) == 0) {
+    cat("❌ No functions found for format '", format_type, "'\n", sep = "")
+    cat("Available format types you can use:\n")
+    
+    # Extract unique format types from function names
+    format_parts <- gsub("^run_study_[23]_([^_]+)_.*", "\\1", study_funcs)
+    unique_formats <- unique(format_parts)
+    for (fmt in sort(unique_formats)) {
+      cat("  - ", fmt, "\n")
+    }
+    
+    # Also show compound formats like binary_simple, binary_elaborated
+    compound_parts <- gsub("^run_study_[23]_([^_]+_[^_]+)_.*", "\\1", study_funcs)
+    compound_formats <- unique(compound_parts[compound_parts != study_funcs]) # only ones that matched
+    if (length(compound_formats) > 0) {
+      cat("\nCompound formats:\n")
+      for (fmt in sort(compound_formats)) {
+        cat("  - ", fmt, "\n")
+      }
+    }
+    return(NULL)
+  }
+  
+  cat("🚀 Running all '", format_type, "' format analyses...\n", sep = "")
+  cat("Found", length(format_funcs), "functions to execute:\n")
+  for (func in sort(format_funcs)) {
+    cat("  📋 ", func, "\n")
+  }
+  cat("\n")
+  
+  # Execute all functions
+  results <- list()
+  successful <- 0
+  failed <- 0
+  
+  for (func_name in sort(format_funcs)) {
+    cat("⏳ Executing: ", func_name, "\n")
+    tryCatch({
+      func <- get(func_name, envir = .GlobalEnv)
+      result <- func()
+      if (!is.null(result)) {
+        results[[func_name]] <- result
+        successful <- successful + 1
+        cat("✅ ", func_name, " - COMPLETED\n")
+      } else {
+        failed <- failed + 1
+        cat("❌ ", func_name, " - RETURNED NULL\n")
+      }
+    }, error = function(e) {
+      failed <- failed + 1
+      cat("❌ ", func_name, " - ERROR: ", e$message, "\n")
+    })
+    cat("\n")
+  }
+  
+  # Final summary
+  cat("📊 EXECUTION SUMMARY:\n")
+  cat("✅ Successful: ", successful, "\n")
+  cat("❌ Failed: ", failed, "\n")
+  cat("📁 Total results collected: ", length(results), "\n")
+  
+  return(results)
 }
 
-# ===============================
-# STUDY 3 - BINARY ELABORATED
-# ===============================
-run_study3_binary_elaborated_gpt_3_5_turbo <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_elaborated_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
-                      "gpt_3_5_turbo","binary_elaborated","study_3")
-}
-run_study3_binary_elaborated_gpt_4 <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_elaborated_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
-                      "gpt_4","binary_elaborated","study_3")
-}
-run_study3_binary_elaborated_gpt_4o <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_elaborated_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
-                      "gpt_4o","binary_elaborated","study_3")
-}
-run_study3_binary_elaborated_llama <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_elaborated_results","bfi_to_minimarker_llama_temp1_0.json"),
-                      "llama","binary_elaborated","study_3")
-}
-run_study3_binary_elaborated_deepseek <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_elaborated_results","bfi_to_minimarker_deepseek_temp1_0.json"),
-                      "deepseek","binary_elaborated","study_3")
+# Function to test a specific file path (useful for debugging)
+test_file_path <- function(study, format, model) {
+  filename <- get_filename(study, format, model)
+  json_path <- find_json_file(study, format, filename)
+  
+  cat("Testing file path:\n")
+  cat("Study:", study, "\n")
+  cat("Format:", format, "\n")
+  cat("Model:", model, "\n")
+  cat("Generated filename:", filename, "\n")
+  cat("Expected path:", json_path, "\n")
+  cat("File exists:", file.exists(json_path), "\n")
+  
+  if (file.exists(json_path)) {
+    cat("✅ File found successfully!\n")
+  } else {
+    cat("❌ File not found. Check the directory structure.\n")
+  }
+  
+  return(json_path)
 }
 
-# ===============================
-# STUDY 3 - LIKERT
-# ===============================
-run_study3_likert_gpt_3_5_turbo <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_likert_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
-                      "gpt_3_5_turbo","likert","study_3")
-}
-run_study3_likert_gpt_4 <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_likert_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
-                      "gpt_4","likert","study_3")
-}
-run_study3_likert_gpt_4o <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_likert_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
-                      "gpt_4o","likert","study_3")
-}
-run_study3_likert_llama <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_likert_results","bfi_to_minimarker_llama_temp1_0.json"),
-                      "llama","likert","study_3")
-}
-run_study3_likert_deepseek <- function() {
-  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_likert_results","bfi_to_minimarker_deepseek_temp1_0.json"),
-                      "deepseek","likert","study_3")
-}
+# ==============================================
+# USAGE EXAMPLES
+# ==============================================
 
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-# ==== STUDY 2 - EXPANDED
-run_study2_expanded_gpt_3_5_turbo()
-run_study2_expanded_gpt_4()
-run_study2_expanded_gpt_4o()
-run_study2_expanded_llama()
-run_study2_expanded_deepseek()
+cat("Dynamic functions have been created with FIXED path detection!\n")
+cat("==============================================================\n\n")
 
-# ==== STUDY 2 - BINARY SIMPLE
-run_study2_binary_simple_gpt_3_5_turbo()
-run_study2_binary_simple_gpt_4()
-run_study2_binary_simple_gpt_4o()
-run_study2_binary_simple_llama()
-run_study2_binary_simple_deepseek()
+cat("Usage examples:\n")
+cat("1. Run a specific analysis:\n")
+cat("   run_study_2_expanded_gpt_4()\n")
+cat("   run_study_3_binary_elaborated_deepseek()\n")
+cat("   run_study_2_likert_openai_gpt_3.5_turbo_0125()\n\n")
 
-# ==== STUDY 2 - BINARY ELABORATED
-run_study2_binary_elaborated_gpt_3_5_turbo()
-run_study2_binary_elaborated_gpt_4()
-run_study2_binary_elaborated_gpt_4o()
-run_study2_binary_elaborated_llama()
-run_study2_binary_elaborated_deepseek()
+cat("2. Test file paths (for debugging):\n")
+cat("   test_file_path('study_3', 'binary_elaborated_format', 'deepseek')\n")
+cat("   test_file_path('study_2', 'binary_simple_format', 'gpt_4')\n\n")
 
-# ==== STUDY 2 - LIKERT
-run_study2_likert_gpt_3_5_turbo()
-run_study2_likert_gpt_4()
-run_study2_likert_gpt_4o()
-run_study2_likert_llama()
-run_study2_likert_deepseek()
+cat("3. List all available functions:\n")
+cat("   list_analysis_functions()\n\n")
 
-# ==== STUDY 3 - EXPANDED
-run_study3_expanded_gpt_3_5_turbo()
-run_study3_expanded_gpt_4()
-run_study3_expanded_gpt_4o()
-run_study3_expanded_llama()
-run_study3_expanded_deepseek()
+cat("4. Run all analyses for a study:\n")
+cat("   run_all_study(2)  # Runs all Study 2 analyses\n")
+cat("   run_all_study(3)  # Runs all Study 3 analyses\n\n")
 
-# ==== STUDY 3 - BINARY SIMPLE
-run_study3_binary_simple_gpt_3_5_turbo()
-run_study3_binary_simple_gpt_4()
-run_study3_binary_simple_gpt_4o()
-run_study3_binary_simple_llama()
-run_study3_binary_simple_deepseek()
+cat("5. Run all analyses for a format:\n")
+cat("   run_all_format('expanded')  # Runs all expanded format analyses\n")
+cat("   run_all_format('binary_elaborated')   # Runs all binary elaborated format analyses\n\n")
 
-# ==== STUDY 3 - BINARY ELABORATED
-run_study3_binary_elaborated_gpt_3_5_turbo()
-run_study3_binary_elaborated_gpt_4()
-run_study3_binary_elaborated_gpt_4o()
-run_study3_binary_elaborated_llama()
-run_study3_binary_elaborated_deepseek()
-
-# ==== STUDY 3 - LIKERT
-run_study3_likert_gpt_3_5_turbo()
-run_study3_likert_gpt_4()
-run_study3_likert_gpt_4o()
-run_study3_likert_llama()
-run_study3_likert_deepseek()
+cat("Key fixes:\n")
+cat("- Study 3 binary files now use 'temp1' instead of 'temp1_0'\n")
+cat("- Correct directory names for Study 3\n")
+cat("- Enhanced path detection with better error reporting\n")
+cat("- Added test_file_path() function for debugging\n")
