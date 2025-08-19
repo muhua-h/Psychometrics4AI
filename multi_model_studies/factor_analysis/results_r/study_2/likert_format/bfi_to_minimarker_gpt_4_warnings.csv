@@ -1,3 +1,0 @@
-"Study","Format","Model","Factor_Domain","Console_Output"
-"STUDY_2","likert","bfi_to_minimarker_gpt_4","Openness","WARNING: lavaan->lav_object_post_check():  
-   some estimated ov variances are negative"

@@ -22,9 +22,9 @@ analyze_study() {
     find "$study_path" -name "*.json" | while read json_file; do
         
         # Determine format from path
-        if [[ "$json_file" == *"binary_simple"* ]]; then
+        if [[ "$json_file" == *"simple"* ]]; then
             format="binary_simple"
-        elif [[ "$json_file" == *"binary_elaborated"* ]]; then
+        elif [[ "$json_file" == *"elaborated"* ]]; then
             format="binary_elaborated"
         elif [[ "$json_file" == *"expanded"* ]]; then
             format="expanded"

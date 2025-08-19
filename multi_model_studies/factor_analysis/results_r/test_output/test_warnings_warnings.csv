@@ -1,3 +1,0 @@
-"Study","Format","Model","Factor_Domain","Console_Output"
-"STUDY_4","unknown","test_warnings","Extraversion","ERROR: lavaan->lav_samplestats_icov():  
-   sample covariance matrix is not positive-definite"

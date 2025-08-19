@@ -35,98 +35,85 @@ BIG_FIVE_DOMAINS <- list(
   )
 )
 
-# Reverse code items
+# Reverse code items - Fixed to always use 1-9 scale
 reverse_items <- function(data) {
   negative <- c("Bashful", "Quiet", "Shy", "Withdrawn", "Cold", "Harsh", "Rude", "Unsympathetic",
                 "Careless", "Disorganized", "Inefficient", "Sloppy", "Relaxed", "Unenvious",
                 "Uncreative", "Unintellectual")
-  
+
   to_reverse <- negative[negative %in% names(data)]
   if (length(to_reverse) > 0) {
-    # Detect actual scale range
-    max_val <- max(data[to_reverse], na.rm = TRUE)
-    min_val <- min(data[to_reverse], na.rm = TRUE)
-    
-    # Reverse code based on detected scale
-    if (max_val <= 5) {  # 1-5 scale
-      data[to_reverse] <- 6 - data[to_reverse]
-    } else if (max_val <= 7) {  # 1-7 scale
-      data[to_reverse] <- 8 - data[to_reverse]
-    } else if (max_val <= 9) {  # 1-9 scale
-      data[to_reverse] <- 10 - data[to_reverse]
-    } else {
-      cat("Warning: Unknown scale range, using 1-9 reverse coding\n")
-      data[to_reverse] <- 10 - data[to_reverse]
-    }
+    # Always use 1-9 scale reverse coding (10 - value)
+    data[to_reverse] <- 10 - data[to_reverse]
   }
   data
 }
 
 # Main analysis function
 analyze_file <- function(json_path, output_dir) {
-  
+
   if (!dir.exists(output_dir)) {
     dir.create(output_dir, recursive = TRUE)
   }
-  
+
   tryCatch({
     # Load data
     cat("Loading data from:", json_path, "\n")
     data <- fromJSON(json_path)
     data <- as.data.frame(data)
-    
-    # Reverse code
+
+    # Reverse code using fixed 1-9 scale
     data <- reverse_items(data)
-    
+
     # Clean data
     data <- na.omit(data)
-    
+
     # Extract model name
     model_name <- tools::file_path_sans_ext(basename(json_path))
-    
+
     # Determine study and format from path
     path_parts <- strsplit(json_path, "/")[[1]]
-    study <- ifelse(any(grepl("study_2", path_parts)), "STUDY_2", 
+    study <- ifelse(any(grepl("study_2", path_parts)), "STUDY_2",
                ifelse(any(grepl("study_3", path_parts)), "STUDY_3", "STUDY_4"))
-    
+
     format <- ifelse(any(grepl("binary_elaborated", path_parts)), "binary_elaborated",
                 ifelse(any(grepl("binary_simple", path_parts)), "binary_simple",
                 ifelse(any(grepl("expanded", path_parts)), "expanded", "likert")))
-    
+
     results <- list()
-    
+
     for (domain in names(BIG_FIVE_DOMAINS)) {
       cat("Processing", domain, "...")
-      
+
       # Get items for domain
       items <- c(BIG_FIVE_DOMAINS[[domain]]$positive, BIG_FIVE_DOMAINS[[domain]]$negative)
       available <- items[items %in% names(data)]
-      
+
       if (length(available) < 3) {
-        cat("❌ insufficient items (", length(available), ")\n")
+        cat("⌘ insufficient items (", length(available), ")\n")
         next
       }
-      
+
       # Subset data
       domain_data <- data[available]
-      
+
       # CFA model
       model_spec <- paste(domain, "=~", paste(available, collapse = " + "))
-      
+
       tryCatch({
         # Fit CFA
         fit <- cfa(model_spec, data = domain_data, std.lv = TRUE)
-        
+
         # Fit indices
         fit_stats <- fitMeasures(fit, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
-        
+
         # Loadings
         loadings <- standardizedSolution(fit)
         loadings <- loadings[loadings$op == "=~", c("rhs", "est.std")]
-        
+
         # Reliability
         alpha <- psych::alpha(domain_data, check.keys = TRUE)$total$raw_alpha
-        
+
         # McDonald's Omega using multiple methods
         omega <- tryCatch({
           # Primary method: compRelSEM
@@ -142,7 +129,7 @@ analyze_file <- function(json_path, output_dir) {
             NA
           })
         })
-        
+
         # Summary
         results[[domain]] <- data.frame(
           Study = study,
@@ -161,11 +148,11 @@ analyze_file <- function(json_path, output_dir) {
           DF = fit_stats["df"],
           P_Value = round(fit_stats["pvalue"], 3)
         )
-        
+
         cat("✅ Alpha:", round(alpha, 3), "Omega:", round(omega, 3), "CFI:", round(fit_stats["cfi"], 3), "\n")
-        
+
       }, error = function(e) {
-        cat("❌ CFA failed:", substr(as.character(e), 1, 50), "...\n")
+        cat("⌘ CFA failed:", substr(as.character(e), 1, 50), "...\n")
       })
     }
     
