@@ -1,0 +1,6 @@
+"Study","Format","Model","Factor_Domain","N_Items","N_Participants","Alpha","Omega","CFI","TLI","RMSEA","SRMR","Chi_Square","DF","P_Value"
+"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_llama_temp1","Extraversion",8,200,0.996,0.998,0.921,0.889,0.361,0.005,540.81,20,0
+"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_llama_temp1","Agreeableness",8,200,0.953,0.803,0.494,0.292,0.696,0.206,1959.911,20,0
+"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_llama_temp1","Conscientiousness",8,200,0.98,0.974,0.848,0.788,0.401,0.035,663.835,20,0
+"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_llama_temp1","Neuroticism",8,200,0.949,0.978,0.768,0.675,0.433,0.131,771.023,20,0
+"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_llama_temp1","Openness",8,200,0.95,0.965,0.66,0.524,0.509,0.11,1057.172,20,0

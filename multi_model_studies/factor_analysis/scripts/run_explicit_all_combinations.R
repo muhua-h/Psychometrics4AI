@@ -19,6 +19,7 @@ if (!dir.exists(RESULTS_DIR)) {
   dir.create(RESULTS_DIR, recursive = TRUE)
 }
 
+
 # Define Big Five domains with actual mini-marker items
 DOMAINS <- list(
   Extraversion = c("Bold", "Energetic", "Extraverted", "Talkative", "Bashful", "Quiet", "Shy", "Withdrawn"),
@@ -373,24 +374,256 @@ run_single_analysis <- function(json_path, model_name, format_type, study_name) 
 # ==============================================
 # STUDY 2 - ALL MODEL × FORMAT COMBINATIONS
 # ==============================================
-
-# STUDY 2 - EXPANDED FORMAT
-run_study2_expanded_gpt4 <- function() {
-  run_single_analysis(
-    json_path = file.path(BASE_DIR, "study_2", "study_2_expanded_results", "bfi_to_minimarker_gpt_4_temp1_0.json"),
-    model_name = "gpt_4",
-    format_type = "expanded",
-    study_name = "study_2"
-  )
+# ===============================
+# STUDY 2 - EXPANDED
+# ===============================
+run_study2_expanded_gpt_3_5_turbo <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_expanded_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
+                      "gpt_3_5_turbo","expanded","study_2")
+}
+run_study2_expanded_gpt_4 <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_expanded_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
+                      "gpt_4","expanded","study_2")
+}
+run_study2_expanded_gpt_4o <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_expanded_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
+                      "gpt_4o","expanded","study_2")
+}
+run_study2_expanded_llama <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_expanded_results","bfi_to_minimarker_llama_temp1_0.json"),
+                      "llama","expanded","study_2")
+}
+run_study2_expanded_deepseek <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_expanded_results","bfi_to_minimarker_deepseek_temp1_0.json"),
+                      "deepseek","expanded","study_2")
 }
 
-# [Include all other function definitions here...]
+# ===============================
+# STUDY 2 - BINARY SIMPLE
+# ===============================
+run_study2_binary_simple_gpt_3_5_turbo <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_simple_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
+                      "gpt_3_5_turbo","binary_simple","study_2")
+}
+run_study2_binary_simple_gpt_4 <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_simple_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
+                      "gpt_4","binary_simple","study_2")
+}
+run_study2_binary_simple_gpt_4o <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_simple_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
+                      "gpt_4o","binary_simple","study_2")
+}
+run_study2_binary_simple_llama <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_simple_results","bfi_to_minimarker_llama_temp1_0.json"),
+                      "llama","binary_simple","study_2")
+}
+run_study2_binary_simple_deepseek <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_simple_results","bfi_to_minimarker_deepseek_temp1_0.json"),
+                      "deepseek","binary_simple","study_2")
+}
 
-# Usage example with enhanced output:
-cat("🚀 Enhanced CFA script loaded! Try:\n")
-cat("   run_study2_expanded_gpt4()\n")
-cat("\nNow you'll see detailed domain-by-domain analysis with explicit warnings!\n")
+# ===============================
+# STUDY 2 - BINARY ELABORATED
+# ===============================
+run_study2_binary_elaborated_gpt_3_5_turbo <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_elaborated_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
+                      "gpt_3_5_turbo","binary_elaborated","study_2")
+}
+run_study2_binary_elaborated_gpt_4 <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_elaborated_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
+                      "gpt_4","binary_elaborated","study_2")
+}
+run_study2_binary_elaborated_gpt_4o <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_elaborated_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
+                      "gpt_4o","binary_elaborated","study_2")
+}
+run_study2_binary_elaborated_llama <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_elaborated_results","bfi_to_minimarker_llama_temp1_0.json"),
+                      "llama","binary_elaborated","study_2")
+}
+run_study2_binary_elaborated_deepseek <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_binary_elaborated_results","bfi_to_minimarker_deepseek_temp1_0.json"),
+                      "deepseek","binary_elaborated","study_2")
+}
 
+# ===============================
+# STUDY 2 - LIKERT
+# ===============================
+run_study2_likert_gpt_3_5_turbo <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_likert_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
+                      "gpt_3_5_turbo","likert","study_2")
+}
+run_study2_likert_gpt_4 <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_likert_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
+                      "gpt_4","likert","study_2")
+}
+run_study2_likert_gpt_4o <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_likert_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
+                      "gpt_4o","likert","study_2")
+}
+run_study2_likert_llama <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_likert_results","bfi_to_minimarker_llama_temp1_0.json"),
+                      "llama","likert","study_2")
+}
+run_study2_likert_deepseek <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_2","study_2_likert_results","bfi_to_minimarker_deepseek_temp1_0.json"),
+                      "deepseek","likert","study_2")
+}
 
+##=====
+# ===============================
+# STUDY 3 - EXPANDED
+# ===============================
+run_study3_expanded_gpt_3_5_turbo <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_expanded_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
+                      "gpt_3_5_turbo","expanded","study_3")
+}
+run_study3_expanded_gpt_4 <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_expanded_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
+                      "gpt_4","expanded","study_3")
+}
+run_study3_expanded_gpt_4o <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_expanded_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
+                      "gpt_4o","expanded","study_3")
+}
+run_study3_expanded_llama <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_expanded_results","bfi_to_minimarker_llama_temp1_0.json"),
+                      "llama","expanded","study_3")
+}
+run_study3_expanded_deepseek <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_expanded_results","bfi_to_minimarker_deepseek_temp1_0.json"),
+                      "deepseek","expanded","study_3")
+}
 
-run_study2_expanded_gpt4()
+# ===============================
+# STUDY 3 - BINARY SIMPLE
+# ===============================
+run_study3_binary_simple_gpt_3_5_turbo <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_simple_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
+                      "gpt_3_5_turbo","binary_simple","study_3")
+}
+run_study3_binary_simple_gpt_4 <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_simple_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
+                      "gpt_4","binary_simple","study_3")
+}
+run_study3_binary_simple_gpt_4o <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_simple_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
+                      "gpt_4o","binary_simple","study_3")
+}
+run_study3_binary_simple_llama <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_simple_results","bfi_to_minimarker_llama_temp1_0.json"),
+                      "llama","binary_simple","study_3")
+}
+run_study3_binary_simple_deepseek <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_simple_results","bfi_to_minimarker_deepseek_temp1_0.json"),
+                      "deepseek","binary_simple","study_3")
+}
+
+# ===============================
+# STUDY 3 - BINARY ELABORATED
+# ===============================
+run_study3_binary_elaborated_gpt_3_5_turbo <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_elaborated_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
+                      "gpt_3_5_turbo","binary_elaborated","study_3")
+}
+run_study3_binary_elaborated_gpt_4 <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_elaborated_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
+                      "gpt_4","binary_elaborated","study_3")
+}
+run_study3_binary_elaborated_gpt_4o <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_elaborated_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
+                      "gpt_4o","binary_elaborated","study_3")
+}
+run_study3_binary_elaborated_llama <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_elaborated_results","bfi_to_minimarker_llama_temp1_0.json"),
+                      "llama","binary_elaborated","study_3")
+}
+run_study3_binary_elaborated_deepseek <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_binary_elaborated_results","bfi_to_minimarker_deepseek_temp1_0.json"),
+                      "deepseek","binary_elaborated","study_3")
+}
+
+# ===============================
+# STUDY 3 - LIKERT
+# ===============================
+run_study3_likert_gpt_3_5_turbo <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_likert_results","bfi_to_minimarker_gpt_3_5_turbo_temp1_0.json"),
+                      "gpt_3_5_turbo","likert","study_3")
+}
+run_study3_likert_gpt_4 <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_likert_results","bfi_to_minimarker_gpt_4_temp1_0.json"),
+                      "gpt_4","likert","study_3")
+}
+run_study3_likert_gpt_4o <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_likert_results","bfi_to_minimarker_gpt_4o_temp1_0.json"),
+                      "gpt_4o","likert","study_3")
+}
+run_study3_likert_llama <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_likert_results","bfi_to_minimarker_llama_temp1_0.json"),
+                      "llama","likert","study_3")
+}
+run_study3_likert_deepseek <- function() {
+  run_single_analysis(file.path(BASE_DIR,"study_3","study_3_likert_results","bfi_to_minimarker_deepseek_temp1_0.json"),
+                      "deepseek","likert","study_3")
+}
+
+#########################################################
+#########################################################
+#########################################################
+#########################################################
+#########################################################
+# ==== STUDY 2 - EXPANDED
+run_study2_expanded_gpt_3_5_turbo()
+run_study2_expanded_gpt_4()
+run_study2_expanded_gpt_4o()
+run_study2_expanded_llama()
+run_study2_expanded_deepseek()
+
+# ==== STUDY 2 - BINARY SIMPLE
+run_study2_binary_simple_gpt_3_5_turbo()
+run_study2_binary_simple_gpt_4()
+run_study2_binary_simple_gpt_4o()
+run_study2_binary_simple_llama()
+run_study2_binary_simple_deepseek()
+
+# ==== STUDY 2 - BINARY ELABORATED
+run_study2_binary_elaborated_gpt_3_5_turbo()
+run_study2_binary_elaborated_gpt_4()
+run_study2_binary_elaborated_gpt_4o()
+run_study2_binary_elaborated_llama()
+run_study2_binary_elaborated_deepseek()
+
+# ==== STUDY 2 - LIKERT
+run_study2_likert_gpt_3_5_turbo()
+run_study2_likert_gpt_4()
+run_study2_likert_gpt_4o()
+run_study2_likert_llama()
+run_study2_likert_deepseek()
+
+# ==== STUDY 3 - EXPANDED
+run_study3_expanded_gpt_3_5_turbo()
+run_study3_expanded_gpt_4()
+run_study3_expanded_gpt_4o()
+run_study3_expanded_llama()
+run_study3_expanded_deepseek()
+
+# ==== STUDY 3 - BINARY SIMPLE
+run_study3_binary_simple_gpt_3_5_turbo()
+run_study3_binary_simple_gpt_4()
+run_study3_binary_simple_gpt_4o()
+run_study3_binary_simple_llama()
+run_study3_binary_simple_deepseek()
+
+# ==== STUDY 3 - BINARY ELABORATED
+run_study3_binary_elaborated_gpt_3_5_turbo()
+run_study3_binary_elaborated_gpt_4()
+run_study3_binary_elaborated_gpt_4o()
+run_study3_binary_elaborated_llama()
+run_study3_binary_elaborated_deepseek()
+
+# ==== STUDY 3 - LIKERT
+run_study3_likert_gpt_3_5_turbo()
+run_study3_likert_gpt_4()
+run_study3_likert_gpt_4o()
+run_study3_likert_llama()
+run_study3_likert_deepseek()
