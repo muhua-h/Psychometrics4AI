@@ -1,5 +1,5 @@
-"Study","Format","Model","Factor_Domain","N_Items","N_Participants","Alpha","Omega","CFI","TLI","RMSEA","SRMR","Chi_Square","DF","P_Value"
-"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_deepseek_temp1","Extraversion",8,200,0.994,0.991,0.871,0.819,0.406,0.017,679.598,20,0
-"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_deepseek_temp1","Conscientiousness",8,200,0.982,0.988,0.885,0.839,0.338,0.017,477.436,20,0
-"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_deepseek_temp1","Neuroticism",8,200,0.982,0.984,0.887,0.842,0.336,0.039,471.77,20,0
-"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_deepseek_temp1","Openness",8,200,0.979,0.953,0.794,0.712,0.421,0.065,727.342,20,0
+"Study","Format","Model","Factor_Domain","N_Items","N_Participants","Alpha","Omega","CFI","RMSEA","SRMR","Chi_Square","DF","P_Value"
+"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_deepseek_temp1","Extraversion",8,200,0.994,0.991,0.871,0.406,0.017,679.598,20,0
+"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_deepseek_temp1","Conscientiousness",8,200,0.982,0.988,0.885,0.338,0.017,477.436,20,0
+"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_deepseek_temp1","Neuroticism",8,200,0.982,0.984,0.887,0.336,0.039,471.77,20,0
+"STUDY_3","binary_elaborated","bfi_to_minimarker_binary_deepseek_temp1","Openness",8,200,0.979,0.953,0.794,0.421,0.065,727.342,20,0

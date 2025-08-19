@@ -59,7 +59,7 @@ create_cross_format_summary <- function(df) {
   
   # Keep domain-level information (no aggregation)
   summary <- df %>%
-    select(Study, Format, Model, Factor_Domain, N_Items, N_Participants, Alpha, Omega, CFI, TLI, RMSEA, SRMR, Chi_Square, DF, P_Value) %>%
+    select(Study, Format, Model, Factor_Domain, N_Items, N_Participants, Alpha, Omega, CFI, RMSEA, SRMR, Chi_Square, DF, P_Value) %>%
     arrange(Study, Format, Model, Factor_Domain)
   
   summary

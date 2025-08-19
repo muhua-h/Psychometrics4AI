@@ -1,6 +1,6 @@
-"Study","Format","Model","Factor_Domain","N_Items","N_Participants","Alpha","Omega","CFI","TLI","RMSEA","SRMR","Chi_Square","DF","P_Value"
-"STUDY_2","likert","bfi_to_minimarker_binary_gpt_4_temp1_0","Extraversion",8,438,0.995,0.996,0.982,0.975,0.148,0.004,211.499,20,0
-"STUDY_2","likert","bfi_to_minimarker_binary_gpt_4_temp1_0","Agreeableness",8,438,0.979,0.975,0.941,0.917,0.203,0.032,381.246,20,0
-"STUDY_2","likert","bfi_to_minimarker_binary_gpt_4_temp1_0","Conscientiousness",8,438,0.989,0.991,0.985,0.979,0.124,0.006,154.416,20,0
-"STUDY_2","likert","bfi_to_minimarker_binary_gpt_4_temp1_0","Neuroticism",8,438,0.966,0.947,0.832,0.764,0.378,0.13,1273.363,20,0
-"STUDY_2","likert","bfi_to_minimarker_binary_gpt_4_temp1_0","Openness",8,438,0.972,0.973,0.939,0.915,0.192,0.03,344.241,20,0
+"Study","Format","Model","Factor_Domain","N_Items","N_Participants","Alpha","Omega","CFI","RMSEA","SRMR","Chi_Square","DF","P_Value"
+"STUDY_2","likert","bfi_to_minimarker_binary_gpt_4_temp1_0","Extraversion",8,438,0.995,0.996,0.982,0.148,0.004,211.499,20,0
+"STUDY_2","likert","bfi_to_minimarker_binary_gpt_4_temp1_0","Agreeableness",8,438,0.979,0.975,0.941,0.203,0.032,381.246,20,0
+"STUDY_2","likert","bfi_to_minimarker_binary_gpt_4_temp1_0","Conscientiousness",8,438,0.989,0.991,0.985,0.124,0.006,154.416,20,0
+"STUDY_2","likert","bfi_to_minimarker_binary_gpt_4_temp1_0","Neuroticism",8,438,0.966,0.947,0.832,0.378,0.13,1273.363,20,0
+"STUDY_2","likert","bfi_to_minimarker_binary_gpt_4_temp1_0","Openness",8,438,0.972,0.973,0.939,0.192,0.03,344.241,20,0

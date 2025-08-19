@@ -102,7 +102,7 @@ analyze_file <- function(json_path, output_dir) {
 
       tryCatch({
         # Fit CFA
-        fit <- cfa(model_spec, data = domain_data, std.lv = TRUE)
+        fit <- cfa(model_spec, data = domain_data, std.lv = TRUE, estimator = "ML", std.lv = TRUE)
 
         # Fit indices
         fit_stats <- fitMeasures(fit, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
@@ -141,7 +141,6 @@ analyze_file <- function(json_path, output_dir) {
           Alpha = round(alpha, 3),
           Omega = round(omega, 3),
           CFI = round(fit_stats["cfi"], 3),
-          TLI = round(fit_stats["tli"], 3),
           RMSEA = round(fit_stats["rmsea"], 3),
           SRMR = round(fit_stats["srmr"], 3),
           Chi_Square = round(fit_stats["chisq"], 3),

@@ -173,7 +173,7 @@ run_domain_cfa <- function(domain, items, data, model_name, format_type, study_n
       cat(domain_header, "🔥 Fitting CFA model...\n")
       
       # Fit the model
-      fit <- cfa(model_syntax, data = data, estimator = "MLR", std.lv = TRUE)
+      fit <- cfa(model_syntax, data = data, estimator = "ML", std.lv = TRUE)
       
       # Check convergence
       if (!lavInspect(fit, "converged")) {
@@ -221,7 +221,6 @@ run_domain_cfa <- function(domain, items, data, model_name, format_type, study_n
         Alpha = round(alpha, 3),
         Omega = round(omega, 3),
         CFI = round(fit_measures["cfi"], 3),
-        TLI = round(fit_measures["tli"], 3),
         RMSEA = round(fit_measures["rmsea"], 3),
         SRMR = round(fit_measures["srmr"], 3),
         Chi_Square = round(fit_measures["chisq"], 3),
