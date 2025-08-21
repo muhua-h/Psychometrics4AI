@@ -18,30 +18,61 @@ read_arg <- function(flag, default = NULL) {
   args[ix + 1]
 }
 INPUT_DIR   <- read_arg("--input_dir",   ".")
-OUT_CSV     <- read_arg("--out_csv",     file.path(".", "factor_loadings_summary.csv"))
-LOAD_DIR    <- read_arg("--loadings_dir",file.path(".", "loadings"))
+OUT_CSV     <- read_arg("--out_csv",     file.path("multi_model_studies", "factor_analysis", "results_r", "factor_loadings_summary.csv"))
+LOAD_DIR    <- read_arg("--loadings_dir",file.path("multi_model_studies", "factor_analysis", "results_r", "loadings"))
 if (!dir.exists(LOAD_DIR)) dir.create(LOAD_DIR, recursive = TRUE, showWarnings = FALSE)
 
-# ---------- Mini-Marker items (updated to match actual data column names) ----------
-DOMAINS <- list(
-  Extraversion = c("Bold", "Energetic", "Extraverted", "Talkative",
-                   "Bashful", "Quiet", "Shy", "Withdrawn"),
-  Agreeableness = c("Cooperative", "Kind", "Sympathetic", "Warm",
-                    "Cold", "Harsh", "Rude", "Unsympathetic"),
-  Conscientiousness = c("Efficient", "Organized", "Practical", "Systematic",
-                        "Careless", "Disorganized", "Inefficient", "Sloppy"),
-  Neuroticism = c("Envious", "Fretful", "Jealous", "Moody", "Temperamental", "Touchy",
-                  "Relaxed", "Unenvious"),
-  Openness = c("Complex", "Creative", "Deep", "Imaginative", "Intellectual", "Philosophical",
-               "Uncreative", "Unintellectual")
+# ---------- Big Five domains with positive/negative keying ----------
+BIG_FIVE_DOMAINS <- list(
+  Extraversion = list(
+    positive = c("Bold", "Energetic", "Extraverted", "Talkative"),
+    negative = c("Bashful", "Quiet", "Shy", "Withdrawn")
+  ),
+  Agreeableness = list(
+    positive = c("Cooperative", "Kind", "Sympathetic", "Warm"),
+    negative = c("Cold", "Harsh", "Rude", "Unsympathetic")
+  ),
+  Conscientiousness = list(
+    positive = c("Efficient", "Organized", "Practical", "Systematic"),
+    negative = c("Careless", "Disorganized", "Inefficient", "Sloppy")
+  ),
+  Neuroticism = list(
+    positive = c("Envious", "Fretful", "Jealous", "Moody", "Temperamental", "Touchy"),
+    negative = c("Relaxed", "Unenvious")
+  ),
+  Openness = list(
+    positive = c("Complex", "Creative", "Deep", "Imaginative", "Intellectual", "Philosophical"),
+    negative = c("Uncreative", "Unintellectual")
+  )
 )
+
+# Create flat list of all items for compatibility
+DOMAINS <- lapply(BIG_FIVE_DOMAINS, function(domain) c(domain$positive, domain$negative))
 ALL_ITEMS <- unlist(DOMAINS, use.names = FALSE)
+
+# Get all negatively keyed items
+NEGATIVE_ITEMS <- unlist(lapply(BIG_FIVE_DOMAINS, function(domain) domain$negative), use.names = FALSE)
 
 normalize_names <- function(x) {
   x %>%
     str_replace_all("[^A-Za-z0-9]+", "") %>%
     str_trim() %>%
     tolower()
+}
+
+# ---------- Reverse coding function ----------
+reverse_items <- function(data) {
+  to_reverse <- NEGATIVE_ITEMS[NEGATIVE_ITEMS %in% names(data)]
+  if (length(to_reverse) > 0) {
+    message(sprintf("   Reverse coding %d items: %s",
+                   length(to_reverse),
+                   paste(to_reverse, collapse = ", ")))
+    # Always use 1-9 scale reverse coding (10 - value)
+    data[to_reverse] <- 10 - data[to_reverse]
+  } else {
+    message("   No items to reverse code")
+  }
+  data
 }
 
 # ---------- Data extraction ----------
@@ -64,6 +95,10 @@ extract_data <- function(json_path, expected_items) {
   keep <- !is.na(map_idx)
   matched_df <- df[, map_idx[keep], drop = FALSE]
   colnames(matched_df) <- expected_items[keep]
+
+  # Apply reverse coding
+  matched_df <- reverse_items(matched_df)
+
   matched_df
 }
 
@@ -92,21 +127,21 @@ parse_meta <- function(filepath) {
   # Extract both filename and path parts
   filename <- basename(filepath)
   path_parts <- strsplit(filepath, "/")[[1]]
-  
+
   # Extract study from path structure (similar to cfa_analysis_simple.R logic)
   study <- case_when(
     any(grepl("study_2", path_parts, ignore.case = TRUE)) ~ "STUDY_2",
-    any(grepl("study_3", path_parts, ignore.case = TRUE)) ~ "STUDY_3", 
+    any(grepl("study_3", path_parts, ignore.case = TRUE)) ~ "STUDY_3",
     # Fallback to filename-based detection
     str_detect(filename, regex("study[_-]?2", ignore_case = TRUE)) ~ "STUDY_2",
     str_detect(filename, regex("study[_-]?3", ignore_case = TRUE)) ~ "STUDY_3",
     TRUE ~ "UNKNOWN"
   )
-  
+
   # Determine condition from path structure (similar to run_batch_r_analysis.sh logic)
   condition <- case_when(
     any(grepl("binary.*simple|simple.*binary", path_parts, ignore.case = TRUE)) ~ "Simple Binary",
-    any(grepl("binary.*elaborated|elaborated.*binary", path_parts, ignore.case = TRUE)) ~ "Elaborated Binary", 
+    any(grepl("binary.*elaborated|elaborated.*binary", path_parts, ignore.case = TRUE)) ~ "Elaborated Binary",
     any(grepl("expanded", path_parts, ignore.case = TRUE)) ~ "Expanded Format",
     any(grepl("likert", path_parts, ignore.case = TRUE)) ~ "Likert",
     # Fallback to filename-based detection
@@ -119,7 +154,7 @@ parse_meta <- function(filepath) {
   )
 
   # Extract model from filename with improved patterns
-  model_patterns <- c("openai[-_]?gpt[-_]?3[.]?5[-_]?turbo", "gpt[-_]?3[.]?5[-_]?turbo", 
+  model_patterns <- c("openai[-_]?gpt[-_]?3[.]?5[-_]?turbo", "gpt[-_]?3[.]?5[-_]?turbo",
                       "gpt[-_]?4o", "gpt[-_]?4", "llama", "deepseek",
                       "claude", "gemini", "mistral", "qwen", "phi", "o1", "o3")
   model <- "unknown"
@@ -129,14 +164,14 @@ parse_meta <- function(filepath) {
       # Clean up common variations
       model <- case_when(
         str_detect(extracted, regex("(openai.*)?gpt.*3.*5", ignore_case = TRUE)) ~ "gpt_3.5",
-        str_detect(extracted, regex("gpt.*4o", ignore_case = TRUE)) ~ "gpt_4o", 
+        str_detect(extracted, regex("gpt.*4o", ignore_case = TRUE)) ~ "gpt_4o",
         str_detect(extracted, regex("gpt.*4", ignore_case = TRUE)) ~ "gpt_4",
         TRUE ~ str_replace_all(tolower(extracted), "[-.]", "_")
       )
       break
     }
   }
-  
+
   list(study = study, condition = condition, model = model)
 }
 
@@ -150,7 +185,7 @@ fit_and_extract <- function(dat) {
   }
 
   fit <- tryCatch({
-    cfa(model_syntax, data = dat, estimator = "MLR", std.lv = TRUE, missing = "fiml")
+    cfa(model_syntax, data = dat, estimator = "ML")
   }, error = function(e) e)
 
   if (inherits(fit, "error")) {
@@ -192,6 +227,8 @@ json_files <- json_files[
 
 message(sprintf("Found %d JSON files after filtering", length(json_files)))
 if (length(json_files) == 0) stop("No valid JSON files found after filtering")
+
+message(sprintf("Negative items that will be reverse coded: %s", paste(NEGATIVE_ITEMS, collapse = ", ")))
 
 rows <- list()
 
