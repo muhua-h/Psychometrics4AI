@@ -22,7 +22,7 @@ OUT_CSV     <- read_arg("--out_csv",     file.path(".", "factor_loadings_summary
 LOAD_DIR    <- read_arg("--loadings_dir",file.path(".", "loadings"))
 if (!dir.exists(LOAD_DIR)) dir.create(LOAD_DIR, recursive = TRUE, showWarnings = FALSE)
 
-# ---------- Mini-Marker items (edit to match your column names) ----------
+# ---------- Mini-Marker items (updated to match actual data column names) ----------
 DOMAINS <- list(
   Extraversion = c("Bold", "Energetic", "Extraverted", "Talkative",
                    "Bashful", "Quiet", "Shy", "Withdrawn"),
@@ -30,10 +30,10 @@ DOMAINS <- list(
                     "Cold", "Harsh", "Rude", "Unsympathetic"),
   Conscientiousness = c("Efficient", "Organized", "Practical", "Systematic",
                         "Careless", "Disorganized", "Inefficient", "Sloppy"),
-  Neuroticism = c("Envious", "Fretful", "Jealous", "Moody",
-                  "SelfConfident", "SelfAssured", "Unemotional", "Unselfconscious"),
-  Openness = c("Artistic", "Imaginative", "Intellectual", "Philosophical",
-               "Unartistic", "Uncreative", "Unintellectual", "Unreflective")
+  Neuroticism = c("Envious", "Fretful", "Jealous", "Moody", "Temperamental", "Touchy",
+                  "Relaxed", "Unenvious"),
+  Openness = c("Complex", "Creative", "Deep", "Imaginative", "Intellectual", "Philosophical",
+               "Uncreative", "Unintellectual")
 )
 ALL_ITEMS <- unlist(DOMAINS, use.names = FALSE)
 
@@ -88,9 +88,18 @@ sanitize <- function(x) {
     str_replace_all("^_|_$", "")
 }
 
-parse_meta <- function(filename) {
-  # Condition
+parse_meta <- function(filepath) {
+  # Extract both filename and path parts
+  filename <- basename(filepath)
+  path_parts <- strsplit(filepath, "/")[[1]]
+  
+  # Determine condition from path structure (similar to run_batch_r_analysis.sh logic)
   condition <- case_when(
+    any(grepl("binary.*simple|simple.*binary", path_parts, ignore.case = TRUE)) ~ "Simple Binary",
+    any(grepl("binary.*elaborated|elaborated.*binary", path_parts, ignore.case = TRUE)) ~ "Elaborated Binary", 
+    any(grepl("expanded", path_parts, ignore.case = TRUE)) ~ "Expanded Format",
+    any(grepl("likert", path_parts, ignore.case = TRUE)) ~ "Likert",
+    # Fallback to filename-based detection
     str_detect(filename, regex("binary[_-]?simple|simple[_-]?binary", ignore_case = TRUE)) ~ "Simple Binary",
     str_detect(filename, regex("binary[_-]?elaborated|elaborated[_-]?binary", ignore_case = TRUE)) ~ "Elaborated Binary",
     str_detect(filename, regex("expanded|expanded[_-]?format|expformat", ignore_case = TRUE)) ~ "Expanded Format",
@@ -99,16 +108,24 @@ parse_meta <- function(filename) {
     TRUE ~ "Unknown"
   )
 
-  # Model
-  model_patterns <- c("gpt[-_]?3[.]?5", "gpt[-_]?4o", "gpt[-_]?4", "llama", "deepseek",
+  # Extract model from filename with improved patterns
+  model_patterns <- c("gpt[-_]?3[.]?5[-_]?turbo", "gpt[-_]?4o", "gpt[-_]?4", "llama", "deepseek",
                       "claude", "gemini", "mistral", "qwen", "phi", "o1", "o3")
   model <- "unknown"
   for (pat in model_patterns) {
     if (str_detect(filename, regex(pat, ignore_case = TRUE))) {
-      model <- str_extract(filename, regex(pat, ignore_case = TRUE))
+      extracted <- str_extract(filename, regex(pat, ignore_case = TRUE))
+      # Clean up common variations
+      model <- case_when(
+        str_detect(extracted, regex("gpt.*3.*5", ignore_case = TRUE)) ~ "gpt_3.5",
+        str_detect(extracted, regex("gpt.*4o", ignore_case = TRUE)) ~ "gpt_4o", 
+        str_detect(extracted, regex("gpt.*4", ignore_case = TRUE)) ~ "gpt_4",
+        TRUE ~ str_replace_all(tolower(extracted), "[-.]", "_")
+      )
       break
     }
   }
+  
   list(condition = condition, model = model)
 }
 
@@ -156,7 +173,7 @@ rows <- list()
 
 for (fp in json_files) {
   fname <- basename(fp)
-  meta <- parse_meta(fname)
+  meta <- parse_meta(fp)
   message(sprintf("➡️  Processing: %s  |  Condition=%s  Model=%s", fname, meta$condition, meta$model))
 
   dat <- tryCatch({
