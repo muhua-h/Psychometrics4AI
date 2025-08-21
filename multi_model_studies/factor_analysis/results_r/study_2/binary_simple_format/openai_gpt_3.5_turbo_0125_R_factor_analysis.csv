@@ -1,6 +1,6 @@
 Study,Format,Model,Factor_Domain,N_Items,N_Participants,Alpha,Omega,CFI,RMSEA,SRMR,Chi_Square,DF,P_Value
-STUDY_2,binary_simple,openai_gpt_3.5_turbo_0125,EXTRAVERSION,8,438,0.984,0.993,0.928,0.255,0.028,587.55,20,0
-STUDY_2,binary_simple,openai_gpt_3.5_turbo_0125,AGREEABLENESS,8,438,0.862,0.935,0.796,0.249,0.174,562.116,20,0
-STUDY_2,binary_simple,openai_gpt_3.5_turbo_0125,CONSCIENTIOUSNESS,8,438,0.935,0.97,0.712,0.359,0.139,1147.917,20,0
-STUDY_2,binary_simple,openai_gpt_3.5_turbo_0125,NEUROTICISM,8,438,0.813,0.897,0.362,0.409,0.285,1484.583,20,0
-STUDY_2,binary_simple,openai_gpt_3.5_turbo_0125,OPENNESS,8,438,0.89,0.945,0.831,0.221,0.115,449.043,20,0
+STUDY_2,binary_simple,openai_gpt_3.5_turbo_0125,EXTRAVERSION,8,438,0.984,0.984,0.928,0.255,0.028,587.55,20,0
+STUDY_2,binary_simple,openai_gpt_3.5_turbo_0125,AGREEABLENESS,8,438,0.862,0.775,0.796,0.249,0.174,562.116,20,0
+STUDY_2,binary_simple,openai_gpt_3.5_turbo_0125,CONSCIENTIOUSNESS,8,438,0.935,0.915,0.712,0.359,0.139,1147.917,20,0
+STUDY_2,binary_simple,openai_gpt_3.5_turbo_0125,NEUROTICISM,8,438,0.813,0.262,0.362,0.409,0.285,1484.583,20,0
+STUDY_2,binary_simple,openai_gpt_3.5_turbo_0125,OPENNESS,8,438,0.89,0.882,0.831,0.221,0.115,449.043,20,0

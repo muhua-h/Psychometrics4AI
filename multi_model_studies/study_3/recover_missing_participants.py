@@ -27,25 +27,27 @@ from mini_marker_prompt import get_expanded_prompt, get_likert_prompt
 from binary_baseline_prompt import get_binary_prompt, \
     generate_binary_personality_description
 
-# Mini-Marker to Big Five domain mapping (same as unified_convergent_analysis.py)
+
 minimarker_domain_mapping = {
     # Extraversion (E)
     'Bashful': 'E', 'Bold': 'E', 'Energetic': 'E', 'Extraverted': 'E',
     'Quiet': 'E', 'Shy': 'E', 'Talkative': 'E', 'Withdrawn': 'E',
-    # Agreeableness (A) 
-    'Cold': 'A', 'Cooperative': 'A', 'Envious': 'A', 'Harsh': 'A',
-    'Jealous': 'A', 'Kind': 'A', 'Rude': 'A', 'Sympathetic': 'A',
-    'Unsympathetic': 'A', 'Warm': 'A',
+
+    # Agreeableness (A)
+    'Cold': 'A', 'Cooperative': 'A', 'Harsh': 'A', 'Kind': 'A',
+    'Rude': 'A', 'Sympathetic': 'A', 'Unsympathetic': 'A', 'Warm': 'A',
+
     # Conscientiousness (C)
     'Careless': 'C', 'Disorganized': 'C', 'Efficient': 'C', 'Inefficient': 'C',
     'Organized': 'C', 'Practical': 'C', 'Sloppy': 'C', 'Systematic': 'C',
+
     # Neuroticism (N)
-    'Fretful': 'N', 'Moody': 'N', 'Relaxed': 'N', 'Temperamental': 'N',
-    'Touchy': 'N',
+    'Envious': 'N', 'Fretful': 'N', 'Jealous': 'N', 'Moody': 'N',
+    'Relaxed': 'N', 'Temperamental': 'N', 'Touchy': 'N', 'Unenvious': 'N',
+
     # Openness (O)
-    'Complex': 'O', 'Creative': 'O', 'Deep': 'O', 'Imaginative': 'O',
-    'Intellectual': 'O', 'Philosophical': 'O', 'Uncreative': 'O',
-    'Unenvious': 'O', 'Unintellectual': 'O'
+    'Complex': 'O', 'Deep': 'O', 'Creative': 'O', 'Imaginative': 'O',
+    'Intellectual': 'O', 'Philosophical': 'O', 'Uncreative': 'O', 'Unintellectual': 'O'
 }
 
 # Items that need reverse coding (same as unified_convergent_analysis.py)

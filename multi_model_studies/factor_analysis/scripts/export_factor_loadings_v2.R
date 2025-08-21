@@ -119,7 +119,8 @@ parse_meta <- function(filepath) {
   )
 
   # Extract model from filename with improved patterns
-  model_patterns <- c("gpt[-_]?3[.]?5[-_]?turbo", "gpt[-_]?4o", "gpt[-_]?4", "llama", "deepseek",
+  model_patterns <- c("openai[-_]?gpt[-_]?3[.]?5[-_]?turbo", "gpt[-_]?3[.]?5[-_]?turbo", 
+                      "gpt[-_]?4o", "gpt[-_]?4", "llama", "deepseek",
                       "claude", "gemini", "mistral", "qwen", "phi", "o1", "o3")
   model <- "unknown"
   for (pat in model_patterns) {
@@ -127,7 +128,7 @@ parse_meta <- function(filepath) {
       extracted <- str_extract(filename, regex(pat, ignore_case = TRUE))
       # Clean up common variations
       model <- case_when(
-        str_detect(extracted, regex("gpt.*3.*5", ignore_case = TRUE)) ~ "gpt_3.5",
+        str_detect(extracted, regex("(openai.*)?gpt.*3.*5", ignore_case = TRUE)) ~ "gpt_3.5",
         str_detect(extracted, regex("gpt.*4o", ignore_case = TRUE)) ~ "gpt_4o", 
         str_detect(extracted, regex("gpt.*4", ignore_case = TRUE)) ~ "gpt_4",
         TRUE ~ str_replace_all(tolower(extracted), "[-.]", "_")
@@ -178,6 +179,19 @@ fit_and_extract <- function(dat) {
 # ---------- Main ----------
 json_files <- list.files(INPUT_DIR, pattern = "\\.json$", recursive = TRUE, full.names = TRUE)
 if (length(json_files) == 0) stop(sprintf("No JSON files found under: %s", INPUT_DIR))
+
+# Filter out unwanted files
+json_files <- json_files[
+  # Exclude study_4 files (not needed for this analysis)
+  !grepl("study_4", json_files, ignore.case = TRUE) &
+  # Exclude metadata files
+  !grepl("metadata\\.json$", json_files, ignore.case = TRUE) &
+  # Only include files from study_2 and study_3 directories
+  (grepl("study_2", json_files, ignore.case = TRUE) | grepl("study_3", json_files, ignore.case = TRUE))
+]
+
+message(sprintf("Found %d JSON files after filtering", length(json_files)))
+if (length(json_files) == 0) stop("No valid JSON files found after filtering")
 
 rows <- list()
 
