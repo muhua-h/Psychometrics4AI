@@ -93,6 +93,16 @@ parse_meta <- function(filepath) {
   filename <- basename(filepath)
   path_parts <- strsplit(filepath, "/")[[1]]
   
+  # Extract study from path structure (similar to cfa_analysis_simple.R logic)
+  study <- case_when(
+    any(grepl("study_2", path_parts, ignore.case = TRUE)) ~ "STUDY_2",
+    any(grepl("study_3", path_parts, ignore.case = TRUE)) ~ "STUDY_3", 
+    # Fallback to filename-based detection
+    str_detect(filename, regex("study[_-]?2", ignore_case = TRUE)) ~ "STUDY_2",
+    str_detect(filename, regex("study[_-]?3", ignore_case = TRUE)) ~ "STUDY_3",
+    TRUE ~ "UNKNOWN"
+  )
+  
   # Determine condition from path structure (similar to run_batch_r_analysis.sh logic)
   condition <- case_when(
     any(grepl("binary.*simple|simple.*binary", path_parts, ignore.case = TRUE)) ~ "Simple Binary",
@@ -126,7 +136,7 @@ parse_meta <- function(filepath) {
     }
   }
   
-  list(condition = condition, model = model)
+  list(study = study, condition = condition, model = model)
 }
 
 # ---------- Fit & extract standardized loadings ----------
@@ -174,7 +184,7 @@ rows <- list()
 for (fp in json_files) {
   fname <- basename(fp)
   meta <- parse_meta(fp)
-  message(sprintf("➡️  Processing: %s  |  Condition=%s  Model=%s", fname, meta$condition, meta$model))
+  message(sprintf("➡️  Processing: %s  |  Study=%s  Condition=%s  Model=%s", fname, meta$study, meta$condition, meta$model))
 
   dat <- tryCatch({
     extract_data(fp, ALL_ITEMS)
@@ -205,7 +215,7 @@ for (fp in json_files) {
 
   # keep names when building the summary row
   row_df <- tibble::as_tibble_row(as.list(load_vec))
-  row_df <- mutate(row_df, Condition = meta$condition, Model = meta$model, .before = 1L)
+  row_df <- mutate(row_df, Study = meta$study, Condition = meta$condition, Model = meta$model, .before = 1L)
   rows[[length(rows) + 1]] <- row_df
 }
 
