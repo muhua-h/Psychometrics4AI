@@ -235,6 +235,13 @@ rows <- list()
 for (fp in json_files) {
   fname <- basename(fp)
   meta <- parse_meta(fp)
+  
+  # Skip files with unknown metadata
+  if (meta$study == "UNKNOWN" || meta$condition == "Unknown" || meta$model == "unknown") {
+    message(sprintf("⏭️  Skipping: %s  |  Study=%s  Condition=%s  Model=%s (contains unknown values)", fname, meta$study, meta$condition, meta$model))
+    next
+  }
+  
   message(sprintf("➡️  Processing: %s  |  Study=%s  Condition=%s  Model=%s", fname, meta$study, meta$condition, meta$model))
 
   dat <- tryCatch({

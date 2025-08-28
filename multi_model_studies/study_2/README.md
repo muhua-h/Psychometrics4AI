@@ -161,6 +161,18 @@ unified_analysis_results/
 5. **Cross-Comparison**: Compare performance across formats and models
 6. **Visualization**: Generate comprehensive charts and summary statistics
 
+### Correlation Measures Explained
+
+The unified analysis calculates three key correlation measures for convergent validity:
+
+- **BFI-Orig**: Correlation between **BFI-2 scores** and **Original Mini-Marker scores** (human responses). This is the empirical baseline correlation showing how well the original human data correlates.
+
+- **BFI-Sim**: Correlation between **BFI-2 scores** and **simulated Mini-Marker scores** (LLM responses). This measures **simulation validity** - how well the LLM simulation matches the target personality test.
+
+- **Orig-Sim**: Correlation between **Original Mini-Marker scores** (human responses) and **simulated Mini-Marker scores** (LLM responses). This provides a **direct comparison** between human and LLM responses on the same personality measure.
+
+**Note**: "Orig" consistently refers to **Original Mini-Marker scores from human participants**, not original BFI-2 scores.
+
 ## Pending Implementation
 
 ### Factor Analysis
@@ -226,12 +238,3 @@ Potential enhancements for future research:
 3. **Scale Expansion**: Test with additional personality measures
 4. **Cultural Validation**: Cross-cultural personality assessment
 5. **Longitudinal Analysis**: Stability of LLM personality patterns over time
-
-## Citation
-
-When using this implementation, please cite both the original Study 2 methodology and this multi-model extension.
-
----
-
-**Status**: ✅ **FULLY IMPLEMENTED** - Ready for execution and analysis
-**Next Steps**: Implement factor analysis for comprehensive psychometric validation 
