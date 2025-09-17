@@ -16,7 +16,7 @@ collect_all_r_results <- function() {
   all_files <- list()
   
   # Process each study
-  for (study in c("study_2", "study_3")) {
+  for (study in c("study_2a", "study_2b")) {
     study_path <- file.path(base_dir, study)
     
     if (dir.exists(study_path)) {

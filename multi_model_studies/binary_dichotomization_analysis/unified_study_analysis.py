@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Unified Binary Dichotomized Analysis for Study 2 and Study 3
+Unified Binary Dichotomized Analysis for Study 2a and Study 2b
 
 This script analyzes the correlation between dichotomized BFI-2 scores and Mini-Marker output
-for both Study 2 (empirical data) and Study 3 (simulated data) across binary simple and binary elaborated formats.
+for both Study 2a (empirical data) and Study 2b (simulated data) across binary simple and binary elaborated formats.
 """
 
 import pandas as pd
@@ -18,30 +18,30 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 def load_study2_data():
-    """Load the original Study 2 empirical data."""
-    data_path = Path(__file__).parent / '..' / 'study_2' / 'shared_data' / 'study2_preprocessed_data.csv'
+    """Load the original Study 2a empirical data."""
+    data_path = Path(__file__).parent / '..' / 'study_2a' / 'shared_data' / 'study2_preprocessed_data.csv'
     
     if not data_path.exists():
-        raise FileNotFoundError(f"Study 2 data file not found: {data_path}")
+        raise FileNotFoundError(f"Study 2a data file not found: {data_path}")
     
     df = pd.read_csv(data_path)
     
-    # Study 2 has pre-computed BFI-2 domain scores
+    # Study 2a has pre-computed BFI-2 domain scores
     df['bfi2_e'] = df['bfi2_e']
     df['bfi2_a'] = df['bfi2_a']
     df['bfi2_c'] = df['bfi2_c']
     df['bfi2_n'] = df['bfi2_n']
     df['bfi2_o'] = df['bfi2_o']
     
-    logger.info(f"Loaded Study 2 empirical data: {df.shape}")
+    logger.info(f"Loaded Study 2a empirical data: {df.shape}")
     return df
 
 def load_study3_data():
-    """Load the original Study 3 simulated data."""
-    data_path = Path(__file__).parent / '..' / 'study_3' / 'facet_lvl_simulated_data.csv'
+    """Load the original Study 2b simulated data."""
+    data_path = Path(__file__).parent / '..' / 'study_2b' / 'facet_lvl_simulated_data.csv'
     
     if not data_path.exists():
-        raise FileNotFoundError(f"Study 3 data file not found: {data_path}")
+        raise FileNotFoundError(f"Study 2b data file not found: {data_path}")
     
     df = pd.read_csv(data_path)
     
@@ -52,7 +52,7 @@ def load_study3_data():
     df['bfi2_n'] = df['bfi_n']
     df['bfi2_o'] = df['bfi_o']
     
-    logger.info(f"Loaded Study 3 simulated data: {df.shape}")
+    logger.info(f"Loaded Study 2b simulated data: {df.shape}")
     return df
 
 
@@ -277,7 +277,7 @@ def analyze_format_differences(results_df):
 
 def main():
     """Main analysis function."""
-    logger.info("Starting unified binary dichotomized analysis for Study 2 and Study 3...")
+    logger.info("Starting unified binary dichotomized analysis for Study 2a and Study 2b...")
     
     all_results = []
     cutoff_type = 2.5
@@ -285,16 +285,16 @@ def main():
     # Define study configurations
     study_configs = [
         {
-            'name': 'study_2',
+            'name': 'study_2a',
             'data_loader': load_study2_data,
-            'binary_simple_dir': Path(__file__).parent / '..' / 'study_2' / 'study_2_simple_binary_results',
-            'binary_elaborated_dir': Path(__file__).parent / '..' / 'study_2' / 'study_2_elaborated_binary_results'
+            'binary_simple_dir': Path(__file__).parent / '..' / 'study_2a' / 'study_2_simple_binary_results',
+            'binary_elaborated_dir': Path(__file__).parent / '..' / 'study_2a' / 'study_2_elaborated_binary_results'
         },
         {
-            'name': 'study_3',
+            'name': 'study_2b',
             'data_loader': load_study3_data,
-            'binary_simple_dir': Path(__file__).parent / '..' / 'study_3' / 'study_3_binary_simple_results',
-            'binary_elaborated_dir': Path(__file__).parent / '..' / 'study_3' / 'study_3_binary_elaborated_results'
+            'binary_simple_dir': Path(__file__).parent / '..' / 'study_2b' / 'study_3_binary_simple_results',
+            'binary_elaborated_dir': Path(__file__).parent / '..' / 'study_2b' / 'study_3_binary_elaborated_results'
         }
     ]
     
@@ -443,13 +443,13 @@ def main():
     
     # Compare studies
     if len(study_comparison) == 2:
-        study2_mean = study_comparison.get('study_2', {}).get('mean_correlation', 0)
-        study3_mean = study_comparison.get('study_3', {}).get('mean_correlation', 0)
+        study2_mean = study_comparison.get('study_2a', {}).get('mean_correlation', 0)
+        study3_mean = study_comparison.get('study_2b', {}).get('mean_correlation', 0)
         difference = study3_mean - study2_mean
         logger.info(f"\nStudy Comparison:")
-        logger.info(f"  Study 3 vs Study 2 difference: {difference:+.3f}")
+        logger.info(f"  Study 2b vs Study 2a difference: {difference:+.3f}")
         if abs(difference) > 0.01:
-            better_study = "study_3" if difference > 0 else "study_2"
+            better_study = "study_2b" if difference > 0 else "study_2a"
             logger.info(f"  {better_study} performs better")
         else:
             logger.info(f"  Studies perform similarly")

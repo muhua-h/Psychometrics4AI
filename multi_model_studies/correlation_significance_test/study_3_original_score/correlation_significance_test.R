@@ -31,7 +31,7 @@ suppressPackageStartupMessages({
 .project_root <- normalizePath(file.path(.script_dir, "..", ".."))
 
 # CSV input and output paths
-csv_path <- file.path(.project_root, "study_3", "unified_analysis_results", "unified_convergent_results.csv")
+csv_path <- file.path(.project_root, "study_2b", "unified_analysis_results", "unified_convergent_results.csv")
 out_csv  <- file.path(.script_dir, "correlation_significance_results_updated.csv")
 
 # ============================================================

@@ -23,7 +23,7 @@ All results in `results_r/`:
 
 ```bash
 # Single file
-Rscript scripts/cfa_analysis_simple.R study_2.json results_r/study_2/
+Rscript scripts/cfa_analysis_simple.R study_2a.json results_r/study_2a/
 
 # All files
 ./scripts/run_batch_r_analysis.sh

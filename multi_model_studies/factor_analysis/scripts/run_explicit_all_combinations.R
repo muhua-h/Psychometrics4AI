@@ -349,7 +349,7 @@ run_single_analysis <- function(json_path, model_name, format_type, study_name) 
 # Function to generate correct filename based on study and format
 get_filename <- function(study, format, model) {
   # Determine the correct file prefix based on study
-  file_prefix <- if (study == "study_2") "bfi_to_minimarker" else "bfi_to_minimarker"
+  file_prefix <- if (study == "study_2a") "bfi_to_minimarker" else "bfi_to_minimarker"
 
   # Handle special model name formatting for files
   file_model_name <- switch(model,
@@ -363,22 +363,22 @@ get_filename <- function(study, format, model) {
 
   # Generate filename based on format and study
   if (grepl("binary", format)) {
-    if (study == "study_2") {
-      # Study 2 binary formats have temp1_0 suffix
+    if (study == "study_2a") {
+      # Study 2a binary formats have temp1_0 suffix
       filename <- paste0(file_prefix, "_binary_", file_model_name, "_temp1_0.json")
     } else {
-      # Study 3 binary formats have temp1 suffix (no _0)
+      # Study 2b binary formats have temp1 suffix (no _0)
       filename <- paste0(file_prefix, "_binary_", file_model_name, "_temp1.json")
     }
   } else if (format == "likert_format") {
     # Likert format has no temp suffix for both studies
     filename <- paste0(file_prefix, "_", file_model_name, ".json")
   } else if (format == "expanded_format") {
-    if (study == "study_2") {
-      # Study 2 expanded format has temp1_0 suffix
+    if (study == "study_2a") {
+      # Study 2a expanded format has temp1_0 suffix
       filename <- paste0(file_prefix, "_", file_model_name, "_temp1_0.json")
     } else {
-      # Study 3 expanded format - need to check actual naming
+      # Study 2b expanded format - need to check actual naming
       # Based on the pattern, it might not have temp suffix or might be different
       filename <- paste0(file_prefix, "_", file_model_name, ".json")  # Try without temp first
     }
@@ -389,7 +389,7 @@ get_filename <- function(study, format, model) {
 
 # Function to get directory name based on study and format
 get_directory_name <- function(study, format) {
-  if (study == "study_2") {
+  if (study == "study_2a") {
     dir_mapping <- list(
       "expanded_format" = "study_2_expanded_results",
       "likert_format" = "study_2_likert_results",
@@ -416,7 +416,7 @@ formats <- c("expanded_format", "likert_format", "binary_simple_format", "binary
 models <- c("deepseek", "gpt_4", "gpt_4o", "llama", "openai_gpt_3.5_turbo_0125")
 
 # Generate configurations for both studies
-for (study in c("study_2", "study_3")) {
+for (study in c("study_2a", "study_2b")) {
   for (format in formats) {
     for (model in models) {
       filename <- get_filename(study, format, model)
@@ -494,8 +494,8 @@ find_json_file <- function(study, format, filename) {
     }
   }
 
-  # If not found, try alternative filename patterns for study 3 expanded format
-  if (study == "study_3" && format == "expanded_format") {
+  # If not found, try alternative filename patterns for study 2b expanded format
+  if (study == "study_2b" && format == "expanded_format") {
     # Try with temp1_0 suffix as well
     alt_filename <- gsub("\\.json$", "_temp1_0.json", filename)
     for (dir_path in possible_dirs) {
@@ -693,23 +693,23 @@ cat("   run_study_3_binary_elaborated_deepseek()\n")
 cat("   run_study_2_likert_openai_gpt_3.5_turbo_0125()\n\n")
 
 cat("2. Test file paths (for debugging):\n")
-cat("   test_file_path('study_3', 'binary_elaborated_format', 'deepseek')\n")
-cat("   test_file_path('study_2', 'binary_simple_format', 'gpt_4')\n\n")
+cat("   test_file_path('study_2b', 'binary_elaborated_format', 'deepseek')\n")
+cat("   test_file_path('study_2a', 'binary_simple_format', 'gpt_4')\n\n")
 
 cat("3. List all available functions:\n")
 cat("   list_analysis_functions()\n\n")
 
 cat("4. Run all analyses for a study:\n")
-cat("   run_all_study(2)  # Runs all Study 2 analyses\n")
-cat("   run_all_study(3)  # Runs all Study 3 analyses\n\n")
+cat("   run_all_study(2)  # Runs all Study 2a analyses\n")
+cat("   run_all_study(3)  # Runs all Study 2b analyses\n\n")
 
 cat("5. Run all analyses for a format:\n")
 cat("   run_all_format('expanded')  # Runs all expanded format analyses\n")
 cat("   run_all_format('binary_elaborated')   # Runs all binary elaborated format analyses\n\n")
 
 cat("Key fixes:\n")
-cat("- Study 3 binary files now use 'temp1' instead of 'temp1_0'\n")
-cat("- Correct directory names for Study 3\n")
+cat("- Study 2b binary files now use 'temp1' instead of 'temp1_0'\n")
+cat("- Correct directory names for Study 2b\n")
 cat("- Enhanced path detection with better error reporting\n")
 cat("- Added test_file_path() function for debugging\n")
 

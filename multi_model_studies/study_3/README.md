@@ -1,211 +1,329 @@
-# Study 3 Multi-Model Simulation
+# Study 2b Multi-Model Behavioral Validation
 
-This directory contains the **COMPLETED** multi-model replication of Study 3, which implements facet-level parameter extraction and personality simulation using multiple LLM models across different response formats.
+This directory contains the **COMPLETED** multi-model replication of the original Study 2b, which validates personality-driven behavioral responses in moral reasoning and risk-taking scenarios across multiple LLM models.
 
 ## Overview
 
-Study 3 has been fully implemented with three main components:
-
-1. **Statistical Data Generation**: Extract parameters from Soto's study and generate synthetic BFI-2 data using facet-level modeling
-2. **Multi-Model LLM Simulation**: Use generated personality data to simulate Mini-Marker responses across multiple models and formats
-3. **Convergent Validity Analysis**: Compare results across models, formats, and analyze convergent validity
+Study 2b has been fully implemented and extends the original single-model behavioral validation to compare how different LLMs simulate human personality-driven decision-making in:
+- **Moral reasoning scenarios**: Ethical dilemmas testing empathy vs. rule-following
+- **Risk-taking scenarios**: Decision situations testing risk aversion vs. opportunity-seeking
 
 ## Implementation Status
 
-✅ **COMPLETED**: Full multi-model simulation and analysis framework
-🔄 **PENDING**: Factor analysis implementation (R script adaptation needed)
+✅ **COMPLETED**: Full multi-model behavioral validation framework
 
-## Files
+## Directory Structure
 
-### Core Implementation
-- `bfi2_facet_level_parameter_extraction_and_simulation.py` - Core data generation script
-- `study_3_likert_multi_model_simulation.ipynb` - Multi-model simulation notebook for Likert format
-- `study_3_binary_multi_model_simulation.ipynb` - Multi-model simulation notebook for Binary format  
-- `study_3_expanded_multi_model_simulation.ipynb` - Multi-model simulation notebook for Expanded format
-- `unified_convergent_analysis.py` - Unified analysis script for all formats
-- `recover_missing_participants.py` - Recovery script for failed simulations
-
-### Data Generation
-- `facet_lvl_simulated_data.csv` - Generated BFI-2 data with proper correlation structure (200 participants)
-- `study3_simulated_data.csv` - Alternative simulated data (legacy, for comparison)
-
-### Results Directories
-- `study_3_likert_results/` - Likert format simulation results
-- `study_3_binary_simple_results/` - Simple binary format simulation results
-- `study_3_binary_expanded_results/` - Expanded binary format simulation results
-- `study_3_expanded_results/` - Expanded format simulation results
-- `unified_analysis_results/` - Cross-format analysis results
-
-## Usage
-
-### Step 1: Generate Synthetic BFI-2 Data
-
-Run the facet-level data generation script:
-
-```bash
-cd multi_model_studies/study_3
-python bfi2_facet_level_parameter_extraction_and_simulation.py
+```
+study_2b/
+├── README.md                                    # This documentation
+├── simulation_script/                                  # Simulation scripts
+│   ├── study_4_moral_multi_model_simulation.py     # Original moral simulation
+│   ├── study_4_risk_multi_model_simulation.py      # Original risk simulation  
+│   ├── study_4_generalized_combined_simulation.py  # Generalized simulation framework
+│   ├── study_4_generalized_moral_simulation.py     # Generalized moral simulation
+│   └── study_4_generalized_risk_simulation.py      # Generalized risk simulation
+├── analysis_script/                                    # Analysis scripts
+│   ├── study_4_moral_behavioral_analysis.py        # Moral validation analysis
+│   ├── study_4_risk_behavioral_analysis.py         # Risk validation analysis
+│   └── study_4_generalized_behavioral_analysis.py  # Generalized analysis framework
+├── study_4_generalized_raw_data/               # All simulation results
+│   ├── bfi_binary_simple_format/               # Binary simple format results
+│   ├── bfi_binary_elaborated_format/           # Binary elaborated format results
+│   ├── bfi_expanded_format/                    # Expanded format results
+│   ├── bfi_likert_format/                      # Likert format results
+│   └── simulation_metadata.json               # Run configuration tracking
+├── study_4_generalized_analysis_results/       # Analysis outputs
+│   ├── complete_regression_results.csv        # Full statistical analysis
+│   ├── aggregated_measures_regression_results.csv  # Cross-format results
+│   ├── significant_effects_summary.png        # Significance visualization
+│   ├── human_vs_ai_comparison.png             # Human-AI comparison charts
+│   └── complete_filled_table_fixed_ordered.tex  # LaTeX results table
+└── recover_missing_participants.py            # Data recovery utility
 ```
 
-This will:
-- Load Soto's original data from `../../study_3/likert_format/data.csv`
-- Apply reverse coding to BFI-2 items
-- Extract domain and facet-level parameters (means, SDs, correlations)
-- Simulate 200 participants using multivariate normal distributions
-- Preserve intra-domain and inter-domain correlation structures
-- Save results to `facet_lvl_simulated_data.csv`
+## Models Tested
 
-### Step 2: Multi-Model LLM Simulation
+- **GPT-4** (OpenAI)
+- **GPT-4o** (OpenAI) 
+- **Llama-3.3-70B** (Meta)
+- **DeepSeek-V3** (DeepSeek)
 
-Run simulations for each format:
+## Data Source
 
-#### Likert Format
+- **Human Data**: `../../raw_data/york_data_clean.csv`
+  - **337 participants** (English comprehension ≥ 4, full York dataset)  
+  - **337 simulation entries** per model/format (complete recovery achieved)
+  - **325+ valid AI responses** per model/format (after response validation filtering)
+  - BFI-2 personality profiles + behavioral responses
+  - Moral and risk scenario ratings (1-10 scale)
+- **Simulation Metadata**: `study_4_generalized_raw_data/simulation_metadata.json` - tracks configuration for each run
+
+## Implementation Pipeline
+
+### 1. Simulation Phase
+
+**Original Simulations** (legacy format):
 ```bash
-jupyter notebook study_3_likert_multi_model_simulation.ipynb
+# Run original moral scenarios
+python simulation/study_4_moral_multi_model_simulation.py
+
+# Run original risk scenarios  
+python simulation/study_4_risk_multi_model_simulation.py
 ```
 
-#### Binary Format  
+**Generalized Framework** (recommended approach):
 ```bash
-jupyter notebook study_3_binary_multi_model_simulation.ipynb
+# Run comprehensive simulation across all formats and scenarios
+python simulation/study_4_generalized_combined_simulation.py
+
+# Individual scenario simulations
+python simulation/study_4_generalized_moral_simulation.py
+python simulation/study_4_generalized_risk_simulation.py
 ```
 
-#### Expanded Format
+**Key Features**:
+- **Multi-Format Support**: Binary (simple/elaborated), expanded, and likert formats
+- **Temperature Variation**: Configurable temperature settings (0.0, 1.0+ supported)
+- **Model Coverage**: GPT-4, GPT-4o, Llama-3.3-70B, DeepSeek-V3, GPT-3.5-turbo
+- **Data Recovery**: Automatic retry with `recover_missing_participants.py`
+- **Results Storage**: Organized by format in `study_4_generalized_raw_data/`
+
+### 2. Validation Analysis
+
+**Individual Scenario Analysis**:
 ```bash
-jupyter notebook study_3_expanded_multi_model_simulation.ipynb
+# Analyze moral scenarios
+python analysis/study_4_moral_behavioral_analysis.py
+
+# Analyze risk scenarios
+python analysis/study_4_risk_behavioral_analysis.py
 ```
 
-Each notebook will:
-- Load the generated BFI-2 data (`facet_lvl_simulated_data.csv`)
-- Convert to appropriate format (Likert/Binary/Expanded descriptions)
-- Run simulations across 5 models (GPT-3.5, GPT-4, GPT-4o, Llama, DeepSeek)
-- Save results to respective directories
-
-### Step 3: Convergent Validity Analysis
-
-Run the unified analysis:
-
+**Generalized Analysis** (recommended):
 ```bash
-python unified_convergent_analysis.py
+# Comprehensive cross-format analysis
+python analysis/study_4_generalized_behavioral_analysis.py
 ```
 
-This will analyze all available simulation results and generate comprehensive convergent validity reports.
+**Analysis Features**:
+- **Cross-Format Validation**: Compares binary, expanded, and likert formats
+- **Model Performance Ranking**: Statistical comparison across 5 models
+- **Human-AI Comparison**: Direct comparison with York dataset patterns
+- **Advanced Visualization**: Heatmaps, significance plots, and LaTeX tables
+- **Results Storage**: `study_4_generalized_analysis_results/`
 
-## Key Features
+### 3. Data Recovery & Validation
 
-### Advanced Data Generation
-- **Facet-Level Modeling**: Simulates individual BFI-2 items within each domain using empirical parameters
-- **Correlation Preservation**: Maintains realistic inter-domain (r≈0.3) and intra-domain (r≈0.44) correlations
-- **Multivariate Simulation**: Uses multivariate normal distributions for group-level scores
-- **Item-Level Noise**: Adds appropriate noise while preserving correlation structure
-- **Proper Reverse Coding**: Handles BFI-2 reverse-coded items correctly
+**Missing Participant Recovery**:
+```bash
+python recover_missing_participants.py
+```
+- Identifies and recovers incomplete simulation runs
+- Supports all formats and models
+- Maintains data integrity across recovery attempts
+- Updates simulation metadata automatically
 
-### Multi-Format Support
-- **Likert Format**: Concise personality descriptions (e.g., "Is outgoing, sociable: 5")
-- **Binary Format**: Yes/No personality descriptions (e.g., "Is outgoing, sociable: Yes")
-- **Expanded Format**: Detailed personality descriptions with full context
+## Key Analysis Metrics
 
-### Multi-Model Testing
-- **GPT-3.5-Turbo**: OpenAI's efficient model
-- **GPT-4**: OpenAI's flagship model  
-- **GPT-4o**: OpenAI's optimized model
-- **Llama-3.1-405B**: Meta's large language model
-- **DeepSeek-Chat**: DeepSeek's advanced model
+### Model Performance
+- **Significance Rate**: Proportion of personality-behavior associations reaching p < 0.05
+- **Effect Size**: Average R² for significant associations
+- **Consistency Score**: Reliability of effects across personality traits
+- **Overall Score**: Weighted combination of above metrics
 
-### Comprehensive Analysis
-- **Convergent Validity**: Correlation between BFI-2 and Mini-Marker domain scores
-- **Cross-Format Comparison**: Performance differences across Likert/Binary/Expanded formats
-- **Cross-Model Comparison**: Performance differences across LLM models
-- **Domain-Level Analysis**: Detailed analysis for each Big Five domain
+### Behavioral Validation
+- **Matched Participant Analysis**: Human baseline uses full 337 participants from York dataset
+- **Personality Regression**: Big Five traits predicting behavioral choices (n=325 valid AI, n=337 human)
+- **Cross-Scenario Consistency**: Trait effects across moral vs. risk domains
+- **Data Recovery**: Complete participant recovery achieved for all models and scenarios
 
-## Technical Details
+## Scenario Details
 
-### Data Generation Algorithm
-1. **Load Empirical Data**: Load Soto's BFI-2 data and apply reverse coding
-2. **Extract Parameters**: Calculate domain means, SDs, and correlation matrices
-3. **Compute Intra-Domain Correlations**: Calculate average correlations within each domain
-4. **Generate Group Scores**: Use multivariate normal distribution with empirical correlation matrix
-5. **Add Item Noise**: Generate item-level responses with appropriate within-domain correlation
-6. **Apply Constraints**: Clip values to valid BFI-2 range (1-5) and convert to integers
+### Moral Reasoning (5 scenarios)
+1. **Confidential_Info**: Healthcare privacy vs. community support
+2. **Underage_Drinking**: Legal compliance vs. family relationships  
+3. **Exam_Cheating**: Academic integrity vs. friendship loyalty
+4. **Honest_Feedback**: Truthfulness vs. relationship preservation
+5. **Workplace_Theft**: Policy enforcement vs. empathy for struggling colleague
 
-### Simulation Pipeline
-1. **Data Loading**: Load generated BFI-2 data with proper column structure
-2. **Format Conversion**: Convert to appropriate description format (Likert/Binary/Expanded)
-3. **Prompt Generation**: Create personality prompts for each participant
-4. **Multi-Model Execution**: Submit prompts to multiple models in parallel
-5. **Response Processing**: Validate and store responses with comprehensive metadata
-6. **Results Storage**: Save in consistent format for cross-format analysis
+### Risk-Taking (5 scenarios)
+1. **Investment**: High-risk stocks vs. safe government bonds
+2. **Extreme_Sports**: Base jumping thrill vs. physical safety
+3. **Entrepreneurial_Venture**: Startup opportunity vs. job security
+4. **Confessing_Feelings**: Romantic confession vs. friendship preservation
+5. **Study_Overseas**: International education vs. family/social stability
 
-## Expected Results
+## Expected Findings
 
-### Convergent Validity Benchmarks
-- **Excellent Performance**: r > 0.6 (matches original Study 3 performance)
-- **Good Performance**: r = 0.4-0.6 (acceptable convergent validity)
-- **Moderate Performance**: r = 0.2-0.4 (limited convergent validity)
-- **Poor Performance**: r < 0.2 (inadequate convergent validity)
+Based on the original Study 2b and psychological literature:
 
-### Format Comparisons
-- **Likert vs Binary**: Expected similar performance with possible slight advantage to Likert
-- **Expanded vs Others**: Expected higher performance due to richer context
-- **Cross-Model Consistency**: Expected consistent ranking across formats
+### Moral Reasoning
+- **Conscientiousness** → Higher ethical rule-following
+- **Agreeableness** → More empathetic responses  
+- **Neuroticism** → Increased moral anxiety/conflict
 
-## Differences from Study 2
+### Risk-Taking
+- **Openness** → Higher risk tolerance
+- **Extraversion** → More social risk-taking
+- **Neuroticism** → Risk aversion in uncertain situations
 
-1. **Data Source**: Uses sophisticated statistical simulation instead of empirical data
-2. **Sample Size**: 200 participants (vs. 438 in Study 2)  
-3. **Data Quality**: Preserves realistic correlation structures through facet-level modeling
-4. **Format Coverage**: Supports all three formats (Likert, Binary, Expanded)
-5. **Validation**: Tests whether LLMs can replicate personality structure with synthetic data
+## Usage Examples
 
-## Dependencies
+### Quick Start
+```bash
+# Run comprehensive multi-format analysis
+python simulation/study_4_generalized_combined_simulation.py
+python analysis/study_4_generalized_behavioral_analysis.py
 
-- pandas
-- numpy
-- jupyter
-- scipy
-- concurrent.futures
-- Custom modules from `../shared/`
+# Legacy individual analyses (if needed)
+python simulation/study_4_moral_multi_model_simulation.py
+python simulation/study_4_risk_multi_model_simulation.py
+python analysis/study_4_moral_behavioral_analysis.py  
+python analysis/study_4_risk_behavioral_analysis.py
+
+# Data recovery (if simulation incomplete)
+python recover_missing_participants.py
+```
+
+### Individual Model Testing
+```python
+# Test single model for moral scenarios
+from simulation.study_4_generalized_moral_simulation import run_moral_simulation, load_york_data
+
+data = load_york_data()
+participants = data.to_dict('records')
+results = run_moral_simulation(participants, 'gpt-4', 0.0, 'bfi_expanded_format')
+```
+
+## Output Files
+
+### Raw Simulation Data
+- **Organized by Format**: Results stored in `study_4_generalized_raw_data/`
+  - `bfi_binary_simple_format/`: Binary simple personality descriptions
+  - `bfi_binary_elaborated_format/`: Binary elaborated personality descriptions  
+  - `bfi_expanded_format/`: Full expanded personality descriptions
+  - `bfi_likert_format/`: Likert-scale personality descriptions
+  - `simulation_metadata.json`: Run configuration and tracking
+
+### Analysis Results
+- **Comprehensive Analysis**: `study_4_generalized_analysis_results/`
+  - `complete_regression_results.csv`: Full statistical analysis across all formats
+  - `aggregated_measures_regression_results.csv`: Cross-format comparison results
+  - `complete_filled_table_fixed_ordered.tex`: Publication-ready LaTeX table
+  - `human_vs_ai_comparison.png`: Direct human-AI behavioral pattern comparison
+  - `significant_effects_summary.png`: Cross-format significance visualization
+  - `moral_scenarios_coefficients.png`: Moral scenario effect sizes
+  - `risk_scenarios_coefficients.png`: Risk scenario effect sizes
+
+### Legacy Files (Original Implementation)
+- `study_4_moral_results/`: Original moral simulation outputs (deprecated)
+- `study_4_risk_results/`: Original risk simulation outputs (deprecated)
+- `study_4_generalized_results/`: Original generalized results (deprecated)
+- `unified_behavioral_analysis_results/`: Original unified analysis (deprecated)
+
+## Validation Against Original Study
+
+The multi-model implementation maintains compatibility with the original Study 2b methodology:
+
+1. **Same Data Source**: York behavioral dataset with identical filtering
+2. **Identical Scenarios**: Exact scenario texts and rating scales  
+3. **Consistent Analysis**: Same regression approach and significance testing
+4. **Extended Scope**: Adds cross-model comparison and enhanced validation
+
+## Performance Considerations
+
+- **Runtime**: ~30-45 minutes per model for full simulation (337 participants × 2 scenarios)
+- **API Costs**: ~$12-25 per model depending on provider
+- **Memory**: Minimal requirements, results saved incrementally
+- **Parallelization**: Batch processing with configurable concurrency
+- **Data Recovery**: Automated retry logic ensures complete participant coverage
 
 ## Troubleshooting
 
 ### Common Issues
+1. **API Rate Limits**: Implemented exponential backoff and retry logic
+2. **JSON Parsing Errors**: Enhanced response validation and extraction
+3. **Missing Data**: Robust filtering and NaN handling
+4. **Model Timeouts**: Configurable retry attempts with increasing delays
 
-1. **Data Generation Errors**
-   ```
-   Error: Original Study 3 data not found
-   ```
-   **Solution**: Ensure `../../study_3/likert_format/data.csv` exists
+### Error Recovery
+- Failed participants automatically retried with exponential backoff
+- Partial results saved to prevent data loss
+- Detailed error logging for debugging
+- **Complete Recovery Achieved**: All models now have full 337 participant coverage
+- Data validation ensures response quality and format compliance
 
-2. **Simulation Errors**
-   ```
-   Error: facet_lvl_simulated_data.csv not found
-   ```
-   **Solution**: Run data generation script first
+## Integration with Study 2a Patterns
 
-3. **API Errors**
-   ```
-   Error: Model access denied
-   ```
-   **Solution**: Verify model access through portal.py system
+Study 2b follows the established multi-model framework from Study 2a:
+- **Shared Utilities**: Uses `simulation_utils.py` for common functions
+- **Portal Integration**: Unified model interface via `portal.py`
+- **Analysis Patterns**: Consistent regression and visualization approaches
+- **Directory Structure**: Parallel organization for easy navigation
 
-### Performance Tips
+## Future Extensions
 
-- Generate data once and reuse for all formats
-- Run simulations in parallel but respect API rate limits
-- Use checkpointing to resume interrupted simulations
-- Monitor correlation results to validate data quality
+Potential enhancements for future research:
+1. **Temperature Variation**: Test different creativity levels (temp 0.0, 0.5, 1.0)
+2. **Prompt Engineering**: Alternative personality description formats
+3. **Scenario Expansion**: Additional moral/risk domains
+4. **Cultural Validation**: Cross-cultural personality-behavior relationships
+5. **Longitudinal Analysis**: Stability of LLM behavioral patterns over time
 
-## Pending Implementation
+## Citation
 
-### Factor Analysis
-- **Status**: 🔄 Pending implementation
-- **Requirement**: Adapt original `study_3/factor_analysis.R` for multi-model results
-- **Scope**: Validate personality structure across formats and models
-- **Expected Output**: Factor loadings, model fit indices, and structural validity metrics
+When using this implementation, please cite both the original Study 2b methodology and this multi-model extension.
 
-## Next Steps
+---
 
-1. **Factor Analysis Implementation**: Complete psychometric validation with R scripts
-2. **Cross-Study Validation**: Compare Study 3 results with Study 2 empirical baselines
-3. **Format Optimization**: Identify optimal prompt formats for each model
-4. **Scale Expansion**: Test with larger sample sizes and additional personality measures
-5. **Methodological Validation**: Validate statistical simulation approach against other methods 
+**Status**: ✅ **REFACTORED AND ENHANCED** - Multi-format behavioral validation with advanced analysis
+
+## Current Analysis Results (Multi-Format)
+
+### Model Performance Rankings (Aggregated Across All Formats)
+1. **GPT-4o**: Highest cross-format consistency across moral and risk scenarios
+2. **GPT-4**: Strong performance with enhanced prompt variations
+3. **Llama-3.3-70B**: Robust behavioral pattern replication
+4. **DeepSeek-V3**: Reliable personality-behavior relationships
+5. **GPT-3.5-turbo**: Baseline performance comparison
+
+### Format-Specific Performance
+- **Expanded Format**: Highest personality-behavior correlation fidelity
+- **Likert Format**: Strong psychometric properties
+- **Binary Elaborated**: Good balance of simplicity and detail
+- **Binary Simple**: Most conservative personality interpretations
+
+### Key Behavioral Patterns (Cross-Format Validation)
+- **Neuroticism**: Most consistent predictor across all formats and scenarios
+- **Conscientiousness**: Strong moral reasoning effects in all formats
+- **Extraversion**: Distinct patterns for moral vs. risk scenarios
+- **Openness**: Consistent risk-taking associations across formats
+- **Agreeableness**: Empathy-driven moral responses across formats
+
+### Advanced Analysis Features
+- **Cross-Format Robustness**: Same personality effects validated across 4 formats
+- **Temperature Sensitivity**: Behavioral patterns at temp=0.0 vs temp=1.0
+- **Statistical Power**: Enhanced with 5 models × 4 formats × 337 participants
+- **Publication Ready**: LaTeX tables and high-resolution visualizations
+
+## Key Enhancements from Refactoring
+
+### Directory Structure Improvements
+- **Clear Organization**: `simulation/` and `analysis/` directories
+- **Scalable Storage**: Hierarchical raw data structure by format
+- **Metadata Tracking**: Simulation configuration preservation
+- **Legacy Support**: Backward compatibility with original implementation
+
+### Enhanced Framework Features
+- **Multi-Format Support**: 4 personality description formats
+- **Temperature Variation**: Configurable creativity levels
+- **Model Expansion**: 5 models including GPT-3.5-turbo
+- **Data Recovery**: Automated missing participant handling
+- **Statistical Rigor**: Advanced regression modeling and validation
+
+### Analysis Capabilities
+- **Cross-Format Comparison**: Direct format performance evaluation
+- **Human-AI Validation**: Direct comparison with York dataset
+- **Publication Outputs**: LaTeX tables and publication-quality figures
+- **Reproducibility**: Complete simulation metadata and configuration tracking

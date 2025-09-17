@@ -247,12 +247,12 @@ if __name__ == "__main__":
     print(f"llama response:\n{response}\n")
 
     # claude
-    # response = get_model_response(
-    #     model="claude",
-    #     user_prompt="What are three benefits of AI models in modern applications?",
-    #     system_prompt="You are a technical expert who explains concepts clearly and concisely."
-    # )
-    # print(f"claude response:\n{response}\n")
+    response = get_model_response(
+        model="claude",
+        user_prompt="What are three benefits of AI models in modern applications?",
+        system_prompt="You are a technical expert who explains concepts clearly and concisely."
+    )
+    print(f"claude response:\n{response}\n")
 
     # gemini
     response = get_model_response(
@@ -262,26 +262,26 @@ if __name__ == "__main__":
     )
     print(f"gemini response:\n{response}\n")
 
-    # gpt-4
-    response = get_model_response(
-        model="gpt-4",
-        user_prompt="What are three benefits of AI models in modern applications?",
-        system_prompt="You are a technical expert who explains concepts clearly and concisely."
-    )
-    print(f"gpt-4 response:\n{response}\n")
-
-    # gpt-4o
-    response = get_model_response(
-        model="gpt-4o",
-        user_prompt="What are three benefits of AI models in modern applications?",
-        system_prompt="You are a technical expert who explains concepts clearly and concisely."
-    )
-    print(f"gpt-4o response:\n{response}\n")
-
-    # gpt-4.5-preview
-    response = get_model_response(
-        model="gpt-4.5-preview",
-        user_prompt="What are three benefits of AI models in modern applications?",
-        system_prompt="You are a technical expert who explains concepts clearly and concisely."
-    )
-    print(f"gpt-4.5-preview response:\n{response}\n")
+    # # gpt-4
+    # response = get_model_response(
+    #     model="gpt-4",
+    #     user_prompt="What are three benefits of AI models in modern applications?",
+    #     system_prompt="You are a technical expert who explains concepts clearly and concisely."
+    # )
+    # print(f"gpt-4 response:\n{response}\n")
+    #
+    # # gpt-4o
+    # response = get_model_response(
+    #     model="gpt-4o",
+    #     user_prompt="What are three benefits of AI models in modern applications?",
+    #     system_prompt="You are a technical expert who explains concepts clearly and concisely."
+    # )
+    # print(f"gpt-4o response:\n{response}\n")
+    #
+    # # gpt-4.5-preview
+    # response = get_model_response(
+    #     model="gpt-4.5-preview",
+    #     user_prompt="What are three benefits of AI models in modern applications?",
+    #     system_prompt="You are a technical expert who explains concepts clearly and concisely."
+    # )
+    # print(f"gpt-4.5-preview response:\n{response}\n")

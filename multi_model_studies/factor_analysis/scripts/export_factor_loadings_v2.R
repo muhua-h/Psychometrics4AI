@@ -130,8 +130,8 @@ parse_meta <- function(filepath) {
 
   # Extract study from path structure (similar to cfa_analysis_simple.R logic)
   study <- case_when(
-    any(grepl("study_2", path_parts, ignore.case = TRUE)) ~ "STUDY_2",
-    any(grepl("study_3", path_parts, ignore.case = TRUE)) ~ "STUDY_3",
+    any(grepl("study_2a", path_parts, ignore.case = TRUE)) ~ "STUDY_2",
+    any(grepl("study_2b", path_parts, ignore.case = TRUE)) ~ "STUDY_3",
     # Fallback to filename-based detection
     str_detect(filename, regex("study[_-]?2", ignore_case = TRUE)) ~ "STUDY_2",
     str_detect(filename, regex("study[_-]?3", ignore_case = TRUE)) ~ "STUDY_3",
@@ -217,12 +217,12 @@ if (length(json_files) == 0) stop(sprintf("No JSON files found under: %s", INPUT
 
 # Filter out unwanted files
 json_files <- json_files[
-  # Exclude study_4 files (not needed for this analysis)
-  !grepl("study_4", json_files, ignore.case = TRUE) &
+  # Exclude study_2b files (not needed for this analysis)
+  !grepl("study_2b", json_files, ignore.case = TRUE) &
   # Exclude metadata files
   !grepl("metadata\\.json$", json_files, ignore.case = TRUE) &
-  # Only include files from study_2 and study_3 directories
-  (grepl("study_2", json_files, ignore.case = TRUE) | grepl("study_3", json_files, ignore.case = TRUE))
+  # Only include files from study_2a and study_2b directories
+  (grepl("study_2a", json_files, ignore.case = TRUE) | grepl("study_2b", json_files, ignore.case = TRUE))
 ]
 
 message(sprintf("Found %d JSON files after filtering", length(json_files)))

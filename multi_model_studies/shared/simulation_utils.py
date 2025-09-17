@@ -665,7 +665,7 @@ def run_bfi_to_minimarker_simulation(participants_data: List[Dict[str, Any]],
                                    use_enhanced: bool = False,
                                    prompt_generator: Optional[Callable] = None) -> List[Dict[str, Any]]:
     """
-    Run BFI-2 to Mini-Marker personality simulation (Study 2).
+    Run BFI-2 to Mini-Marker personality simulation (Study 2a).
     
     Args:
         participants_data (List[Dict[str, Any]]): Participant data with 'combined_bfi2' key
@@ -696,7 +696,7 @@ def run_moral_simulation(participants_data: List[Dict[str, Any]],
                         config: SimulationConfig,
                         output_dir: str = "moral_results") -> List[Dict[str, Any]]:
     """
-    Run moral decision-making simulation (Study 4).
+    Run moral decision-making simulation (Study 2b).
     
     Args:
         participants_data (List[Dict[str, Any]]): Participant data with 'bfi_combined' key
@@ -722,7 +722,7 @@ def run_risk_simulation(participants_data: List[Dict[str, Any]],
                        config: SimulationConfig,
                        output_dir: str = "risk_results") -> List[Dict[str, Any]]:
     """
-    Run risk-taking simulation (Study 4).
+    Run risk-taking simulation (Study 2b).
     
     Args:
         participants_data (List[Dict[str, Any]]): Participant data with 'bfi_combined' key

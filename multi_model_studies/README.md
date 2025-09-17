@@ -31,8 +31,8 @@ multi_model_studies/
 │   ├── moral_stories.py                     # Moral reasoning scenarios
 │   ├── risk_taking.py                       # Risk-taking scenarios
 │   └── participant_validation.py            # Participant data validation
-├── study_2/                                  # ✅ COMPLETED - Personality Assignment Validation
-│   ├── README.md                            # Study 2 documentation
+├── study_2a/                                  # ✅ COMPLETED - Personality Assignment Validation
+│   ├── README.md                            # Study 2a documentation
 │   ├── study_2_binary_baseline_simulation.ipynb
 │   ├── study_2_expanded_multi_model_simulation.ipynb
 │   ├── study_2_likert_multi_model_simulation.ipynb
@@ -45,8 +45,8 @@ multi_model_studies/
 │   ├── study_2_expanded_results_you_are/    # Expanded format (You are) results
 │   ├── study_2_likert_results/              # Likert format results
 │   └── unified_analysis_results/            # Cross-format analysis results
-├── study_3/                                  # ✅ COMPLETED - Facet-Level Parameter Extraction
-│   ├── README.md                            # Study 3 documentation
+├── study_2b/                                  # ✅ COMPLETED - Facet-Level Parameter Extraction
+│   ├── README.md                            # Study 2b documentation
 │   ├── bfi2_facet_level_parameter_extraction_and_simulation.py
 │   ├── study_3_binary_multi_model_simulation.ipynb
 │   ├── study_3_expanded_multi_model_simulation.ipynb
@@ -59,8 +59,8 @@ multi_model_studies/
 │   ├── study_3_expanded_results/            # Expanded format results
 │   ├── study_3_likert_results/              # Likert format results
 │   └── unified_analysis_results/            # Cross-format analysis results
-├── study_4/                                  # ✅ COMPLETED - Behavioral Validation
-│   ├── README.md                            # Study 4 documentation
+├── study_2b/                                  # ✅ COMPLETED - Behavioral Validation
+│   ├── README.md                            # Study 2b documentation
 │   ├── study_4_moral_multi_model_simulation.py
 │   ├── study_4_risk_multi_model_simulation.py
 │   ├── study_4_moral_behavioral_analysis.py
@@ -79,7 +79,7 @@ multi_model_studies/
 
 ## Studies Description
 
-### Study 2: ✅ **COMPLETED** - Personality Assignment Validation
+### Study 2a: ✅ **COMPLETED** - Personality Assignment Validation
 - **Purpose**: Validate BFI-2 to Mini-Marker personality assignment across multiple formats
 - **Data Source**: Empirical BFI-2 data from Soto's study (438 participants)
 - **Formats**: Binary (simple/elaborated), Expanded (I am/You are), Likert
@@ -88,7 +88,7 @@ multi_model_studies/
 - **Analysis**: Unified convergent validity analysis across all formats and models
 - **Status**: Full implementation with comprehensive analysis framework
 
-### Study 3: ✅ **COMPLETED** - Facet-Level Parameter Extraction
+### Study 2b: ✅ **COMPLETED** - Facet-Level Parameter Extraction
 - **Purpose**: Extract and validate personality at the facet level using statistical simulation
 - **Data Source**: Facet-level statistically simulated BFI-2 data (200 participants)
 - **Formats**: Binary (simple/expanded), Expanded, Likert
@@ -97,7 +97,7 @@ multi_model_studies/
 - **Analysis**: Unified convergent validity analysis with cross-format comparison
 - **Status**: Full implementation with statistical data generation and multi-format analysis
 
-### Study 4: ✅ **COMPLETED** - Behavioral Validation
+### Study 2b: ✅ **COMPLETED** - Behavioral Validation
 - **Purpose**: Test personality effects on moral reasoning and risk-taking behavior
 - **Data Source**: York behavioral dataset with 4 personality formats
 - **Scenarios**: 5 moral dilemmas + 5 risk assessment tasks
@@ -141,13 +141,13 @@ multi_model_studies/
 1. Ensure `portal.py` and `.env` are configured with valid API keys
 2. Have the required data files in the project root:
    - `raw_data/Soto_data.xlsx` (for Studies 2 & 3)
-   - `raw_data/york_data_clean.csv` (for Study 4)
+   - `raw_data/york_data_clean.csv` (for Study 2b)
 
 ### Running Studies
 
-#### Study 2: Personality Assignment Validation
+#### Study 2a: Personality Assignment Validation
 ```bash
-cd multi_model_studies/study_2
+cd multi_model_studies/study_2a
 
 # Run simulations for each format
 jupyter notebook study_2_binary_baseline_simulation.ipynb
@@ -158,9 +158,9 @@ jupyter notebook study_2_likert_multi_model_simulation.ipynb
 python unified_convergent_analysis.py
 ```
 
-#### Study 3: Facet-Level Parameter Extraction
+#### Study 2b: Facet-Level Parameter Extraction
 ```bash
-cd multi_model_studies/study_3
+cd multi_model_studies/study_2b
 
 # Generate synthetic data (if needed)
 python bfi2_facet_level_parameter_extraction_and_simulation.py
@@ -174,9 +174,9 @@ jupyter notebook study_3_likert_multi_model_simulation.ipynb
 python unified_convergent_analysis.py
 ```
 
-#### Study 4: Behavioral Validation
+#### Study 2b: Behavioral Validation
 ```bash
-cd multi_model_studies/study_4
+cd multi_model_studies/study_2b
 
 # Run individual scenario simulations
 python study_4_moral_multi_model_simulation.py
@@ -205,7 +205,7 @@ config = SimulationConfig(
 
 ## Output Structure
 
-### Study 2 Results
+### Study 2a Results
 ```
 study_2_*_results/
 ├── bfi_to_minimarker_gpt_4_temp1_0.json
@@ -221,7 +221,7 @@ unified_analysis_results/
 └── unified_convergent_results.csv
 ```
 
-### Study 3 Results
+### Study 2b Results
 ```
 study_3_*_results/
 ├── bfi_to_minimarker_gpt_4_temp1_0.json
@@ -236,7 +236,7 @@ unified_analysis_results/
 └── unified_convergent_results.csv
 ```
 
-### Study 4 Results
+### Study 2b Results
 ```
 study_4_*_results/
 ├── moral_{model}_temp1_0.json
@@ -273,7 +273,7 @@ unified_behavioral_analysis_results/
 5. **Cross-Format Comparison**: Compare performance across formats and models
 6. **Statistical Testing**: Perform significance testing and effect size analysis
 
-### Behavioral Validation Analysis (Study 4)
+### Behavioral Validation Analysis (Study 2b)
 1. **Response Processing**: Load and validate behavioral scenario responses
 2. **Personality Integration**: Merge with human personality data
 3. **Regression Analysis**: Test personality → behavior relationships
@@ -292,7 +292,7 @@ unified_behavioral_analysis_results/
 
 ### Factor Analysis
 - **Status**: 🔄 Pending implementation
-- **Requirement**: Adapt original `study_2/factor_analysis.R` and `study_3/factor_analysis.R` for multi-model results
+- **Requirement**: Adapt original `study_2a/factor_analysis.R` and `study_2b/factor_analysis.R` for multi-model results
 - **Scope**: Validate personality structure across formats and models
 - **Expected Output**: Factor loadings, model fit indices, and structural validity metrics
 

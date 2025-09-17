@@ -73,8 +73,8 @@ analyze_file <- function(json_path, output_dir) {
 
     # Determine study and format from path
     path_parts <- strsplit(json_path, "/")[[1]]
-    study <- ifelse(any(grepl("study_2", path_parts)), "STUDY_2",
-               ifelse(any(grepl("study_3", path_parts)), "STUDY_3", "STUDY_4"))
+    study <- ifelse(any(grepl("study_2a", path_parts)), "STUDY_2",
+               ifelse(any(grepl("study_2b", path_parts)), "STUDY_3", "STUDY_4"))
 
     format <- ifelse(any(grepl("binary_elaborated", path_parts)), "binary_elaborated",
                 ifelse(any(grepl("binary_simple", path_parts)), "binary_simple",

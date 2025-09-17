@@ -1,6 +1,6 @@
 # Binary Dichotomization Analysis
 
-This directory contains the **NEW** binary dichotomization analysis framework that analyzes the correlation between dichotomized BFI-2 scores and Mini-Marker output across both Study 2 and Study 3.
+This directory contains the **NEW** binary dichotomization analysis framework that analyzes the correlation between dichotomized BFI-2 scores and Mini-Marker output across both Study 2a and Study 2b.
 
 ## Overview
 
@@ -8,7 +8,7 @@ The analysis extends the existing convergent validity framework by:
 1. **Dichotomizing continuous BFI-2 scores** using median/mean split
 2. **Analyzing correlation** between binary personality classifications and Mini-Marker ratings
 3. **Comparing performance** across binary formats (simple vs elaborated)
-4. **Validating results** across both empirical (Study 2) and simulated (Study 3) data
+4. **Validating results** across both empirical (Study 2a) and simulated (Study 2b) data
 
 ## Purpose
 
@@ -24,8 +24,8 @@ The analysis extends the existing convergent validity framework by:
    - Low group: scores < median
 2. **Format Specification**: Focus on binary formats only (simple/elaborated)
 3. **Data Sources**: 
-   - Study 2: 438 participants from empirical data
-   - Study 3: 200 participants from facet-level simulation
+   - Study 2a: 438 participants from empirical data
+   - Study 2b: 200 participants from facet-level simulation
 
 ### Statistical Analysis
 - **Correlation Method**: Point-biserial correlation (`scipy.stats.pointbiserialr`)
@@ -69,7 +69,7 @@ cutoff_type = 'median'  # Options: 'median', 'mean', or numeric value
 
 ### Detailed Results (`unified_binary_dichotomized_correlations_median.csv`)
 Contains individual correlations for each:
-- **Study** (study_2, study_3)
+- **Study** (study_2a, study_2b)
 - **Model** (gpt_4, gpt_4o, llama, deepseek, gpt_3.5_turbo)
 - **Format** (binary_simple, binary_elaborated)
 - **Domain correlations** (E, A, C, N, O)
@@ -93,8 +93,8 @@ Based on median split analysis:
 ## Technical Notes
 
 ### Data Requirements
-- **Study 2**: Requires `/multi_model_studies/study_2/shared_data/study2_preprocessed_data.csv`
-- **Study 3**: Requires `/multi_model_studies/study_3/facet_lvl_simulated_data.csv`
+- **Study 2a**: Requires `/multi_model_studies/study_2a/shared_data/study2_preprocessed_data.csv`
+- **Study 2b**: Requires `/multi_model_studies/study_2b/facet_lvl_simulated_data.csv`
 - **Simulation Results**: Expects JSON files from binary format simulations
 
 ### Error Handling

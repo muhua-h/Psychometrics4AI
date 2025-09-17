@@ -51,11 +51,11 @@ analyze_study() {
 # Process each study
 echo "Starting comprehensive R-based CFA analysis..."
 
-# Study 2
-analyze_study "$BASE_DIR/study_2" "study_2"
+# Study 2a
+analyze_study "$BASE_DIR/study_2a" "study_2a"
 
-# Study 3  
-analyze_study "$BASE_DIR/study_3" "study_3"
+# Study 2b  
+analyze_study "$BASE_DIR/study_2b" "study_2b"
 
 echo "=== Analysis Complete ==="
 echo "Results saved to: $RESULTS_DIR"

@@ -4,7 +4,7 @@ library(semTools)
 library(readr)
 
 # Read the CSV file
-data <- read_csv("/Users/mhhuang/Psychometrics4AI_revision/old_study/study_2/likert_format/gpt3-5-turbo/study1_with_simulation_result.csv")
+data <- read_csv("/Users/mhhuang/Psychometrics4AI_revision/old_study/study_2a/likert_format/gpt3-5-turbo/study1_with_simulation_result.csv")
 
 # Function to reverse code items
 reverse_code <- function(x) {
