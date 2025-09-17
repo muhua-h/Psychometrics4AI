@@ -1,0 +1,6 @@
+Study,Format,Model,Factor_Domain,N_Items,N_Participants,Alpha,Omega,CFI,RMSEA,SRMR,Chi_Square,DF,P_Value
+STUDY_2,binary_simple,deepseek,EXTRAVERSION,8,438,0.996,0.996,0.878,0.429,0.007,1630.11,20,0
+STUDY_2,binary_simple,deepseek,AGREEABLENESS,8,438,0.976,0.898,0.697,0.566,0.118,2822.896,20,0
+STUDY_2,binary_simple,deepseek,CONSCIENTIOUSNESS,8,438,0.983,0.987,0.849,0.391,0.025,1356.576,20,0
+STUDY_2,binary_simple,deepseek,NEUROTICISM,8,438,0.982,0.989,0.857,0.395,0.033,1384.598,20,0
+STUDY_2,binary_simple,deepseek,OPENNESS,8,438,0.975,0.962,0.771,0.445,0.068,1754.923,20,0
