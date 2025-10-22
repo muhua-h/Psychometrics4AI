@@ -1,0 +1,19 @@
+Analysis for DeepSeek Likert
+Timestamp: 2025-10-22 12:25:10.273326
+Correlations:
+  Domain  BFI2_vs_Simulated_r  BFI2_vs_Simulated_p
+     O             0.849281          5.010e-123
+     C             0.921695          2.024e-181
+     E             0.928405          1.416e-189
+     A             0.902517          1.277e-161
+     N             0.872282          1.516e-137
+
+Average BFI-Sim correlation: 0.895
+
+============================================================
+ANALYSIS COMPLETE
+============================================================
+Log file: unified_analysis_log.txt
+
+Note: All correlations are Pearson r values
+BFI-Sim: BFI-2 vs Simulated Mini-Marker (Simulation Validity)

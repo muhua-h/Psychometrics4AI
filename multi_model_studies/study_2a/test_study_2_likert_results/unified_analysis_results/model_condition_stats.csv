@@ -1,0 +1,6 @@
+Model,Domain,BFI2_vs_Simulated_r_mean,BFI2_vs_Simulated_p_mean,BFI2_vs_Simulated_r_std,BFI2_vs_Simulated_p_std,BFI2_vs_Simulated_r_count,BFI2_vs_Simulated_p_count
+deepseek,A,0.9025173098825652,1.2767369648388268e-161,,,1,1
+deepseek,C,0.9216952079851324,2.024257567432776e-181,,,1,1
+deepseek,E,0.9284054114773376,1.4163576692048526e-189,,,1,1
+deepseek,N,0.8722823053976244,1.5158758402556026e-137,,,1,1
+deepseek,O,0.8492808987712767,5.009925322346623e-123,,,1,1
