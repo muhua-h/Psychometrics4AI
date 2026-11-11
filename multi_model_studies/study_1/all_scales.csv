@@ -1,0 +1,304 @@
+Label,Domain,Facet,Item
+BFAS,N,Volatility,Get angry easily.
+BFAS,N,Volatility,Get upset easily.
+BFAS,N,Volatility,Change my mood a lot.
+BFAS,N,Volatility,Am a person whose moods go up and down easily.
+BFAS,N,Volatility,Get easily agitated.
+BFAS,N,Volatility,Can be stirred up easily.
+BFAS,N,Volatility,Rarely get irritated.
+BFAS,N,Volatility,Keep my emotions under control.
+BFAS,N,Volatility,Rarely lose my composure.
+BFAS,N,Volatility,Am not easily annoyed.
+BFAS,N,Withdrawal,Am filled with doubts about things.
+BFAS,N,Withdrawal,Feel threatened easily.
+BFAS,N,Withdrawal,Worry about things.
+BFAS,N,Withdrawal,Am easily discouraged.
+BFAS,N,Withdrawal,Become overwhelmed by events.
+BFAS,N,Withdrawal,Am afraid of many things.
+BFAS,N,Withdrawal,Seldom feel blue.
+BFAS,N,Withdrawal,Feel comfortable with myself.
+BFAS,N,Withdrawal,Rarely feel depressed.
+BFAS,N,Withdrawal,Am not embarrassed easily.
+BFAS,A,Compassion,Feel others' emotions.
+BFAS,A,Compassion,Inquire about others' well-being.
+BFAS,A,Compassion,Sympathize with others' feelings.
+BFAS,A,Compassion,Take an interest in other people's lives.
+BFAS,A,Compassion,Like to do things for others.
+BFAS,A,Compassion,Am not interested in other people's problems.
+BFAS,A,Compassion,Can't be bothered with other's needs.
+BFAS,A,Compassion,Am indifferent to the feelings of others.
+BFAS,A,Compassion,Take no time for others.
+BFAS,A,Compassion,Don't have a soft side.
+BFAS,A,Politeness,Respect authority.
+BFAS,A,Politeness,Hate to seem pushy.
+BFAS,A,Politeness,Avoid imposing my will on others.
+BFAS,A,Politeness,Rarely put people under pressure.
+BFAS,A,Politeness,Insult people.
+BFAS,A,Politeness,Believe that I am better than others.
+BFAS,A,Politeness,Take advantage of others.
+BFAS,A,Politeness,Seek conflict.
+BFAS,A,Politeness,Love a good fight.
+BFAS,C,Industriousness,Carry out my plans.
+BFAS,C,Industriousness,Finish what I start.
+BFAS,C,Industriousness,Get things done quickly.
+BFAS,C,Industriousness,Always know what I am doing.
+BFAS,C,Industriousness,Waste my time.
+BFAS,C,Industriousness,Find it difficult to get down to work.
+BFAS,C,Industriousness,Mess things up.
+BFAS,C,Industriousness,Don't put my mind on the task at hand.
+BFAS,C,Industriousness,Postpone decisions.
+BFAS,C,Industriousness,Am easily distracted.
+BFAS,C,Orderliness,Like order.
+BFAS,C,Orderliness,Keep things tidy.
+BFAS,C,Orderliness,Follow a schedule.
+BFAS,C,Orderliness,Want everything to be “just right.”
+BFAS,C,Orderliness,See that rules are observed.
+BFAS,C,Orderliness,Want every detail taken care of.
+BFAS,C,Orderliness,Leave my belongings around.
+BFAS,C,Orderliness,Am not bothered by messy people.
+BFAS,C,Orderliness,Am not bothered by disorder.
+BFAS,C,Orderliness,Dislike routine.
+BFAS,E,Enthusiasm,Make friends easily.
+BFAS,E,Enthusiasm,Warm up quickly to others.
+BFAS,E,Enthusiasm,Show my feelings when I'm happy.
+BFAS,E,Enthusiasm,Have a lot of fun.
+BFAS,E,Enthusiasm,Laugh a lot.
+BFAS,E,Enthusiasm,Am hard to get to know.
+BFAS,E,Enthusiasm,Keep others at a distance.
+BFAS,E,Enthusiasm,Reveal little about myself.
+BFAS,E,Enthusiasm,Rarely get caught up in the excitement.
+BFAS,E,Enthusiasm,Am not a very enthusiastic person.
+BFAS,E,Assertiveness,Take charge.
+BFAS,E,Assertiveness,Have a strong personality.
+BFAS,E,Assertiveness,Know how to captivate people.
+BFAS,E,Assertiveness,See myself as a good leader.
+BFAS,E,Assertiveness,Can talk others into doing things.
+BFAS,E,Assertiveness,Am the first to act.
+BFAS,E,Assertiveness,Do not have an assertive personality.
+BFAS,E,Assertiveness,Lack the talent for influencing people.
+BFAS,E,Assertiveness,Wait for others to lead the way.
+BFAS,E,Assertiveness,Hold back my opinions.
+BFAS,O,Intellect,Am quick to understand things.
+BFAS,O,Intellect,Can handle a lot of information.
+BFAS,O,Intellect,Like to solve complex problems.
+BFAS,O,Intellect,Have a rich vocabulary.
+BFAS,O,Intellect,Think quickly.
+BFAS,O,Intellect,Formulate ideas clearly.
+BFAS,O,Intellect,Have difficulty understanding abstract ideas.
+BFAS,O,Intellect,Avoid philosophical discussions.
+BFAS,O,Intellect,Avoid difficult reading material.
+BFAS,O,Intellect,Learn things slowly.
+BFAS,O,Openness,Enjoy the beauty of nature.
+BFAS,O,Openness,Believe in the importance of art.
+BFAS,O,Openness,Love to reflect on things.
+BFAS,O,Openness,Get deeply immersed in music.
+BFAS,O,Openness,See beauty in things that others might not notice.
+BFAS,O,Openness,Need a creative outlet.
+BFAS,O,Openness,Do not like poetry.
+BFAS,O,Openness,Seldom get lost in thought.
+BFAS,O,Openness,Seldom daydream.
+BFAS,O,Openness,Seldom notice the emotional aspects of paintings and pictures.
+BFI2,E,Sociability,"Is outgoing, sociable."
+BFI2,E,Sociability,Tends to be quiet.
+BFI2,E,Sociability,"Is sometimes shy, introverted."
+BFI2,E,Sociability,Is talkative.
+BFI2,E,Assertiveness,Has an assertive personality.
+BFI2,E,Assertiveness,"Is dominant, acts as a leader."
+BFI2,E,Assertiveness,Finds it hard to influence people.
+BFI2,E,Assertiveness,Prefers to have others take charge.
+BFI2,E,Energy Level,Rarely feels excited or eager.
+BFI2,E,Energy Level,Is less active than other people.
+BFI2,E,Energy Level,Is full of energy.
+BFI2,E,Energy Level,Shows a lot of enthusiasm.
+BFI2,A,Compassion,"Is compassionate, has a soft heart."
+BFI2,A,Compassion,Feels little sympathy for others.
+BFI2,A,Compassion,Is helpful and unselfish with others.
+BFI2,A,Compassion,Can be cold and uncaring.
+BFI2,A,Respectfulness,"Is respectful, treats others with respect."
+BFI2,A,Respectfulness,Starts arguments with others.
+BFI2,A,Respectfulness,Is sometimes rude to others.
+BFI2,A,Respectfulness,"Is polite, courteous to others."
+BFI2,A,Trust,Tends to find fault with others.
+BFI2,A,Trust,Has a forgiving nature.
+BFI2,A,Trust,Is suspicious of others' intentions.
+BFI2,A,Trust,Assumes the best about people.
+BFI2,C,Organization,Tends to be disorganized.
+BFI2,C,Organization,"Is systematic, likes to keep things in order."
+BFI2,C,Organization,Keeps things neat and tidy.
+BFI2,C,Organization,"Leaves a mess, doesn't clean up."
+BFI2,C,Productiveness,Tends to be lazy.
+BFI2,C,Productiveness,Has difficulty getting started on tasks.
+BFI2,C,Productiveness,"Is efficient, gets things done."
+BFI2,C,Productiveness,"Is persistent, works until the task is finished."
+BFI2,C,Responsibility,"Is dependable, steady."
+BFI2,C,Responsibility,Can be somewhat careless.
+BFI2,C,Responsibility,"Is reliable, can always be counted on."
+BFI2,C,Responsibility,Sometimes behaves irresponsibly.
+BFI2,N,Anxiety,"Is relaxed, handles stress well."
+BFI2,N,Anxiety,Can be tense.
+BFI2,N,Anxiety,Worries a lot.
+BFI2,N,Anxiety,Rarely feels anxious or afraid.
+BFI2,N,Depression,Stays optimistic after experiencing a setback.
+BFI2,N,Depression,"Feels secure, comfortable with self."
+BFI2,N,Depression,Often feels sad.
+BFI2,N,Depression,"Tends to feel depressed, blue."
+BFI2,N,Emotional Volatility,"Is moody, has up and down mood swings."
+BFI2,N,Emotional Volatility,"Is emotionally stable, not easily upset."
+BFI2,N,Emotional Volatility,Keeps their emotions under control.
+BFI2,N,Emotional Volatility,"Is temperamental, gets emotional easily."
+BFI2,O,Intellectual Curiosity,Is curious about many different things.
+BFI2,O,Intellectual Curiosity,"Avoids intellectual, philosophical discussions."
+BFI2,O,Intellectual Curiosity,"Is complex, a deep thinker."
+BFI2,O,Intellectual Curiosity,Has little interest in abstract ideas.
+BFI2,O,Aesthetic Sensitivity,Has few artistic interests.
+BFI2,O,Aesthetic Sensitivity,"Is fascinated by art, music, or literature."
+BFI2,O,Aesthetic Sensitivity,Values art and beauty.
+BFI2,O,Aesthetic Sensitivity,Thinks poetry and plays are boring.
+BFI2,O,Creative Imagination,"Is inventive, finds clever ways to do things."
+BFI2,O,Creative Imagination,Has little creativity.
+BFI2,O,Creative Imagination,"Is original, comes up with new ideas."
+BFI2,O,Creative Imagination,Has difficulty imagining things.
+BFI,E,NA,Is talkative
+BFI,E,NA,Is reserved
+BFI,E,NA,Is full of energy
+BFI,E,NA,Generates a lot of enthusiasm
+BFI,E,NA,Tends to be quiet
+BFI,E,NA,Has an assertive personality
+BFI,E,NA,"Is sometimes shy, inhibited"
+BFI,E,NA,"Is outgoing, sociable"
+BFI,A,NA,Tends to find fault with others
+BFI,A,NA,Is helpful and unselfish with others
+BFI,A,NA,Starts quarrels with others
+BFI,A,NA,Has a forgiving nature
+BFI,A,NA,Is generally trusting
+BFI,A,NA,Can be cold and aloof
+BFI,A,NA,Is considerate and kind to almost everyone
+BFI,A,NA,Is sometimes rude to others
+BFI,A,NA,Likes to cooperate with others
+BFI,C,NA,Does a thorough job
+BFI,C,NA,Can be somewhat careless
+BFI,C,NA,Is a reliable worker
+BFI,C,NA,Tends to be disorganized
+BFI,C,NA,Tends to be lazy
+BFI,C,NA,Perseveres until the task is finished
+BFI,C,NA,Does things efficiently
+BFI,C,NA,Makes plans and follows through with them
+BFI,C,NA,Is easily distracted
+BFI,N,NA,"Is depressed, blue"
+BFI,N,NA,"Is relaxed, handles stress well"
+BFI,N,NA,Can be tense
+BFI,N,NA,Worries a lot
+BFI,N,NA,"Is emotionally stable, not easily upset"
+BFI,N,NA,Can be moody
+BFI,N,NA,Remains calm in tense situations
+BFI,N,NA,Gets nervous easily
+BFI,O,NA,"Is original, comes up with new ideas"
+BFI,O,NA,Is curious about many different things
+BFI,O,NA,"Is ingenious, a deep thinker"
+BFI,O,NA,Has an active imagination
+BFI,O,NA,Is inventive
+BFI,O,NA,"Values artistic, aesthetic experiences"
+BFI,O,NA,Prefers work that is routine
+BFI,O,NA,"Likes to reflect, play with ideas"
+BFI,O,NA,Has few artistic interests
+BFI,O,NA,"Is sophisticated in art, music, or literature"
+Mini-Marker,E,NA,Bold
+Mini-Marker,E,NA,Energetic
+Mini-Marker,E,NA,Extraverted
+Mini-Marker,E,NA,Talkative
+Mini-Marker,E,NA,Bashful
+Mini-Marker,E,NA,Quiet
+Mini-Marker,E,NA,Shy
+Mini-Marker,E,NA,Withdrawn
+Mini-Marker,A,NA,Cooperative
+Mini-Marker,A,NA,Kind
+Mini-Marker,A,NA,Sympathetic
+Mini-Marker,A,NA,Warm
+Mini-Marker,A,NA,Cold
+Mini-Marker,A,NA,Harsh
+Mini-Marker,A,NA,Rude
+Mini-Marker,A,NA,Unsympathetic
+Mini-Marker,C,NA,Efficient
+Mini-Marker,C,NA,Organized
+Mini-Marker,C,NA,Practical
+Mini-Marker,C,NA,Systematic
+Mini-Marker,C,NA,Careless
+Mini-Marker,C,NA,Disorganized
+Mini-Marker,C,NA,Inefficient
+Mini-Marker,C,NA,Sloppy
+Mini-Marker,N,NA,Relaxed
+Mini-Marker,N,NA,Unenvious
+Mini-Marker,N,NA,Envious
+Mini-Marker,N,NA,Fretful
+Mini-Marker,N,NA,Jealous
+Mini-Marker,N,NA,Moody
+Mini-Marker,N,NA,Temperamental
+Mini-Marker,N,NA,Touchy
+Mini-Marker,O,NA,Complex
+Mini-Marker,O,NA,Deep
+Mini-Marker,O,NA,Creative
+Mini-Marker,O,NA,Imaginative
+Mini-Marker,O,NA,Intellectual
+Mini-Marker,O,NA,Philosophical
+Mini-Marker,O,NA,Uncreative
+Mini-Marker,O,NA,Unintellectual
+NEOFFI,N,NA,I am not a worrier.
+NEOFFI,N,NA,I often feel inferior to others.
+NEOFFI,N,NA,"When I'm under a great deal of stress, sometimes I feel like I'm going to pieces."
+NEOFFI,N,NA,I rarely feel lonely or blue.
+NEOFFI,N,NA,I often feel tense and jittery.
+NEOFFI,N,NA,Sometimes I feel completely worthless.
+NEOFFI,N,NA,I rarely feel fearful or anxious.
+NEOFFI,N,NA,I often get angry at the way people treat me.
+NEOFFI,N,NA,"Too often, when things go wrong, I get discouraged and feel like giving up."
+NEOFFI,N,NA,I am seldom sad or depressed.
+NEOFFI,N,NA,I often feel helpless and want someone else to solve my problems.
+NEOFFI,N,NA,At times I have been so ashamed I just wanted to hide.
+NEOFFI,E,NA,I like to have a lot of people around me.
+NEOFFI,E,NA,I laugh easily.
+NEOFFI,E,NA,I don't consider myself especially light-hearted.
+NEOFFI,E,NA,I really enjoy talking to people.
+NEOFFI,E,NA,I like to be where the action is.
+NEOFFI,E,NA,I usually prefer to do things alone.
+NEOFFI,E,NA,I often feel as if I'm bursting with energy.
+NEOFFI,E,NA,"l am a cheerful, high-spirited person."
+NEOFFI,E,NA,I am not a cheerful optimist.
+NEOFFI,E,NA,My life is fast-paced.
+NEOFFI,E,NA,I am a very active person.
+NEOFFI,E,NA,I would rather go my own way than be a leader of others.
+NEOFFI,O,NA,I don't like to waste my time daydreaming.
+NEOFFI,O,NA,"Once I find the right way to do something, I stick to it."
+NEOFFI,O,NA,I am intrigued by the patterns I find in art and nature.
+NEOFFI,O,NA,I believe letting students hear controversial speakers can only confuse and mislead them.
+NEOFFI,O,NA,Poetry has little or no effect on me.
+NEOFFI,O,NA,I often try new and foreign foods.
+NEOFFI,O,NA,I seldom notice the moods or feelings that different environments produce.
+NEOFFI,O,NA,I believe we should look to our religious authorities for decisions on moral issues.
+NEOFFI,O,NA,"Sometimes when I am reading poetry or looking at a work of art, I feel a chill or wave of excitement."
+NEOFFI,O,NA,I have little interest in speculating on the nature of the universe or the human condition.
+NEOFFI,O,NA,I have a lot of intellectual curiosity.
+NEOFFI,O,NA,I often enjoy playing with theories or abstract ideas.
+NEOFFI,A,NA,I try to be courteous to everyone I meet.
+NEOFFI,A,NA,I often get into arguments with my family and co-workers.
+NEOFFI,A,NA,Some people think I'm selfish and egotistical.
+NEOFFI,A,NA,I would rather cooperate with others than compete with them.
+NEOFFI,A,NA,I tend to be cynical and skeptical of others' intentions.
+NEOFFI,A,NA,I believe that most people will take advantage of you if you let them.
+NEOFFI,A,NA,Most people I know like me.
+NEOFFI,A,NA,Some people think of me as cold and calculating.
+NEOFFI,A,NA,I'm hard-headed and tough-minded in my attitudes.
+NEOFFI,A,NA,I generally try to be thoughtful and considerate.
+NEOFFI,A,NA,"If I don't like people, I let them know it."
+NEOFFI,A,NA,"If necessary, I am willing to manipulate people to get what I want."
+NEOFFI,C,NA,I keep my belongings clean and neat.
+NEOFFI,C,NA,I'm pretty good about pacing myself so as to get things done on time.
+NEOFFI,C,NA,I am not a very methodical person.
+NEOFFI,C,NA,I try to perform all the tasks assigned to me conscientiously.
+NEOFFI,C,NA,I have a clear set of goals and work toward them in an orderly fashion.
+NEOFFI,C,NA,I waste a lot of time before settling down to work.
+NEOFFI,C,NA,I work hard to accomplish my goals.
+NEOFFI,C,NA,"When I make a commitment, I can always be counted on to follow through."
+NEOFFI,C,NA,Sometimes I'm not as dependable or reliable as I should be.
+NEOFFI,C,NA,I am a productive person who always gets the job done.
+NEOFFI,C,NA,I never seem to be able to get organized.
+NEOFFI,C,NA,I strive for excellence in everything I do.

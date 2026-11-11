@@ -1,0 +1,41 @@
+{
+  "simulation_type": "study_3_expanded",
+  "models_tested": [
+    "gpt-4",
+    "gpt-4o",
+    "llama",
+    "deepseek"
+  ],
+  "temperatures": [
+    1
+  ],
+  "batch_size": 25,
+  "total_participants": 200,
+  "simulation_date": "2025-07-14T13:02:03.560969",
+  "data_source": "statistically_simulated_bfi2",
+  "format": "expanded",
+  "key_differences_from_likert": [
+    "No reverse coding applied - data already in correct format",
+    "Uses expanded_scale mapping instead of likert_scale",
+    "Uses get_expanded_prompt instead of get_likert_prompt",
+    "Descriptions are narrative (\"You are very...\")"
+  ],
+  "results_summary": {
+    "gpt-4o_temp1": {
+      "total": 200,
+      "successful": 200
+    },
+    "gpt-4_temp1": {
+      "total": 200,
+      "successful": 200
+    },
+    "deepseek_temp1": {
+      "total": 200,
+      "successful": 200
+    },
+    "llama_temp1": {
+      "total": 200,
+      "successful": 185
+    }
+  }
+}

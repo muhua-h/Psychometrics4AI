@@ -1,0 +1,704 @@
+﻿case_id,Case ID number
+age,Age
+sex,Sex
+ethnicity,Ethnicity
+rel_acquaintance,Acquaintance
+rel_friend,Friend
+rel_roommate,Roommate
+rel_boygirlfriend,Boy/girlfriend
+rel_relative,Relative
+rel_other,Other relationship
+rel_description,Other relationship description
+bfi1,"1. Is outgoing, sociable."
+bfi2,"2. Is compassionate, has a soft heart."
+bfi3,3. Tends to be disorganized.
+bfi4,"4. Is relaxed, handles stress well."
+bfi5,5. Has few artistic interests.
+bfi6,6. Has an assertive personality.
+bfi7,"7. Is respectful, treats others with respect."
+bfi8,8. Tends to be lazy.
+bfi9,9. Stays optimistic after experiencing a setback.
+bfi10,10. Is curious about many different things.
+bfi11,11. Rarely feels excited or eager.
+bfi12,12. Tends to find fault with others.
+bfi13,"13. Is dependable, steady."
+bfi14,"14. Is moody, has up and down mood swings."
+bfi15,"15. Is inventive, finds clever ways to do things."
+bfi16,16. Tends to be quiet.
+bfi17,17. Feels little sympathy for others.
+bfi18,"18. Is systematic, likes to keep things in order."
+bfi19,19. Can be tense.
+bfi20,"20. Is fascinated by art, music, or literature."
+bfi21,"21. Is dominant, acts as a leader."
+bfi22,22. Starts arguments with others.
+bfi23,23. Has difficulty getting started on tasks.
+bfi24,"24. Feels secure, comfortable with self."
+bfi25,"25. Avoids intellectual, philosophical discussions."
+bfi26,26. Is less active than other people.
+bfi27,27. Has a forgiving nature.
+bfi28,28. Can be somewhat careless.
+bfi29,"29. Is emotionally stable, not easily upset."
+bfi30,30. Has little creativity.
+bfi31,"31. Is sometimes shy, introverted."
+bfi32,32. Is helpful and unselfish with others.
+bfi33,33. Keeps things neat and tidy.
+bfi34,34. Worries a lot.
+bfi35,35. Values art and beauty.
+bfi36,36. Finds it hard to influence people.
+bfi37,37. Is sometimes rude to others.
+bfi38,"38. Is efficient, gets things done."
+bfi39,39. Often feels sad.
+bfi40,"40. Is complex, a deep thinker."
+bfi41,41. Is full of energy.
+bfi42,42. Is suspicious of others' intentions.
+bfi43,"43. Is reliable, can always be counted on."
+bfi44,44. Keeps their emotions under control.
+bfi45,45. Has difficulty imagining things.
+bfi46,46. Is talkative.
+bfi47,47. Can be cold and uncaring.
+bfi48,"48. Leaves a mess, doesn't clean up."
+bfi49,49. Rarely feels anxious or afraid.
+bfi50,50. Thinks poetry and plays are boring.
+bfi51,51. Prefers to have others take charge.
+bfi52,"52. Is polite, courteous toward others."
+bfi53,"53. Is persistent, works until the task is finished."
+bfi54,"54. Tends to feel depressed, blue."
+bfi55,55. Has little interest in abstract ideas.
+bfi56,56. Shows a lot of enthusiasm.
+bfi57,57. Assumes the best about people.
+bfi58,58. Sometimes behaves irresponsibly.
+bfi59,"59. Is temperamental, gets emotional easily."
+bfi60,"60. Is original, comes up with new ideas."
+pbfi1,"p1. Is outgoing, sociable."
+pbfi2,"p2. Is compassionate, has a soft heart."
+pbfi3,p3. Tends to be disorganized.
+pbfi4,"p4. Is relaxed, handles stress well."
+pbfi5,p5. Has few artistic interests.
+pbfi6,p6. Has an assertive personality.
+pbfi7,"p7. Is respectful, treats others with respect."
+pbfi8,p8. Tends to be lazy.
+pbfi9,p9. Stays optimistic after experiencing a setback.
+pbfi10,p10. Is curious about many different things.
+pbfi11,p11. Rarely feels excited or eager.
+pbfi12,p12. Tends to find fault with others.
+pbfi13,"p13. Is dependable, steady."
+pbfi14,"p14. Is moody, has up and down mood swings."
+pbfi15,"p15. Is inventive, finds clever ways to do things."
+pbfi16,p16. Tends to be quiet.
+pbfi17,p17. Feels little sympathy for others.
+pbfi18,"p18. Is systematic, likes to keep things in order."
+pbfi19,p19. Can be tense.
+pbfi20,"p20. Is fascinated by art, music, or literature."
+pbfi21,"p21. Is dominant, acts as a leader."
+pbfi22,p22. Starts arguments with others.
+pbfi23,p23. Has difficulty getting started on tasks.
+pbfi24,"p24. Feels secure, comfortable with self."
+pbfi25,"p25. Avoids intellectual, philosophical discussions."
+pbfi26,p26. Is less active than other people.
+pbfi27,p27. Has a forgiving nature.
+pbfi28,p28. Can be somewhat careless.
+pbfi29,"p29. Is emotionally stable, not easily upset."
+pbfi30,p30. Has little creativity.
+pbfi31,"p31. Is sometimes shy, introverted."
+pbfi32,p32. Is helpful and unselfish with others.
+pbfi33,p33. Keeps things neat and tidy.
+pbfi34,p34. Worries a lot.
+pbfi35,p35. Values art and beauty.
+pbfi36,p36. Finds it hard to influence people.
+pbfi37,p37. Is sometimes rude to others.
+pbfi38,"p38. Is efficient, gets things done."
+pbfi39,p39. Often feels sad.
+pbfi40,"p40. Is complex, a deep thinker."
+pbfi41,p41. Is full of energy.
+pbfi42,p42. Is suspicious of others' intentions.
+pbfi43,"p43. Is reliable, can always be counted on."
+pbfi44,p44. Keeps their emotions under control.
+pbfi45,p45. Has difficulty imagining things.
+pbfi46,p46. Is talkative.
+pbfi47,p47. Can be cold and uncaring.
+pbfi48,"p48. Leaves a mess, doesn't clean up."
+pbfi49,p49. Rarely feels anxious or afraid.
+pbfi50,p50. Thinks poetry and plays are boring.
+pbfi51,p51. Prefers to have others take charge.
+pbfi52,"p52. Is polite, courteous toward others."
+pbfi53,"p53. Is persistent, works until the task is finished."
+pbfi54,"p54. Tends to feel depressed, blue."
+pbfi55,p55. Has little interest in abstract ideas.
+pbfi56,p56. Shows a lot of enthusiasm.
+pbfi57,p57. Assumes the best about people.
+pbfi58,p58. Sometimes behaves irresponsibly.
+pbfi59,"p59. Is temperamental, gets emotional easily."
+pbfi60,"p60. Is original, comes up with new ideas."
+sbfi1,"s1. Is outgoing, sociable."
+sbfi2,"s2. Is compassionate, has a soft heart."
+sbfi3,s3. Tends to be disorganized.
+sbfi4,"s4. Is relaxed, handles stress well."
+sbfi5,s5. Has few artistic interests.
+sbfi6,s6. Has an assertive personality.
+sbfi7,"s7. Is respectful, treats others with respect."
+sbfi8,s8. Tends to be lazy.
+sbfi9,s9. Stays optimistic after experiencing a setback.
+sbfi10,s10. Is curious about many different things.
+sbfi11,s11. Rarely feels excited or eager.
+sbfi12,s12. Tends to find fault with others.
+sbfi13,"s13. Is dependable, steady."
+sbfi14,"s14. Is moody, has up and down mood swings."
+sbfi15,"s15. Is inventive, finds clever ways to do things."
+sbfi16,s16. Tends to be quiet.
+sbfi17,s17. Feels little sympathy for others.
+sbfi18,"s18. Is systematic, likes to keep things in order."
+sbfi19,s19. Can be tense.
+sbfi20,"s20. Is fascinated by art, music, or literature."
+sbfi21,"s21. Is dominant, acts as a leader."
+sbfi22,s22. Starts arguments with others.
+sbfi23,s23. Has difficulty getting started on tasks.
+sbfi24,"s24. Feels secure, comfortable with self."
+sbfi25,"s25. Avoids intellectual, philosophical discussions."
+sbfi26,s26. Is less active than other people.
+sbfi27,s27. Has a forgiving nature.
+sbfi28,s28. Can be somewhat careless.
+sbfi29,"s29. Is emotionally stable, not easily upset."
+sbfi30,s30. Has little creativity.
+sbfi31,"s31. Is sometimes shy, introverted."
+sbfi32,s32. Is helpful and unselfish with others.
+sbfi33,s33. Keeps things neat and tidy.
+sbfi34,s34. Worries a lot.
+sbfi35,s35. Values art and beauty.
+sbfi36,s36. Finds it hard to influence people.
+sbfi37,s37. Is sometimes rude to others.
+sbfi38,"s38. Is efficient, gets things done."
+sbfi39,s39. Often feels sad.
+sbfi40,"s40. Is complex, a deep thinker."
+sbfi41,s41. Is full of energy.
+sbfi42,s42. Is suspicious of others' intentions.
+sbfi43,"s43. Is reliable, can always be counted on."
+sbfi44,s44. Keeps their emotions under control.
+sbfi45,s45. Has difficulty imagining things.
+sbfi46,s46. Is talkative.
+sbfi47,s47. Can be cold and uncaring.
+sbfi48,"s48. Leaves a mess, doesn't clean up."
+sbfi49,s49. Rarely feels anxious or afraid.
+sbfi50,s50. Thinks poetry and plays are boring.
+sbfi51,s51. Prefers to have others take charge.
+sbfi52,"s52. Is polite, courteous toward others."
+sbfi53,"s53. Is persistent, works until the task is finished."
+sbfi54,"s54. Tends to feel depressed, blue."
+sbfi55,s55. Has little interest in abstract ideas.
+sbfi56,s56. Shows a lot of enthusiasm.
+sbfi57,s57. Assumes the best about people.
+sbfi58,s58. Sometimes behaves irresponsibly.
+sbfi59,"s59. Is temperamental, gets emotional easily."
+sbfi60,"s60. Is original, comes up with new ideas."
+bfi2_e_sociability,BFI-2 E Sociability
+bfi2_e_assertiveness,BFI-2 E Assertiveness
+bfi2_e_energy_level,BFI-2 E Energy Level
+bfi2_a_compassion,BFI-2 A Compassion
+bfi2_a_respectfulness,BFI-2 A Respectfulness
+bfi2_a_trust,BFI-2 A Trust
+bfi2_c_organization,BFI-2 C Organization
+bfi2_c_productiveness,BFI-2 C Productiveness
+bfi2_c_responsibility,BFI-2 C Responsibility
+bfi2_n_anxiety,BFI-2 N Anxiety
+bfi2_n_depression,BFI-2 N Depression
+bfi2_n_emotional_volatility,BFI-2 N Emotional Volatility
+bfi2_o_intellectual_curiosity,BFI-2 O Intellectual Curiosity
+bfi2_o_aesthetic_sensitivity,BFI-2 O Aesthetic Sensitivity
+bfi2_o_creative_imagination,BFI-2 O Creative Imagination
+bfi2_e,BFI-2 Extraversion
+bfi2_a,BFI-2 Agreeableness
+bfi2_c,BFI-2 Conscientiousness
+bfi2_n,BFI-2 Negative Emotionality
+bfi2_o,BFI-2 Open-Mindedness
+pbfi2_e_sociability,pBFI-2 E Sociability
+pbfi2_e_assertiveness,pBFI-2 E Assertiveness
+pbfi2_e_energy_level,pBFI-2 E Energy Level
+pbfi2_a_compassion,pBFI-2 A Compassion
+pbfi2_a_respectfulness,pBFI-2 A Respectfulness
+pbfi2_a_trust,pBFI-2 A Trust
+pbfi2_c_organization,pBFI-2 C Organization
+pbfi2_c_productiveness,pBFI-2 C Productiveness
+pbfi2_c_responsibility,pBFI-2 C Responsibility
+pbfi2_n_anxiety,pBFI-2 N Anxiety
+pbfi2_n_depression,pBFI-2 N Depression
+pbfi2_n_emotional_volatility,pBFI-2 N Emotional Volatility
+pbfi2_o_intellectual_curiosity,pBFI-2 O Intellectual Curiosity
+pbfi2_o_aesthetic_sensitivity,pBFI-2 O Aesthetic Sensitivity
+pbfi2_o_creative_imagination,pBFI-2 O Creative Imagination
+pbfi2_e,pBFI-2 Extraversion
+pbfi2_a,pBFI-2 Agreeableness
+pbfi2_c,pBFI-2 Conscientiousness
+pbfi2_n,pBFI-2 Negative Emotionality
+pbfi2_o,pBFI-2 Open-Mindedness
+sbfi2_e_sociability,sBFI-2 E Sociability
+sbfi2_e_assertiveness,sBFI-2 E Assertiveness
+sbfi2_e_energy_level,sBFI-2 E Energy Level
+sbfi2_a_compassion,sBFI-2 A Compassion
+sbfi2_a_respectfulness,sBFI-2 A Respectfulness
+sbfi2_a_trust,sBFI-2 A Trust
+sbfi2_c_organization,sBFI-2 C Organization
+sbfi2_c_productiveness,sBFI-2 C Productiveness
+sbfi2_c_responsibility,sBFI-2 C Responsibility
+sbfi2_n_anxiety,sBFI-2 N Anxiety
+sbfi2_n_depression,sBFI-2 N Depression
+sbfi2_n_emotional_volatility,sBFI-2 N Emotional Volatility
+sbfi2_o_intellectual_curiosity,sBFI-2 O Intellectual Curiosity
+sbfi2_o_aesthetic_sensitivity,sBFI-2 O Aesthetic Sensitivity
+sbfi2_o_creative_imagination,sBFI-2 O Creative Imagination
+sbfi2_e,sBFI-2 Extraversion
+sbfi2_a,sBFI-2 Agreeableness
+sbfi2_c,sBFI-2 Conscientiousness
+sbfi2_n,sBFI-2 Negative Emotionality
+sbfi2_o,sBFI-2 Open-Mindedness
+tda1,1. Bashful
+tda2,2. Bold
+tda3,3. Careless
+tda4,4. Cold
+tda5,5. Complex
+tda6,6. Cooperative
+tda7,7. Creative
+tda8,8. Deep
+tda9,9. Disorganized
+tda10,10. Efficient
+tda11,11. Energetic
+tda12,12. Envious
+tda13,13. Extraverted
+tda14,14. Fretful
+tda15,15. Harsh
+tda16,16. Imaginative
+tda17,17. Inefficient
+tda18,18. Intellectual
+tda19,19. Jealous
+tda20,20. Kind
+tda21,21. Moody
+tda22,22. Organized
+tda23,23. Philosophical
+tda24,24. Practical
+tda25,25. Quiet
+tda26,26. Relaxed
+tda27,27. Rude
+tda28,28. Shy
+tda29,29. Sloppy
+tda30,30. Sympathetic
+tda31,31. Systematic
+tda32,32. Talkative
+tda33,33. Temperamental
+tda34,34. Touchy
+tda35,35. Uncreative
+tda36,36. Unenvious
+tda37,37. Unintellectual
+tda38,38. Unsympathetic
+tda39,39. Warm
+tda40,40. Withdrawn
+bfas1,1. Seldom feel blue.
+bfas2,2. Am not interested in other people's problems.
+bfas3,3. Carry out my plans.
+bfas4,4. Make friends easily.
+bfas5,5. Am quick to understand things.
+bfas6,6. Get angry easily.
+bfas7,7. Respect authority.
+bfas8,8. Leave my belongings around.
+bfas9,9. Take charge.
+bfas10,10. Enjoy the beauty of nature.
+bfas11,11. Am filled with doubts about things.
+bfas12,12. Feel others' emotions.
+bfas13,13. Waste my time.
+bfas14,14. Am hard to get to know.
+bfas15,15. Have difficulty understanding abstract ideas.
+bfas16,16. Rarely get irritated.
+bfas17,17. Believe that I am better than others.
+bfas18,18. Like order.
+bfas19,19. Have a strong personality.
+bfas20,20. Believe in the importance of art.
+bfas21,21. Feel comfortable with myself.
+bfas22,22. Inquire about others' well-being.
+bfas23,23. Find it difficult to get down to work.
+bfas24,24. Keep others at a distance.
+bfas25,25. Can handle a lot of information.
+bfas26,26. Get upset easily.
+bfas27,27. Hate to seem pushy.
+bfas28,28. Keep things tidy.
+bfas29,29. Lack the talent for influencing people.
+bfas30,30. Love to reflect on things.
+bfas31,31. Feel threatened easily.
+bfas32,32. Can't be bothered with other's needs.
+bfas33,33. Mess things up.
+bfas34,34. Reveal little about myself.
+bfas35,35. Like to solve complex problems.
+bfas36,36. Keep my emotions under control.
+bfas37,37. Take advantage of others.
+bfas38,38. Follow a schedule.
+bfas39,39. Know how to captivate people.
+bfas40,40. Get deeply immersed in music.
+bfas41,41. Rarely feel depressed.
+bfas42,42. Sympathize with others' feelings.
+bfas43,43. Finish what I start.
+bfas44,44. Warm up quickly to others.
+bfas45,45. Avoid philosophical discussions.
+bfas46,46. Change my mood a lot.
+bfas47,47. Avoid imposing my will on others.
+bfas48,48. Am not bothered by messy people.
+bfas49,49. Wait for others to lead the way.
+bfas50,50. Do not like poetry.
+bfas51,51. Worry about things.
+bfas52,52. Am indifferent to the feelings of others.
+bfas53,53. Don't put my mind on the task at hand.
+bfas54,54. Rarely get caught up in the excitement.
+bfas55,55. Avoid difficult reading material.
+bfas56,56. Rarely lose my composure.
+bfas57,57. Rarely put people under pressure.
+bfas58,58. Want everything to be “just right.”
+bfas59,59. See myself as a good leader.
+bfas60,60. Seldom notice the emotional aspects of paintings and pictures.
+bfas61,61. Am easily discouraged.
+bfas62,62. Take no time for others.
+bfas63,63. Get things done quickly.
+bfas64,64. Am not a very enthusiastic person.
+bfas65,65. Have a rich vocabulary.
+bfas66,66. Am a person whose moods go up and down easily.
+bfas67,67. Insult people.
+bfas68,68. Am not bothered by disorder.
+bfas69,69. Can talk others into doing things.
+bfas70,70. Need a creative outlet.
+bfas71,71. Am not embarrassed easily.
+bfas72,72. Take an interest in other people's lives.
+bfas73,73. Always know what I am doing.
+bfas74,74. Show my feelings when I'm happy.
+bfas75,75. Think quickly.
+bfas76,76. Am not easily annoyed.
+bfas77,77. Seek conflict.
+bfas78,78. Dislike routine.
+bfas79,79. Hold back my opinions.
+bfas80,80. Seldom get lost in thought.
+bfas81,81. Become overwhelmed by events.
+bfas82,82. Don't have a soft side.
+bfas83,83. Postpone decisions.
+bfas84,84. Have a lot of fun.
+bfas85,85. Learn things slowly.
+bfas86,86. Get easily agitated.
+bfas87,87. Love a good fight.
+bfas88,88. See that rules are observed.
+bfas89,89. Am the first to act.
+bfas90,90. Seldom daydream.
+bfas91,91. Am afraid of many things.
+bfas92,92. Like to do things for others.
+bfas93,93. Am easily distracted.
+bfas94,94. Laugh a lot.
+bfas95,95. Formulate ideas clearly.
+bfas96,96. Can be stirred up easily.
+bfas97,97. Am out for my own personal gain.
+bfas98,98. Want every detail taken care of.
+bfas99,99. Do not have an assertive personality.
+bfas100,100. See beauty in things that others might not notice.
+neo1,1. I am not a worrier.
+neo2,2. I really like most people I meet.
+neo3,3. I have a very active imagination.
+neo4,4. I tend to be cynical and skeptical of others' intentions.
+neo5,5. I'm known for my prudence and common sense.
+neo6,6. I often get angry at the way people treat me.
+neo7,7. I shy away from crowds of people.
+neo8,8. Aesthetic and artistic concerns aren't very important to me.
+neo9,9. I'm not crafty or sly.
+neo10,10. I would rather keep my options open than to plan everything in advance.
+neo11,11. I rarely feel lonely or blue.
+neo12,"12. I am dominant, forceful, and assertive."
+neo13,"13. Without strong emotions, life would be uninteresting to me."
+neo14,14. Some people think I'm selfish and egotistical.
+neo15,15. I try to perform all the tasks assigned to me conscientiously.
+neo16,"16. In dealing with other people, I always dread making a social blunder."
+neo17,17. I have a leisurely style in work and play.
+neo18,18. I'm pretty set in my ways.
+neo19,19. I would rather cooperate with others than compete with them.
+neo20,20. I am easy-going and lackadaisical.
+neo21,21. I rarely overindulge in anything.
+neo22,22. I often crave excitement.
+neo23,23. I often enjoy playing with theories or abstract ideas.
+neo24,24. I don't mind bragging about my talents and accomplishments.
+neo25,25. I'm pretty good about pacing myself so as to get things done on time.
+neo26,26. I often feel helpless and want someone else to solve my problems.
+neo27,27. I have never literally jumped for joy.
+neo28,28. I believe letting students hear controversial speakers can only confuse and mislead them.
+neo29,29. Political leaders need to be more aware of the human side of their policies.
+neo30,30. Over the years I've done some pretty stupid things.
+neo31,31. I am easily frightened.
+neo32,32. I don't get much pleasure from chatting with people.
+neo33,33. I try to keep all my thoughts directed along realistic lines and avoid flights of fancy.
+neo34,34. I believe that most people are basically well-intentioned.
+neo35,35. I don't take civic duties like voting very seriously.
+neo36,36. I'm an even-tempered person.
+neo37,37. I like to have a lot of people around me.
+neo38,38. I am sometimes completely absorbed in music I am listening to.
+neo39,"39. If necessary, I am willing to manipulate people to get what I want."
+neo40,40. I keep my belongings neat and clean.
+neo41,41. Sometimes I feel completely worthless.
+neo42,42. I sometimes fail to assert myself as much as I should.
+neo43,43. I rarely experience strong emotions.
+neo44,44. I try to be courteous to everyone I meet.
+neo45,45. Sometimes I'm not as dependable or reliable as I should be.
+neo46,46. I seldom feel self-conscious when I'm around people.
+neo47,"47. When I do things, I do them vigorously."
+neo48,48. I think it's interesting to learn and develop new hobbies.
+neo49,49. I can be sarcastic and cutting when I need to be.
+neo50,50. I have a clear set of goals and work toward them in an orderly fashion.
+neo51,51. I have trouble resisting my cravings.
+neo52,52. I wouldn't enjoy vacationing in Las Vegas.
+neo53,53. I find philosophical arguments boring.
+neo54,54. I'd rather not talk about myself and my achievements.
+neo55,55. I waste a lot of time before settling down to work.
+neo56,56. I feel I am capable of coping with most of my problems.
+neo57,57. I have sometimes experienced intense joy or ecstasy.
+neo58,58. I believe that laws and social policies should change to reflect the needs of a changing world.
+neo59,59. I'm hard-headed and tough-minded in my attitudes.
+neo60,60. I think things through before coming to a decision.
+neo61,61. I rarely feel fearful or anxious.
+neo62,62. I'm known as a warm and friendly person.
+neo63,63. I have an active fantasy life.
+neo64,64. I believe that most people will take advantage of you if you let them.
+neo65,65. I keep myself informed and usually make intelligent decisions.
+neo66,66. I am known as hot-blooded and quick-tempered.
+neo67,67. I usually prefer to do things alone.
+neo68,68. Watching ballet or modern dance bores me.
+neo69,69. I couldn't deceive anyone even if I wanted to.
+neo70,70. I am not a very methodical person.
+neo71,71. I am seldom sad or depressed.
+neo72,72. I have often been a leader of groups I have belonged to.
+neo73,73. How I feel about things is important to me.
+neo74,74. Some people think of me as cold and calculating.
+neo75,75. I pay my debts promptly and in full.
+neo76,76. At times I have been so ashamed I just wanted to hide.
+neo77,77. My work is likely to be slow but steady.
+neo78,"78. Once I find the right way to do something, I stick to it."
+neo79,79. I hesitate to express my anger even when it's justified.
+neo80,"80. When I start a self-improvement program, I usually let it slide after a few days."
+neo81,81. I have little difficulty resisting temptation.
+neo82,"82. I have sometimes done things just for ""kicks"" or ""thrills""."
+neo83,83. I enjoy solving problems or puzzles.
+neo84,"84. I'm better than most people, and I know it."
+neo85,85. I am a productive person who always gets the job done.
+neo86,"86. When I'm under a great deal of stress, sometimes I feel like I'm going to pieces."
+neo87,87. I am not a cheerful optimist.
+neo88,88. I believe we should look to our religious authorities for decisions on moral issues.
+neo89,89. We can never do too much for the poor and elderly.
+neo90,90. Occasionally I act first and think later.
+neo91,91. I often feel tense and jittery.
+neo92,92. Many people think of me as somewhat cold and distant.
+neo93,93. I don't like to waste my time daydreaming.
+neo94,94. I think most of the people I deal with are honest and trustworthy.
+neo95,95. I often come into situations without being fully prepared.
+neo96,96. I am not considered a touchy or temperamental person.
+neo97,97. I really feel the need for other people if I am by myself for long.
+neo98,98. I am intrigued by the patterns I find in art and nature.
+neo99,99. Being perfectly honest is a bad way to do business.
+neo100,100. I like to keep everything in its place so I know just where it is.
+neo101,101. I have sometimes experienced a deep sense of guilt or sinfulness.
+neo102,"102. In meetings, I usually let others do the talking."
+neo103,103. I seldom pay much attention to my feelings of the moment.
+neo104,104. I generally try to be thoughtful and considerate.
+neo105,105. Sometimes I cheat when I play solitaire.
+neo106,106. It doesn't embarrass me too much if people ridicule and tease me.
+neo107,107. I often feel as if I'm bursting with energy.
+neo108,108. I often try new and foreign foods.
+neo109,"109. If I don't like people, I let them know it."
+neo110,110. I work hard to accomplish my goals.
+neo111,"111. When I am having my favorite foods, I tend to eat too much."
+neo112,112. I tend to avoid movies that are shocking or scary.
+neo113,"113. I sometimes lose interest when people talk about very abstract, theoretical matters."
+neo114,114. I try to be humble.
+neo115,115. I have trouble making myself do what I should.
+neo116,116. I keep a cool head in emergencies.
+neo117,117. Sometimes I bubble with happiness.
+neo118,118. I believe that the different ideas of right and wrong that people in other societies have may be valid for them.
+neo119,119. I have no sympathy for pan-handlers.
+neo120,120. I always consider the consequences before I take action.
+neo121,121. I'm seldom apprehensive about the future.
+neo122,122. I really enjoy talking to people.
+neo123,"123. I enjoy concentrating on a fantasy or daydream and exploring all its possibilities, letting it grow and develop."
+neo124,124. I'm suspicious when someone does something nice for me.
+neo125,125. I pride myself on my sound judgment.
+neo126,126. I often get disgusted with people I have to deal with.
+neo127,127. I prefer jobs that let me work alone without being bothered by other people.
+neo128,128. Poetry has little or no effect on me.
+neo129,129. I would hate to be thought of as a hypocrite.
+neo130,130. I never seem to be able to get organized.
+neo131,131. I tend to blame myself when anything goes wrong.
+neo132,132. Other people often look to me to make decisions.
+neo133,133. I experience a wide range of emotions or feelings.
+neo134,134. I'm not known for my generosity.
+neo135,"135. When I make a commitment, I can always be counted on to follow through."
+neo136,136. I often feel inferior to others.
+neo137,137. I'm not as quick and lively as other people.
+neo138,138. I prefer to spend my time in familiar surroundings.
+neo139,"139. When I've been insulted, I just try to forgive and forget."
+neo140,140. I don't feel like I'm driven to get ahead.
+neo141,141. I seldom give in to my impulses.
+neo142,142. I like to be where the action is.
+neo143,"143. I enjoy working on ""mind-twister""-type puzzles."
+neo144,144. I have a very high opinion of myself.
+neo145,145. Once I start a project I almost always finish it.
+neo146,146. It's often hard for me to make up my mind.
+neo147,"147. I don't consider myself especially ""light-hearted""."
+neo148,"148. I believe that loyalty to one's ideals and principles is more important than ""open-mindedness""."
+neo149,149. Human need should always take priority over economic considerations.
+neo150,150. I often do things on the spur of the moment.
+neo151,151. I often worry about things that might go wrong.
+neo152,152. I find it easy to smile and be outgoing with strangers.
+neo153,"153. If I feel my mind starting to drift off into daydreams, I usually get busy and start concentrating on some work or activity instead."
+neo154,154. My first reaction is to trust people.
+neo155,155. I don't seem to be completely successful at anything.
+neo156,156. It takes a lot to get me mad.
+neo157,157. I'd rather vacation at a popular beach than on an isolated cabin in the woods.
+neo158,158. Certain kinds of music have an endless fascination for me.
+neo159,159. Sometimes I trick people into doing what I want.
+neo160,160. I tend to be somewhat fastidious or exacting.
+neo161,161. I have a low opinion of myself.
+neo162,162. I would rather go my own way than be a leader of others.
+neo163,163. I seldom notice the moods or feelings that different environments produce.
+neo164,164. Most people I know like me.
+neo165,165. I adhere strictly to my ethical principles.
+neo166,166. I feel comfortable in the presence of my bosses or other authorities.
+neo167,167. I usually seem to be in a hurry.
+neo168,168. Sometimes I make changes around the house just to try something different.
+neo169,"169. If someone starts a fight, I'm ready to fight back."
+neo170,170. I strive to achieve all I can.
+neo171,171. I sometimes eat myself sick.
+neo172,172. I love the excitement of roller coasters.
+neo173,173. I have little interest in speculating on the nature of the universe or the human condition.
+neo174,"174. I feel that I am no better than others, no matter what their condition."
+neo175,"175. When a project gets too difficult, I'm inclined to start a new one."
+neo176,176. I can handle myself pretty well in a crisis.
+neo177,"177. I am a cheerful, high-spirited person."
+neo178,178. I consider myself broad-minded and tolerant of other people's lifestyles.
+neo179,179. I believe all human beings are worthy of respect.
+neo180,180. I rarely make hasty decisions.
+neo181,181. I have fewer fears than most people.
+neo182,182. I have strong emotional attachments to my friends.
+neo183,183. As a child I rarely enjoyed games of make believe.
+neo184,184. I tend to assume the best about people.
+neo185,185. I'm a very competent person.
+neo186,186. At times I have felt bitter and resentful.
+neo187,187. Social gatherings are usually boring to me.
+neo188,"188. Sometimes when I am reading poetry or looking at a work of art, I feel a chill or wave of excitement."
+neo189,189. At times I bully or flatter people into doing what I want them to.
+neo190,190. I'm not compulsive about cleaning.
+neo191,191. Sometimes things look pretty bleak and hopeless to me.
+neo192,"192. In conversations, I tend to do most of the talking."
+neo193,193. I find it easy to empathize-to feel myself what others are feeling.
+neo194,194. I think of myself as a charitable person.
+neo195,"195. I try to do jobs carefully, so they won't have to be done again."
+neo196,"196. If I have said or done the wrong thing to someone, I can hardly bear to face them again."
+neo197,197. My life is fast-paced.
+neo198,"198. On a vacation, I prefer going back to a tried and true spot."
+neo199,199. I'm hard-headed and stubborn.
+neo200,200. I strive for excellence in everything I do.
+neo201,201. Sometimes I do things on impulse that I later regret.
+neo202,202. I'm attracted to bright colors and flashy styles.
+neo203,203. I have a lot of intellectual curiosity.
+neo204,204. I would rather praise others than be praised myself.
+neo205,205. There are so many little jobs that need to be done that I sometimes just ignore them all.
+neo206,"206. When everything seems to be going wrong, I can still make good decisions."
+neo207,"207. I rarely use words like ""fantastic!"" or ""sensational!"" to describe my experiences."
+neo208,"208. I think that if people don't know what they believe in by the time they're 25, there's something wrong with them."
+neo209,209. I have sympathy for others less fortunate than me.
+neo210,210. I plan ahead carefully when I go on a trip.
+neo211,211. Frightening thoughts sometimes come into my head.
+neo212,212. I take a personal interest in the people I work with.
+neo213,213. I would have difficulty just letting my mind wander without control or guidance.
+neo214,214. I have a good deal of faith in human nature.
+neo215,215. I am efficient and effective at my work.
+neo216,216. Even minor annoyances can be frustrating to me.
+neo217,217. I enjoy parties with lots of people.
+neo218,218. I enjoy reading poetry that emphasizes feelings and images more than story lines.
+neo219,219. I pride myself on my shrewdness in handling people.
+neo220,220. I spend a lot of time looking for things I've misplaced.
+neo221,"221. Too often, when things go wrong, I get discouraged and feel like giving up."
+neo222,222. I don't find it easy to take charge of a situation.
+neo223,223. Odd things-like certain scents or the names of distant places-can evoke strong moods in me.
+neo224,224. I go out of my way to help others if I can.
+neo225,225. I'd really have to be sick before I'd miss a day of work.
+neo226,"226. When people I know do foolish things, I get embarrassed for them."
+neo227,227. I am a very active person.
+neo228,228. I follow the same route when I go someplace.
+neo229,229. I often get into arguments with my family and co-workers.
+neo230,"230. I'm something of a ""workaholic."""
+neo231,231. I am always able to keep my feelings under control.
+neo232,232. I like being part of the crowd at sporting events.
+neo233,233. I have a wide range of intellectual interests.
+neo234,234. I am a superior person.
+neo235,235. I have a lot of self-discipline.
+neo236,236. I'm pretty stable emotionally.
+neo237,237. I laugh easily.
+neo238,"238. I believe that the ""new morality"" of permissiveness is no morality at all."
+neo239,"239. I would rather be known as ""merciful"" than as ""just."""
+neo240,240. I think twice before I answer a question.
+tda_e,TDA Extraversion
+tda_a,TDA Agreeableness
+tda_c,TDA Conscientiousness
+tda_n,TDA Neuroticism
+tda_o,TDA Openness
+bfas_e,BFAS Extraversion
+bfas_a,BFAS Agreeableness
+bfas_c,BFAS Conscientiousness
+bfas_n,BFAS Neuroticism
+bfas_o,BFAS Openness
+bfas_e_ent,BFAS E Enthusiasm
+bfas_e_ass,BFAS E Assertiveness
+bfas_a_com,BFAS A Compassion
+bfas_a_pol,BFAS A Politeness
+bfas_c_ind,BFAS C Industriousness
+bfas_c_ord,BFAS C Orderliness
+bfas_n_wit,BFAS N Withdrawal
+bfas_n_vol,BFAS N Volatility
+bfas_o_int,BFAS O Intellect
+bfas_o_ope,BFAS O Openness
+ffi_e,NEO-FFI Extraversion
+ffi_a,NEO-FFI Agreeableness
+ffi_c,NEO-FFI Conscientiousness
+ffi_n,NEO-FFI Neuroticism
+ffi_o,NEO-FFI Openness
+ffi_e_pos,NEO-FFI E Positive Affect
+ffi_e_soc,NEO-FFI E Sociability
+ffi_e_act,NEO-FFI E Activity
+ffi_a_non,NEO-FFI A Nonantagonistic Orientation
+ffi_a_pro,NEO-FFI A Prosocial Orientation
+ffi_c_ord,NEO-FFI C Orderliness
+ffi_c_goa,NEO-FFI C Goal-Striving
+ffi_c_dep,NEO-FFI C Dependability
+ffi_n_neg,NEO-FFI N Negative Affect
+ffi_n_sel,NEO-FFI N Self-Reproach
+ffi_o_aes,NEO-FFI O Aesthetic Interests
+ffi_o_int,NEO-FFI O Intellectual Interests
+ffi_o_unc,NEO-FFI O Unconventionality
+tneo_e,TNEO Extraversion (factor)
+tneo_a,TNEO Agreeableness (factor)
+tneo_c,TNEO Conscientiousness (factor)
+tneo_n,TNEO Neuroticism (factor)
+tneo_o,TNEO Openness (factor)
+tneo_e1_war,TNEO E1 Warmth
+tneo_e2_gre,TNEO E2 Gregariousness
+tneo_e3_ass,TNEO E3 Assertiveness
+tneo_e4_act,TNEO E4 Activity
+tneo_e5_exc,TNEO E5 Excitement-Seeking
+tneo_e6_pos,TNEO E6 Positive Emotions
+tneo_a1_tru,TNEO A1 Trust
+tneo_a2_str,TNEO A2 Straightforwardness
+tneo_a3_alt,TNEO A3 Altruism
+tneo_a4_com,TNEO A4 Compliance
+tneo_a5_mod,TNEO A5 Modesty
+tneo_a6_ten,TNEO A6 Tender-Mindedness
+tneo_c1_com,TNEO C1 Competence
+tneo_c2_ord,TNEO C2 Order
+tneo_c3_dut,TNEO C3 Dutifulness
+tneo_c4_ach,TNEO C4 Achievement Striving
+tneo_c5_sel,TNEO C5 Self-Discipline
+tneo_c6_del,TNEO C6 Deliberation
+tneo_n1_anx,TNEO N1 Anxiety
+tneo_n2_ang,TNEO N2 Angry Hostility
+tneo_n3_dep,TNEO N3 Depression
+tneo_n4_sel,TNEO N4 Self-Consciousness
+tneo_n5_imp,TNEO N5 Impulsiveness
+tneo_n6_vul,TNEO N6 Vulnerability
+tneo_o1_fan,TNEO O1 Fantasy
+tneo_o2_aes,TNEO O2 Aesthetics
+tneo_o3_fee,TNEO O3 Feelings
+tneo_o4_act,TNEO O4 Actions
+tneo_o5_ide,TNEO O5 Ideas
+tneo_o6_val,TNEO O6 Values
